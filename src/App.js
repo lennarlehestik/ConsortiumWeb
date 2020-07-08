@@ -6,16 +6,6 @@ import AnchorLink from 'anchor-link'
 import AnchorLinkBrowserTransport from 'anchor-link-browser-transport'
 import { Modal, Navbar, Button } from 'react-bootstrap';
 
-/* INITIALIZE EMPTY OBJECT */
-
-
-/*IMPORT ANCHOR LIBRARIES*/
-
-
-
-
-
-/* SORTING BASED ON TOTALVOTE SUM */
 function sumArray(arr) {
   return arr.reduce((sum, n) => sum + n);
 }
@@ -23,12 +13,6 @@ function sumArray(arr) {
 function sortBySum(a, b) {
   return sumArray(b.totalvote) - sumArray(a.totalvote);
 }
-
-
-
-/* CODE FOR TURING FORM INTO JSON, TO PASS INTO FETCH POST:
-const formEntries = new FormData(myForm).entries();
-const json = Object.assign(...Array.from(formEntries, ([x,y]) => ({[x]:y}))); */
 
 export default function App() {
   const [data, setData] = useState({"rows":[]});
@@ -46,6 +30,7 @@ export default function App() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -70,7 +55,6 @@ export default function App() {
     )
     .then(restoreSession())
   }, data["rows"]);
-
 
 
   data.rows.sort(sortBySum);
@@ -176,6 +160,7 @@ export default function App() {
     }
   }
 
+
   const percentage = (sum, item) => {
     if(item == 0){
       return 0
@@ -184,6 +169,7 @@ export default function App() {
       return(item / sum.reduce((a, b) => a + b, 0)*100)
     }
   }
+
 
   /* LOOP FOR POLL OPTIONS IN CARDS */
   const polloptions = (votes, answers, pollkey) => {
@@ -219,20 +205,22 @@ export default function App() {
     }
   }
 
+
   return (
     <div>
     <Navbar fixed="top" variant="dark" bg="dark">
-    <div className="mr-auto">
-    <Navbar.Brand href="#"></Navbar.Brand>
-    </div>
-    <input
-      placeholder ={"Vote amount"}
-      onChange={text => setVoteAmount(text.target.value)}
-      style={{"width":"100px","margin-right":"5px"}}
-    />
-    {logbutton()}
-    <Button inline variant="outline-light" onClick={handleShow}>New poll</Button>
+      <div className="mr-auto">
+        <Navbar.Brand href="#"></Navbar.Brand>
+      </div>
+      <input
+        placeholder ={"Vote amount"}
+        onChange={text => setVoteAmount(text.target.value)}
+        style={{"width":"100px","margin-right":"5px"}}
+      />
+      {logbutton()}
+      <Button inline variant="outline-light" onClick={handleShow}>New poll</Button>
     </Navbar>
+
     <div class="app">
     <div>
     <Modal show={show} onHide={handleClose}>
