@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AnchorLink from 'anchor-link'
 import AnchorLinkBrowserTransport from 'anchor-link-browser-transport'
 import { Modal, Navbar, Button } from 'react-bootstrap';
+import Slider from '@material-ui/core/Slider';
 
 function sumArray(arr) {
   return arr.reduce((sum, n) => sum + n);
@@ -262,9 +263,13 @@ export default function App() {
 
     <Modal show={show1} onHide={handleClose1}>
         <Modal.Body>
-        <input
-          placeholder ={"Vote amount"}
-          onChange={text => setVoteAmount(text.target.value)}
+        <Slider
+          defaultValue={30}
+          valueLabelDisplay="auto"
+          step={1}
+          min={1}
+          max={1000}
+          onChange={ (e, val) => setVoteAmount(val)}
         />
         <br />
         <a>You're voting with: {voteamount} tokens.</a>
