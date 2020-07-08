@@ -1,0 +1,59 @@
+@media only screen and (min-width: 600px) {
+  .app {
+    width:50%;
+    margin-left:25%;
+    margin-right:25%
+  }
+}
+
+.app {
+  background-color: white;
+  margin-top:60px;
+}
+
+.card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.1);
+  transition: 0.3s;
+  padding:10px;
+  padding-left:20px;
+  padding-right:20px;
+  margin:10px;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 3px 4px 4px 3px rgba(0,0,0,0.1);
+}
+
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+}
+
+.question {
+  font-size:16px;
+  font-weight: 600
+}
+
+.pollstats {
+  font-size:16px;
+  font-weight: 600;
+}
+
+.progressbar {
+  background-color: #EDEDEE;
+}
+
+.progressbar>div {
+  background-color: #697A90;
+  height: 5px;
+}
+
+.polloption {
+  cursor: pointer;
+}
+
+.answer {
+  margin-bottom:5px;
+}
