@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AnchorLink from 'anchor-link'
 import AnchorLinkBrowserTransport from 'anchor-link-browser-transport'
 import { Modal, Navbar, Button } from 'react-bootstrap';
+import './voting';
 
 function sumArray(arr) {
   return arr.reduce((sum, n) => sum + n);
@@ -24,15 +25,12 @@ export default function App() {
   const [option5submission, setOption5Submission] = useState("")
   const [optionlist, setOptionList] = useState([])
   const [votelist, setVoteList] = useState([])
-  const [voteamount, setVoteAmount] = useState(0)
+  const [voteamount, setVoteAmount] = useState("")
   const [sessionresult, setSessionResult] = useState("")
   const [show, setShow] = useState(false);
-  const [show1, setShow1] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const handleClose1 = () => setShow1(false);
-  const handleShow1 = () => setShow1(true);
 
 
   useEffect(() => {
@@ -215,8 +213,12 @@ export default function App() {
       <div className="mr-auto">
         <Navbar.Brand href="#"></Navbar.Brand>
       </div>
+      <input
+        placeholder ={"Vote amount"}
+        onChange={text => setVoteAmount(text.target.value)}
+        style={{"width":"100px","margin-right":"5px"}}
+      />
       {logbutton()}
-      <Button inline variant="outline-light" onClick={handleShow1} style={{"margin-right":5}}>Vote Amount</Button>
       <Button inline variant="outline-light" onClick={handleShow}>New poll</Button>
     </Navbar>
 
@@ -257,17 +259,6 @@ export default function App() {
         <button
         onClick={() => createpoll()}
         >Create poll</button>
-        </Modal.Body>
-    </Modal>
-
-    <Modal show={show1} onHide={handleClose1}>
-        <Modal.Body>
-        <input
-          placeholder ={"Vote amount"}
-          onChange={text => setVoteAmount(text.target.value)}
-        />
-        <br />
-        <a>You're voting with: {voteamount} tokens.</a>
         </Modal.Body>
     </Modal>
 
