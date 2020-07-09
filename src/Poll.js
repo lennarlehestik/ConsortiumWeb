@@ -73,7 +73,7 @@ function sortBySum(a, b) {
   return sumArray(b.totalvote) - sumArray(a.totalvote);
 }
 
-export default function App() {
+export default function Poll() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
@@ -97,6 +97,8 @@ export default function App() {
   const AppBarOffset = () => {
     return <div className={classes.offset} />;
   }
+
+
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -144,7 +146,6 @@ export default function App() {
 
       }
   }, databalance);
-
 
   data.rows.sort(sortBySum);
   /* ANCHOR CONNECTION */
@@ -332,7 +333,7 @@ export default function App() {
         <MenuIcon />
       </IconButton>
       <Typography variant="h6" style={{"color":"#2A3747"}} className={classes.title}>
-        Consortium
+        Consortium POLL PAGE
       </Typography>
       <Button color="inherit" onClick={handleShow}>Create poll</Button>
       {logbutton()}

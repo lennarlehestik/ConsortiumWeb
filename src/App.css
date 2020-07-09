@@ -2,13 +2,30 @@
   .app {
     width:50%;
     margin-left:25%;
-    margin-right:25%
+    margin-right:25%;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .mobilemenu {
+    display:none;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #logoutname {
+    display:none;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .desktopmenu {
+    display:none;
   }
 }
 
 .app {
-  background-color: white;
-  margin-top:60px;
+  padding-bottom:70px;
 }
 
 .card {
@@ -32,13 +49,14 @@
 }
 
 .question {
-  font-size:16px;
-  font-weight: 600
+  font-size:20px;
+  font-weight: 600;
 }
 
 .pollstats {
   font-size:16px;
   font-weight: 600;
+  float:right;
 }
 
 .progressbar {
@@ -52,8 +70,15 @@
 
 .polloption {
   cursor: pointer;
+  margin-bottom:15px;
+  border-left: 3px solid #AFBBC9;
+  padding:3px;
+  padding-left:7px;
 }
 
 .answer {
-  margin-bottom:5px;
+  margin-bottom:10px;
+  width:100%;
+  vertical-align: bottom;
+  line-height: 10px;
 }
