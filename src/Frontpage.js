@@ -230,14 +230,14 @@ export default function App() {
     <div class="frontapp">
     <div>
     </div>
-    <div className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px", "display":"flex", "padding-left":"13px", "padding-right":"13px"}}>
+    <div className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px", "display":"flex", "padding-left":"14px", "padding-right":"14px"}}>
     <Autocomplete
       id="Community search"
       options={data.rows}
       getOptionLabel={(option) => option.communityname}
       onChange={(event, value) => ((value) ? setSearch(value.community) : setSearch(""))}
-      style={{ width: "100%", backgroundColor:"white" }}
-      renderInput={(params) => <TextField {...params} label="Community name" variant="outlined" />}
+      style={{ width: "100%"}}
+      renderInput={(params) => <TextField {...params} label="Community name" variant="outlined" style={{backgroundColor:"white"}}/>}
     />
     <Button target="_blank" href={`${window.location}community/${searchvalue}`} variant="outlined" style={{"margin-left":"5px", backgroundColor:"white" }}>Search</Button>
     </div>

@@ -26,7 +26,11 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {Link} from "react-router-dom";
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useLocation } from 'react-router-dom'
-
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import CardHeader from '@material-ui/core/CardHeader';
+import Avatar from '@material-ui/core/Avatar';
 
 //STYLES FOR EVERYTHING
 const useStyles = makeStyles((theme) => ({
@@ -55,6 +59,10 @@ const useStyles = makeStyles((theme) => ({
     top: 'auto',
     bottom: 0,
   },
+  media: {
+    height: 0,
+    paddingTop: '30%', // 16:9
+  },
   grow: {
     flexGrow: 1,
   },
@@ -69,7 +77,10 @@ const useStyles = makeStyles((theme) => ({
   offset: {
   ...theme.mixins.toolbar,
   flexGrow: 1
-}
+  },
+  avatar: {
+  backgroundColor: "#697A90",
+  },
 }));
 
 function sumArray(arr) {
@@ -84,6 +95,7 @@ export default function App() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
   const [communitydata, setCommunityData] = useState({"rows":[]});
+  const [scopedcommunitydata, setScopedCommunityData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState("")
   const [questiondescription, setQuestionDescription] = useState("")
@@ -109,7 +121,6 @@ export default function App() {
 
   const location = useLocation();
   const scope = location.pathname.split('/')[2]
-  console.log(scope)
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -131,6 +142,32 @@ export default function App() {
     )
     .then(restoreSession())
   }, communitydata["rows"]);
+
+  const topcard = () => {
+    var commdata = communitydata.rows.filter(function(e) {
+      return e.community == scope;
+    });
+    if(commdata[0]){
+    console.log(commdata)
+    return(
+      <Card className={classes.root} style={{"margin-bottom":"10px", "margin-top":"10px"}}>
+      <CardMedia
+        className={classes.media}
+        image={commdata[0].backgroundurl}
+        title="Community image"
+      />
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
+          {commdata[0].description}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing style={{"float":"right", color:"#485A70"}}>
+      <Tooltip title="Total tokens used for voting"><AccountBalanceWalletIcon /></Tooltip> &nbsp;{commdata[0].totaltokensvoted} &nbsp;<Tooltip title="Total voters"><PeopleOutline /></Tooltip>&nbsp;{commdata[0].totalvoters}
+      </CardActions>
+    </Card>
+    )
+  }
+  }
 
 
   useEffect(() => {
@@ -239,7 +276,6 @@ export default function App() {
         voteslist.push(0)
       }
       const uniqueurl = Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 15)
-      console.log(questiondescription)
       const action = {
           account: 'andrtestcons',
           name: 'createpollz',
@@ -485,9 +521,9 @@ export default function App() {
     </Modal>
 
     <div>
-    <Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px"}}>
-      <Tooltip title="Coming soon"><Button style={{"color":"gray"}}>Sort by <ArrowDropDownIcon /></Button></Tooltip>
-      </Card>
+
+      {topcard()}
+      {/**<Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px"}}><Tooltip title="Coming soon"><Button style={{"color":"gray"}}>Sort by <ArrowDropDownIcon /></Button></Tooltip></Card>**/}
     </div>
 
     </div>
@@ -495,13 +531,28 @@ export default function App() {
         return (
           <div key={i}>
           <Card className={classes.root} style={{"margin-top":"7px", "padding":"10px", "padding-bottom":"20px"}}>
-          <CardContent>
-            <div style={{"margin-bottom":"10px", "color":"#697A90"}}><AccountCircle/>  {u.creator}</div>
+          <CardHeader
+            style={{"padding-bottom":"10px"}}
+            avatar={
+              <Avatar aria-label="recipe" className={classes.avatar}>
+                {u.creator.charAt(0).toUpperCase()}
+              </Avatar>
+            }
+            action={
+              <IconButton aria-label="settings">
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={u.creator}
+            subheader="Community Member"
+          />
+          <CardContent style={{"padding-top":"0px"}}>
+            {/**<div style={{"margin-bottom":"10px", "color":"#697A90"}}><AccountCircle/>  {u.creator}</div>**/}
             <Button style={{"color":"#2A3747"}} class="question" target="_blank" component={Link} to={`/poll/${u.pollkey}/${u.uniqueurl}/${scope}`}>{u.question}</Button>
             <div style={{"color":"#2A3747"}}>{u.description}</div>
             <br />
             <a style={{"color":"#2A3747"}}>{polloptions(u.totalvote, u.answers, u.pollkey)}</a>
-            <div style={{"color":"#2A3747"}} class="pollstats"><Tooltip title="Get poll url"><div style={{"float":"left"}}><FileCopyIcon onClick={() => getpollurl(u.pollkey,u.uniqueurl)}/></div></Tooltip> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}><AccountBalanceWalletIcon /> {u.sumofallopt}</div></Tooltip></div>
+            <div style={{color:"#485A70"}} class="pollstats"><Tooltip title="Get poll url"><div style={{"float":"left"}}><FileCopyIcon onClick={() => getpollurl(u.pollkey,u.uniqueurl)}/></div></Tooltip> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}><AccountBalanceWalletIcon /> {u.sumofallopt}</div></Tooltip></div>
             </CardContent>
             </Card>
           </div>
