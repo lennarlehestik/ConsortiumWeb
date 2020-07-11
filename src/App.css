@@ -8,23 +8,17 @@
 
 @media only screen and (min-width: 600px) {
   .frontapp {
-    width:70%;
-    margin-left:15%;
-    margin-right:15%;
+    width:80%;
+    margin-left:10%;
+    margin-right:10%;
   }
 }
 
-@media only screen and (min-width: 600px) {
-  .frontappcard {
-    width:300px;
-  }
+.frontapp {
+margin-bottom:50px
 }
 
-@media only screen and (max-width: 600px) {
-  .frontappcard {
-    width:100%;
-  }
-}
+
 
 
 @media only screen and (min-width: 600px) {
@@ -101,4 +95,14 @@
   margin-bottom:10px;
   width:100%;
   display:inline
+}
+
+.parent {
+  display: grid;
+  /* Define Auto Row size */
+  grid-auto-rows: auto;
+  /*Define our columns */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  box-sizing: border-box;
+  grid-row-gap: 15px;
 }

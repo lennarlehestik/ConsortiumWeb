@@ -25,6 +25,7 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {Link} from "react-router-dom";
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { useLocation } from 'react-router-dom'
 
 
 //STYLES FOR EVERYTHING
@@ -82,6 +83,7 @@ function sortBySum(a, b) {
 export default function App() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
+  const [communitydata, setCommunityData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState("")
   const [questiondescription, setQuestionDescription] = useState("")
@@ -105,6 +107,31 @@ export default function App() {
     return <div className={classes.offset} />;
   }
 
+  const location = useLocation();
+  const scope = location.pathname.split('/')[2]
+  console.log(scope)
+
+  useEffect(() => {
+    fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        json: true,
+        code: 'andrtestcons',
+        table: 'commped',
+        scope: 'andrtestcons',
+        limit: 50,
+    })
+    })
+    .then(response =>
+        response.json().then(communitydata => setCommunityData(communitydata))
+    )
+    .then(restoreSession())
+  }, communitydata["rows"]);
+
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -117,7 +144,7 @@ export default function App() {
         json: true,
         code: 'andrtestcons',
         table: 'pollud',
-        scope: 'eyaltestcons',
+        scope: scope,
         limit: 50,
         table_key: 'pollkey',
         lower_bound:0,
@@ -221,7 +248,7 @@ export default function App() {
             question: questionsubmission,
             answers: optionslist,
             totalvote: voteslist,
-            community: "eyaltestcons",
+            community: scope,
             creator: sessionresult.auth.actor,
             description: questiondescription,
             uniqueurl: uniqueurl
@@ -255,7 +282,7 @@ export default function App() {
           usersvote: amount,
           pollkey:pollkey,
           option:optionnumber,
-          community: 'eyaltestcons',
+          community: scope,
           voter: sessionresult.auth.actor
         }
     }
@@ -274,7 +301,7 @@ export default function App() {
   }
 
   const getpollurl = (pollkey,uniqueurl) => {
-    const url = "https://pureconso.web.app/poll/"+pollkey+"/"+uniqueurl;
+    const url = window.location.origin+"/poll/"+pollkey+"/"+uniqueurl+"/"+scope;
     Swal.fire({
       title: "<strong>Here's the link to the poll:</strong>",
       html:
@@ -470,7 +497,7 @@ export default function App() {
           <Card className={classes.root} style={{"margin-top":"7px", "padding":"10px", "padding-bottom":"20px"}}>
           <CardContent>
             <div style={{"margin-bottom":"10px", "color":"#697A90"}}><AccountCircle/>  {u.creator}</div>
-            <Button style={{"color":"#2A3747"}} class="question" target="_blank" component={Link} to={`/poll/${u.pollkey}/${u.uniqueurl}`}>{u.question}</Button>
+            <Button style={{"color":"#2A3747"}} class="question" target="_blank" component={Link} to={`/poll/${u.pollkey}/${u.uniqueurl}/${scope}`}>{u.question}</Button>
             <div style={{"color":"#2A3747"}}>{u.description}</div>
             <br />
             <a style={{"color":"#2A3747"}}>{polloptions(u.totalvote, u.answers, u.pollkey)}</a>

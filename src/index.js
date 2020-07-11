@@ -11,10 +11,10 @@ import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
 const routing = (
   <Router>
     <div>
-      <Route path="/poll/:id" component={Poll} />
-      <Route exact path="/" component={App} />
+      <Route path="/poll/:id/:scope" component={Poll} />
+      <Route exact path="/community/:scope" component={App} />
       <Route exact path="/Leaderboard" component={Leaderboard} />
-      <Route exact path="/Frontpage" component={Frontpage} />
+      <Route exact path="/" component={Frontpage} />
     </div>
   </Router>
 )

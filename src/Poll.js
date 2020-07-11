@@ -132,6 +132,7 @@ export default function App() {
   }
 
   useEffect(() => {
+    const scope = location.pathname.split('/')[4]
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
       method: 'POST',
       headers: {
@@ -141,7 +142,7 @@ export default function App() {
       body: JSON.stringify({
         json: true,
         code: 'andrtestcons',
-        scope: 'eyaltestcons',
+        scope: scope,
         table: 'pollud',
         table_key: 'pollkey',
         lower_bound: tablebound,

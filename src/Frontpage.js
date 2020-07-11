@@ -227,24 +227,25 @@ export default function App() {
     </AppBar>
     </div>
 
-    <div class="app">
+    <div class="frontapp">
     <div>
     </div>
-    <Card className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px", "padding":"10px"}}>
+    <div className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px", "display":"flex", "padding-left":"13px", "padding-right":"13px"}}>
     <Autocomplete
       id="Community search"
       options={data.rows}
       getOptionLabel={(option) => option.communityname}
       onChange={(event, value) => ((value) ? setSearch(value.community) : setSearch(""))}
-      style={{ width: "100%" }}
+      style={{ width: "100%", backgroundColor:"white" }}
       renderInput={(params) => <TextField {...params} label="Community name" variant="outlined" />}
     />
-    <Button onClick={() => alert(searchvalue)}>Search</Button>
-    </Card>
-
+    <Button target="_blank" href={`${window.location}community/${searchvalue}`} variant="outlined" style={{"margin-left":"5px", backgroundColor:"white" }}>Search</Button>
+    </div>
+      <div class="parent">
       {data.rows.map((u, i) => {
         return (
-      <Card className={classes.root} style={{"margin-bottom":"10px"}}>
+      <div class="col">
+      <Card className={classes.root} style={{"margin-bottom":"10px", "height":"270px"}}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
@@ -259,27 +260,25 @@ export default function App() {
         title={u.communityname}
         subheader="An EOS dapp."
       />
+
+      <a target="_blank" href={`${window.location}community/${u.community}`}>
       <CardMedia
         className={classes.media}
         image={u.backgroundurl}
-        title="Paella dish"
+        title="Community image"
       />
+      </a>
+
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          {u.description}
+          {u.description.substring(0, 90)}{(u.description.length > 90) ? '...' : ''}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
     </Card>
+    </div>
         )
       })}
+      </div>
     </div>
     </div>
   )
