@@ -21,9 +21,16 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Swal from 'sweetalert2'
 import Tooltip from '@material-ui/core/Tooltip';
-import { useLocation } from 'react-router-dom'
-import {Link} from "react-router-dom";
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,19 +75,13 @@ title: {
 }
 }));
 
-function sumArray(arr) {
-  return arr.reduce((sum, n) => sum + n);
-}
-
-function sortBySum(a, b) {
-  return sumArray(b.totalvote) - sumArray(a.totalvote);
-}
 
 export default function App() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState({"question":""})
+  const [questiondescription, setQuestionDescription] = useState({"description":""})
   const [option1submission, setOption1Submission] = useState("")
   const [option2submission, setOption2Submission] = useState("")
   const [option3submission, setOption3Submission] = useState("")
@@ -101,35 +102,6 @@ export default function App() {
     return <div className={classes.offset} />;
   }
 
-  const location = useLocation();
-  const split = location.pathname.split('/')[2]
-  const tablebound = Number(split.replace('/',''))
-
-
-  const stringmatches = () => {
-    if(data.rows[0]){
-    const urluniqueurl = location.pathname.split('/')[3]
-    if(data.rows[0]["uniqueurl"] == urluniqueurl){
-      return(
-        data.rows.map((u, i) => {
-            return (
-              <div key={i}>
-              <Card className={classes.root} style={{"margin-top":"7px", "padding":"10px", "padding-bottom":"20px"}}>
-              <CardContent>
-                <div style={{"margin-bottom":"10px", "color":"#697A90"}}><AccountCircle/>  {u.creator}</div>
-                <div style={{"color":"#2A3747"}} class="question">{u.question}</div>
-                <br />
-                <a style={{"color":"#2A3747"}}>{polloptions(u.totalvote, u.answers, u.pollkey)}</a>
-                <div style={{"color":"#2A3747"}} class="pollstats"> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}><AccountBalanceWalletIcon /> {u.sumofallopt}</div></Tooltip></div>
-                </CardContent>
-                </Card>
-              </div>
-            )
-          }))
-        }
-        else{return(<Card className={classes.root} style={{"margin-top":"7px", "padding":"10px", "padding-bottom":"20px"}}><CardContent><center><a class="question">Poll has expired or you have the wrong url.</a></center></CardContent></Card>)}
-  }
-  }
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -141,12 +113,9 @@ export default function App() {
       body: JSON.stringify({
         json: true,
         code: 'andrtestcons',
+        table: 'topgovernors',
         scope: 'eyaltestcons',
-        table: 'pollud',
-        table_key: 'pollkey',
-        lower_bound: tablebound,
-        upper_bound: tablebound,
-        limit: 1
+        limit: 50,
     })
     })
     .then(response =>
@@ -154,6 +123,13 @@ export default function App() {
     )
     .then(restoreSession())
   }, data["rows"]);
+
+  if(data.rows[0]){
+  data.rows.sort((a, b) => (a.rewardsreceived < b.rewardsreceived) ? 1 : -1)
+  }
+
+  console.log(data)
+
 
   useEffect(() => {
     if(sessionresult){
@@ -179,7 +155,6 @@ export default function App() {
   }, databalance);
 
 
-  data.rows.sort(sortBySum);
   /* ANCHOR CONNECTION */
   const transport = new AnchorLinkBrowserTransport()
   // initialize the link, this time we are using the TELOS chain
@@ -202,6 +177,7 @@ export default function App() {
     link.login(identifier).then((result) => {
         session = result.session
         setSessionResult(session)
+        window.location.reload(false)
     })
   }
 
@@ -235,6 +211,7 @@ export default function App() {
       for (let i = 0; i < optionslist.length; i++) {
         voteslist.push(0)
       }
+      const uniqueurl = Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 15)
       const action = {
           account: 'andrtestcons',
           name: 'createpollz',
@@ -244,7 +221,9 @@ export default function App() {
             answers: optionslist,
             totalvote: voteslist,
             community: "eyaltestcons",
-            creator: sessionresult.auth.actor
+            creator: sessionresult.auth.actor,
+            description: questiondescription,
+            uniqueurl: uniqueurl
           }
       }
 
@@ -293,6 +272,16 @@ export default function App() {
     }
   }
 
+  const getpollurl = (pollkey,uniqueurl) => {
+    const url = "https://pureconso.web.app/"+pollkey+"/"+uniqueurl;
+    Swal.fire({
+      title: "<strong>Here's the link to the poll:</strong>",
+      icon: 'info',
+      html:
+        `<a target="_blank" href="${url}">${url}</a> `,
+
+    })
+  }
 
   const percentage = (sum, item) => {
     if(item == 0){
@@ -303,18 +292,6 @@ export default function App() {
     }
   }
 
-
-  /* LOOP FOR POLL OPTIONS IN CARDS */
-  const polloptions = (votes, answers, pollkey) => {
-    return(
-    Object.keys(votes).map(key =>
-      <div class="polloption" onClick={() => votingmodal(key, pollkey)}>
-        <div class="answer"><a>{answers[key]}</a> <a style={{"float":"right", "font-size":"12px"}}>{percentage(votes,votes[key]).toFixed(0)}%</a></div>
-        <div class="progressbar"><div style={{"width":`${percentage(votes,votes[key]).toFixed(0)}%`}}/></div>
-      </div>
-    )
-  )
-  }
   const votingmodal = (key, pollkey) => {
     setVoteKey(key)
     setVotePollKey(pollkey)
@@ -323,7 +300,7 @@ export default function App() {
 
   const getbalance = () => {
     if(databalance) {
-      return(Number(databalance.rows[0].balance[0].split(" ")))
+      return(Math.floor(Number(databalance.rows[0].balance.split(" ")[0])))
     }
   }
 
@@ -364,10 +341,10 @@ export default function App() {
       <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
         <MenuIcon />
       </IconButton>
-      <Typography variant="h6" style={{"color":"#2A3747", "text-decoration":"none"}} className={classes.title} component={Link} to={'/'}>
+      <Typography variant="h6" style={{"color":"#2A3747","text-decoration":"none"}} className={classes.title} component={Link} to={'/'}>
         Consortium
       </Typography>
-      <Button color="inherit" component={Link} to={'/Leaderboard'}>Leaderboard</Button>
+      <Button color="inherit" onClick={handleShow}>Create poll</Button>
       {logbutton()}
     </Toolbar>
     </AppBar>
@@ -379,6 +356,9 @@ export default function App() {
     <AppBar position="fixed" color="primary" className={classes.appBar} color="transparent" style={{"background-color":"white"}}>
       <Toolbar>
         {logbutton()}
+        <Fab style={{"background-color":"#AFBBC9"}} onClick={handleShow} aria-label="add" className={classes.fabButton}>
+          <AddIcon style={{"color":"white"}}/>
+        </Fab>
         <div className={classes.grow} />
         <Button style={{"color":"#2A3747"}} color="inherit">{showusername()}</Button>
       </Toolbar>
@@ -396,6 +376,13 @@ export default function App() {
         id="outlined-basic" variant="outlined"
          />
          <br />
+         <TextField
+         style={{"width":"100%", "margin":"7px"}}
+         label ={"Poll description"}
+         onChange={text => setQuestionDescription(text.target.value)}
+         id="outlined-basic" variant="outlined"
+          />
+          <br />
          <TextField
          style={{"width":"100%", "margin":"7px"}}
          label ={"First option"}
@@ -433,6 +420,9 @@ export default function App() {
               <br />
 
         <br />
+        <Button
+        onClick={() => createpoll()}
+        >Create poll</Button>
         </Modal.Body>
     </Modal>
 
@@ -455,7 +445,29 @@ export default function App() {
     </Modal>
 
     </div>
-    {stringmatches()}
+    <TableContainer component={Paper} style={{"margin-top":"10px"}}>
+  <Table className={classes.table} size="small" aria-label="a dense table">
+    <TableHead>
+      <TableRow>
+        <TableCell>Governor</TableCell>
+        <TableCell align="right">Rewards</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {data.rows.map((u, i) => {
+        return (
+        <TableRow key={i}>
+          <TableCell component="th" scope="row">
+          {u.governor}
+          </TableCell>
+          <TableCell align="right">{u.rewardsreceived}</TableCell>
+        </TableRow>
+      )
+    })}
+
+    </TableBody>
+  </Table>
+</TableContainer>
     </div>
     </div>
   )

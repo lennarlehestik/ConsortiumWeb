@@ -21,17 +21,23 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Swal from 'sweetalert2'
 import Tooltip from '@material-ui/core/Tooltip';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import {Link} from "react-router-dom";
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
+
+//STYLES FOR EVERYTHING
 const useStyles = makeStyles((theme) => ({
   root: {
   flexGrow: 1,
-},
-menuButton: {
-  marginRight: theme.spacing(2),
-},
-title: {
-  flexGrow: 1,
-},
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
   text: {
     padding: theme.spacing(2, 2, 0),
   },
@@ -77,7 +83,8 @@ export default function App() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
-  const [questionsubmission, setQuestionSubmission] = useState({"question":""})
+  const [questionsubmission, setQuestionSubmission] = useState("")
+  const [questiondescription, setQuestionDescription] = useState("")
   const [option1submission, setOption1Submission] = useState("")
   const [option2submission, setOption2Submission] = useState("")
   const [option3submission, setOption3Submission] = useState("")
@@ -98,6 +105,7 @@ export default function App() {
     return <div className={classes.offset} />;
   }
 
+
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
       method: 'POST',
@@ -108,7 +116,7 @@ export default function App() {
       body: JSON.stringify({
         json: true,
         code: 'andrtestcons',
-        table: 'polgar',
+        table: 'pollud',
         scope: 'eyaltestcons',
         limit: 50,
         table_key: 'pollkey',
@@ -169,6 +177,7 @@ export default function App() {
     link.login(identifier).then((result) => {
         session = result.session
         setSessionResult(session)
+        window.location.reload(false)
     })
   }
 
@@ -202,6 +211,8 @@ export default function App() {
       for (let i = 0; i < optionslist.length; i++) {
         voteslist.push(0)
       }
+      const uniqueurl = Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 15)
+      console.log(questiondescription)
       const action = {
           account: 'andrtestcons',
           name: 'createpollz',
@@ -211,7 +222,9 @@ export default function App() {
             answers: optionslist,
             totalvote: voteslist,
             community: "eyaltestcons",
-            creator: sessionresult.auth.actor
+            creator: sessionresult.auth.actor,
+            description: questiondescription,
+            uniqueurl: uniqueurl
           }
       }
 
@@ -260,6 +273,15 @@ export default function App() {
     }
   }
 
+  const getpollurl = (pollkey,uniqueurl) => {
+    const url = "https://pureconso.web.app/poll/"+pollkey+"/"+uniqueurl;
+    Swal.fire({
+      title: "<strong>Here's the link to the poll:</strong>",
+      html:
+        `<a target="_blank" href="${url}">${url}</a> `,
+
+    })
+  }
 
   const percentage = (sum, item) => {
     if(item == 0){
@@ -290,7 +312,7 @@ export default function App() {
 
   const getbalance = () => {
     if(databalance) {
-      return(Number(databalance.rows[0].balance[0].split(" ")))
+      return(Math.floor(Number(databalance.rows[0].balance.split(" ")[0])))
     }
   }
 
@@ -331,10 +353,11 @@ export default function App() {
       <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
         <MenuIcon />
       </IconButton>
-      <Typography variant="h6" style={{"color":"#2A3747"}} className={classes.title}>
+      <Typography variant="h6" style={{"color":"#2A3747", "text-decoration":"none"}} className={classes.title} component={Link} to={'/'}>
         Consortium
       </Typography>
       <Button color="inherit" onClick={handleShow}>Create poll</Button>
+      <Button color="inherit" component={Link} to={'/Leaderboard'}>Leaderboard</Button>
       {logbutton()}
     </Toolbar>
     </AppBar>
@@ -366,6 +389,13 @@ export default function App() {
         id="outlined-basic" variant="outlined"
          />
          <br />
+         <TextField
+         style={{"width":"100%", "margin":"7px"}}
+         label ={"Poll description"}
+         onChange={text => setQuestionDescription(text.target.value)}
+         id="outlined-basic" variant="outlined"
+          />
+          <br />
          <TextField
          style={{"width":"100%", "margin":"7px"}}
          label ={"First option"}
@@ -427,6 +457,12 @@ export default function App() {
         </Modal.Body>
     </Modal>
 
+    <div>
+    <Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px"}}>
+      <Tooltip title="Coming soon"><Button style={{"color":"gray"}}>Sort by <ArrowDropDownIcon /></Button></Tooltip>
+      </Card>
+    </div>
+
     </div>
       {data.rows.map((u, i) => {
         return (
@@ -434,10 +470,11 @@ export default function App() {
           <Card className={classes.root} style={{"margin-top":"7px", "padding":"10px", "padding-bottom":"20px"}}>
           <CardContent>
             <div style={{"margin-bottom":"10px", "color":"#697A90"}}><AccountCircle/>  {u.creator}</div>
-            <div style={{"color":"#2A3747"}} class="question">{u.question}</div>
+            <Button style={{"color":"#2A3747"}} class="question" target="_blank" component={Link} to={`/poll/${u.pollkey}/${u.uniqueurl}`}>{u.question}</Button>
+            <div style={{"color":"#2A3747"}}>{u.description}</div>
             <br />
             <a style={{"color":"#2A3747"}}>{polloptions(u.totalvote, u.answers, u.pollkey)}</a>
-            <div style={{"color":"#2A3747"}} class="pollstats"><Tooltip title="Total voters"><div><PeopleOutline /> {u.nrofvoters}</div></Tooltip></div>
+            <div style={{"color":"#2A3747"}} class="pollstats"><Tooltip title="Get poll url"><div style={{"float":"left"}}><FileCopyIcon onClick={() => getpollurl(u.pollkey,u.uniqueurl)}/></div></Tooltip> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}><AccountBalanceWalletIcon /> {u.sumofallopt}</div></Tooltip></div>
             </CardContent>
             </Card>
           </div>
