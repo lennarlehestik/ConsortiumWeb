@@ -111,7 +111,12 @@ export default function App() {
 
   const [votinglist, setVotingList] = useState(["",""]);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setVotingList(["",""]);
+    setQuestionSubmission("");
+    setQuestionDescription("")
+  }
   const handleShow = () => setShow(true);
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
@@ -150,7 +155,6 @@ export default function App() {
       return e.community == scope;
     });
     if(commdata[0]){
-    console.log(commdata)
     return(
       <Card className={classes.root} style={{"margin-bottom":"10px", "margin-top":"10px"}}>
       <CardMedia
@@ -257,8 +261,9 @@ export default function App() {
   /* ASK TO SIGN AND BROADCAST TO CHAIN */
   const createpoll = () => {
     if (sessionresult){
+      var answers = votinglist.filter(Boolean)
       var voteslist = [];
-      for (let i = 0; i < votinglist.length; i++) {
+      for (let i = 0; i < answers.length; i++) {
         voteslist.push(0)
       }
       const uniqueurl = Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 15)
@@ -268,7 +273,7 @@ export default function App() {
           authorization: [sessionresult.auth],
           data: {
             question: questionsubmission,
-            answers: votinglist,
+            answers: answers,
             totalvote: voteslist,
             community: scope,
             creator: sessionresult.auth.actor,
@@ -395,7 +400,6 @@ export default function App() {
 
   const votingfield = (text, i) => {
     votinglist[i] = text
-    console.log(votinglist)
   }
 
   const addvotingfield = () => {
@@ -448,6 +452,12 @@ export default function App() {
         onChange={text => setQuestionSubmission(text.target.value)}
         id="outlined-basic" variant="outlined"
          />
+         <TextField
+         style={{"width":"100%", "margin":"7px"}}
+         label ={"Poll description"}
+         onChange={text => setQuestionDescription(text.target.value)}
+         id="outlined-basic" variant="outlined"
+          />
          <br />
          {votinglist.map((u, i) => {
            return (
