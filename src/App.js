@@ -109,6 +109,8 @@ export default function App() {
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
 
+  const [votinglist, setVotingList] = useState(["",""]);
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleClose1 = () => setShow1(false);
@@ -255,24 +257,8 @@ export default function App() {
   /* ASK TO SIGN AND BROADCAST TO CHAIN */
   const createpoll = () => {
     if (sessionresult){
-      var optionslist = [];
       var voteslist = [];
-      if (option1submission !== "") {
-          optionslist.push(option1submission);
-      }
-      if (option2submission !== "") {
-          optionslist.push(option2submission);
-      }
-      if (option3submission !== "") {
-          optionslist.push(option3submission);
-      }
-      if (option4submission !== "") {
-          optionslist.push(option4submission);
-      }
-      if (option5submission !== "") {
-          optionslist.push(option5submission);
-      }
-      for (let i = 0; i < optionslist.length; i++) {
+      for (let i = 0; i < votinglist.length; i++) {
         voteslist.push(0)
       }
       const uniqueurl = Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 15)
@@ -282,7 +268,7 @@ export default function App() {
           authorization: [sessionresult.auth],
           data: {
             question: questionsubmission,
-            answers: optionslist,
+            answers: votinglist,
             totalvote: voteslist,
             community: scope,
             creator: sessionresult.auth.actor,
@@ -407,6 +393,17 @@ export default function App() {
   }
   }
 
+  const votingfield = (text, i) => {
+    votinglist[i] = text
+    console.log(votinglist)
+  }
+
+  const addvotingfield = () => {
+    if(votinglist.length < 5){
+    setVotingList([...votinglist,""])
+  }
+  }
+
   return (
     <div>
     <div class="desktopmenu">
@@ -452,49 +449,17 @@ export default function App() {
         id="outlined-basic" variant="outlined"
          />
          <br />
-         <TextField
-         style={{"width":"100%", "margin":"7px"}}
-         label ={"Poll description"}
-         onChange={text => setQuestionDescription(text.target.value)}
-         id="outlined-basic" variant="outlined"
-          />
-          <br />
-         <TextField
-         style={{"width":"100%", "margin":"7px"}}
-         label ={"First option"}
-         onChange={text => setOption1Submission(text.target.value)}
-         id="outlined-basic" variant="outlined"
-          />
-          <br />
-          <TextField
-          style={{"width":"100%", "margin":"7px"}}
-          label ={"Second option"}
-          onChange={text => setOption2Submission(text.target.value)}
-          id="outlined-basic" variant="outlined"
-           />
-           <br />
-           <TextField
-           style={{"width":"100%", "margin":"7px"}}
-           label ={"Third option"}
-           onChange={text => setOption3Submission(text.target.value)}
-           id="outlined-basic" variant="outlined"
-            />
-            <br />
-            <TextField
-            style={{"width":"100%", "margin":"7px"}}
-            label ={"Fourth option"}
-            onChange={text => setOption4Submission(text.target.value)}
-            id="outlined-basic" variant="outlined"
-             />
-             <br />
+         {votinglist.map((u, i) => {
+           return (
              <TextField
              style={{"width":"100%", "margin":"7px"}}
-             label ={"Fifth option"}
-             onChange={text => setOption5Submission(text.target.value)}
+             label ={"Option " + (i+1)}
+             onChange={text => votingfield(text.target.value, i)}
              id="outlined-basic" variant="outlined"
               />
-              <br />
-
+           )
+         })}
+         <Button onClick={() => addvotingfield()}>Add option</Button>
         <br />
         <Button
         onClick={() => createpoll()}
@@ -527,6 +492,7 @@ export default function App() {
     </div>
 
     </div>
+
       {data.rows.map((u, i) => {
         return (
           <div key={i}>
