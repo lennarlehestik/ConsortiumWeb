@@ -99,11 +99,6 @@ export default function App() {
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState("")
   const [questiondescription, setQuestionDescription] = useState("")
-  const [option1submission, setOption1Submission] = useState("")
-  const [option2submission, setOption2Submission] = useState("")
-  const [option3submission, setOption3Submission] = useState("")
-  const [option4submission, setOption4Submission] = useState("")
-  const [option5submission, setOption5Submission] = useState("")
   const [voteamount, setVoteAmount] = useState(1)
   const [sessionresult, setSessionResult] = useState("")
   const [show, setShow] = useState(false);
@@ -128,6 +123,15 @@ export default function App() {
 
   const location = useLocation();
   const scope = location.pathname.split('/')[2]
+
+  const filtermypolls = () => {
+    if(data.rows[0]){
+    var datatofilter = data.rows
+    var datafiltered = datatofilter.filter(a=>a.creator==sessionresult.auth.actor);
+    setData({"rows":datafiltered})
+    console.log(datafiltered)
+    }
+  }
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -156,7 +160,7 @@ export default function App() {
     });
     if(commdata[0]){
     return(
-      <Card className={classes.root} style={{"margin-bottom":"10px", "margin-top":"10px"}}>
+      <Card className={classes.root} style={{"marginBottom":"10px", "margin-top":"10px"}}>
       <CardMedia
         className={classes.media}
         image={commdata[0].backgroundurl}
@@ -352,7 +356,7 @@ export default function App() {
     return(
     Object.keys(votes).map(key =>
       <div class="polloption" onClick={() => votingmodal(key, pollkey)}>
-        <div class="answer"><a>{answers[key]}</a> <a style={{"float":"right", "font-size":"12px"}}>{percentage(votes,votes[key]).toFixed(0)}%</a></div>
+        <div class="answer"><a>{answers[key]}</a> <a style={{"float":"right", "fontSize":"12px"}}>{percentage(votes,votes[key]).toFixed(0)}%</a></div>
         <div class="progressbar"><div style={{"width":`${percentage(votes,votes[key]).toFixed(0)}%`}}/></div>
       </div>
     )
@@ -486,7 +490,7 @@ export default function App() {
           min={1}
           max={getbalance()}
           onChange={ (e, val) => setVoteAmount(val)}
-          style={{"margin-bottom":"10px", "margin-top":"10px", "color":"#485A70"}}
+          style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
         />
         <br />
         <center><a>You're voting with: {voteamount} EOS tokens.</a></center>
@@ -498,7 +502,7 @@ export default function App() {
     <div>
 
       {topcard()}
-      {/**<Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px"}}><Tooltip title="Coming soon"><Button style={{"color":"gray"}}>Sort by <ArrowDropDownIcon /></Button></Tooltip></Card>**/}
+      <Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px", "padding":"5px"}}><Button style={{"color":"gray"}} onClick = {() => filtermypolls()}>My polls</Button></Card>
     </div>
 
     </div>
@@ -522,8 +526,9 @@ export default function App() {
             title={u.creator}
             subheader="Community Member"
           />
-          <CardContent style={{"padding-top":"0px"}}>
-            {/**<div style={{"margin-bottom":"10px", "color":"#697A90"}}><AccountCircle/>  {u.creator}</div>**/}
+
+          <CardContent style={{"paddingTop":"0px"}}>
+            {/**<div style={{"marginBottom":"10px", "color":"#697A90"}}><AccountCircle/>  {u.creator}</div>**/}
             <Button style={{"color":"#2A3747"}} class="question" target="_blank" component={Link} to={`/poll/${u.pollkey}/${u.uniqueurl}/${scope}`}>{u.question}</Button>
             <div style={{"color":"#2A3747"}}>{u.description}</div>
             <br />
