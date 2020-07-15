@@ -239,7 +239,7 @@ export default function App() {
       style={{ width: "100%"}}
       renderInput={(params) => <TextField {...params} label="Community name" variant="outlined" style={{backgroundColor:"white"}}/>}
     />
-    <Button target="_blank" href={`${window.location}community/${searchvalue}`} variant="outlined" style={{"margin-left":"5px", backgroundColor:"white" }}>Search</Button>
+    <Button href={`${window.location}community/${searchvalue}`} variant="outlined" style={{"margin-left":"5px", backgroundColor:"white" }}>Search</Button>
     </div>
       <div class="parent">
       {data.rows.map((u, i) => {
@@ -261,7 +261,7 @@ export default function App() {
         subheader="An EOS dapp."
       />
 
-      <a target="_blank" href={`${window.location}community/${u.community}`}>
+      <a href={`${window.location}community/${u.community}`}>
       <CardMedia
         className={classes.media}
         image={u.backgroundurl}

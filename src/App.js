@@ -166,12 +166,15 @@ export default function App() {
         image={commdata[0].backgroundurl}
         title="Community image"
       />
-      <CardContent>
+      <CardContent style={{"padding-bottom":"5px", "margin-right":"20px"}}>
+      <Typography style={{"fontSize":"18px"}}>
+      {commdata[0].communityname}
+      </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
           {commdata[0].description}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing style={{"float":"right", color:"#485A70"}}>
+      <CardActions disableSpacing style={{"justifyContent":"right", color:"#485A70", "margin-right":"20px", "margin-bottom":"10px"}}>
       <Tooltip title="Total tokens used for voting"><AccountBalanceWalletIcon /></Tooltip> &nbsp;{commdata[0].totaltokensvoted} &nbsp;<Tooltip title="Total voters"><PeopleOutline /></Tooltip>&nbsp;{commdata[0].totalvoters}
       </CardActions>
     </Card>
@@ -502,7 +505,7 @@ export default function App() {
     <div>
 
       {topcard()}
-      <Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px", "padding":"5px"}}><Button style={{"color":"gray"}} onClick = {() => filtermypolls()}>My polls</Button></Card>
+      <Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px", "padding":"5px"}}><Button style={{"color":"gray"}} onClick = {() => filtermypolls()}>My polls</Button><Button style={{"color":"gray"}} onClick = {() => window.location.reload(false)}>Top polls</Button></Card>
     </div>
 
     </div>
