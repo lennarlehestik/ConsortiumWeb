@@ -12,7 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import PeopleOutline from '@material-ui/icons/PeopleOutline'
 import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,7 +23,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {Link} from "react-router-dom";
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useLocation } from 'react-router-dom'
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActions from '@material-ui/core/CardActions';
@@ -95,7 +93,6 @@ export default function App() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
   const [communitydata, setCommunityData] = useState({"rows":[]});
-  const [scopedcommunitydata, setScopedCommunityData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState("")
   const [questiondescription, setQuestionDescription] = useState("")
@@ -531,7 +528,6 @@ export default function App() {
           />
 
           <CardContent style={{"paddingTop":"0px"}}>
-            {/**<div style={{"marginBottom":"10px", "color":"#697A90"}}><AccountCircle/>  {u.creator}</div>**/}
             <Button style={{"color":"#2A3747"}} class="question" target="_blank" component={Link} to={`/poll/${u.pollkey}/${u.uniqueurl}/${scope}`}>{u.question}</Button>
             <div style={{"color":"#2A3747"}}>{u.description}</div>
             <br />

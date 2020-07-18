@@ -10,11 +10,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Fab from '@material-ui/core/Fab';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import PeopleOutline from '@material-ui/icons/PeopleOutline'
-import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
@@ -92,7 +90,7 @@ export default function App() {
   const [show1, setShow1] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
   const [votekey, setVoteKey] = useState()
@@ -214,54 +212,7 @@ export default function App() {
 
 
   /* ASK TO SIGN AND BROADCAST TO CHAIN */
-  const createpoll = () => {
-    if (sessionresult){
-      var optionslist = [];
-      var voteslist = [];
-      if (option1submission !== "") {
-          optionslist.push(option1submission);
-      }
-      if (option2submission !== "") {
-          optionslist.push(option2submission);
-      }
-      if (option3submission !== "") {
-          optionslist.push(option3submission);
-      }
-      if (option4submission !== "") {
-          optionslist.push(option4submission);
-      }
-      if (option5submission !== "") {
-          optionslist.push(option5submission);
-      }
-      for (let i = 0; i < optionslist.length; i++) {
-        voteslist.push(0)
-      }
-      const action = {
-          account: 'andrtestcons',
-          name: 'createpollz',
-          authorization: [sessionresult.auth],
-          data: {
-            question: questionsubmission,
-            answers: optionslist,
-            totalvote: voteslist,
-            community: "eyaltestcons",
-            creator: sessionresult.auth.actor
-          }
-      }
 
-      link.transact({action}).then(() => window.location.reload(false))
-    }
-    else{
-      Swal.fire({
-        title: '<strong>Please log in with Anchor</strong>',
-        icon: 'info',
-        html:
-          'You can get the Anchor wallet ' +
-          '<a target="_blank" href="https://greymass.com/anchor/">here.</a> ',
-
-      })
-    }
-  }
 
 
   const vote = (option, pollkey) => {

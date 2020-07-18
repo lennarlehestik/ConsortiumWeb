@@ -6,7 +6,7 @@ import Poll from './Poll';
 import Leaderboard from './Leaderboard';
 import Frontpage from './Frontpage';
 import * as serviceWorker from './serviceWorker';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
+import { Route, BrowserRouter as Router } from 'react-router-dom'
 
 const routing = (
   <Router>

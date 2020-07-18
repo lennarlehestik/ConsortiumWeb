@@ -12,17 +12,10 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import PeopleOutline from '@material-ui/icons/PeopleOutline'
 import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Swal from 'sweetalert2'
-import Tooltip from '@material-ui/core/Tooltip';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -272,31 +265,6 @@ export default function App() {
     }
   }
 
-  const getpollurl = (pollkey,uniqueurl) => {
-    const url = "https://pureconso.web.app/"+pollkey+"/"+uniqueurl;
-    Swal.fire({
-      title: "<strong>Here's the link to the poll:</strong>",
-      icon: 'info',
-      html:
-        `<a target="_blank" href="${url}">${url}</a> `,
-
-    })
-  }
-
-  const percentage = (sum, item) => {
-    if(item == 0){
-      return 0
-    }
-    else{
-      return(item / sum.reduce((a, b) => a + b, 0)*100)
-    }
-  }
-
-  const votingmodal = (key, pollkey) => {
-    setVoteKey(key)
-    setVotePollKey(pollkey)
-    handleShow1()
-  }
 
   const getbalance = () => {
     if(databalance) {
@@ -366,85 +334,7 @@ export default function App() {
     </div>
 
     <div class="app">
-    <div>
-    <Modal show={show} onHide={handleClose} centered>
-        <Modal.Body>
-        <TextField
-        style={{"width":"100%", "margin":"7px"}}
-        label ={"Poll question"}
-        onChange={text => setQuestionSubmission(text.target.value)}
-        id="outlined-basic" variant="outlined"
-         />
-         <br />
-         <TextField
-         style={{"width":"100%", "margin":"7px"}}
-         label ={"Poll description"}
-         onChange={text => setQuestionDescription(text.target.value)}
-         id="outlined-basic" variant="outlined"
-          />
-          <br />
-         <TextField
-         style={{"width":"100%", "margin":"7px"}}
-         label ={"First option"}
-         onChange={text => setOption1Submission(text.target.value)}
-         id="outlined-basic" variant="outlined"
-          />
-          <br />
-          <TextField
-          style={{"width":"100%", "margin":"7px"}}
-          label ={"Second option"}
-          onChange={text => setOption2Submission(text.target.value)}
-          id="outlined-basic" variant="outlined"
-           />
-           <br />
-           <TextField
-           style={{"width":"100%", "margin":"7px"}}
-           label ={"Third option"}
-           onChange={text => setOption3Submission(text.target.value)}
-           id="outlined-basic" variant="outlined"
-            />
-            <br />
-            <TextField
-            style={{"width":"100%", "margin":"7px"}}
-            label ={"Fourth option"}
-            onChange={text => setOption4Submission(text.target.value)}
-            id="outlined-basic" variant="outlined"
-             />
-             <br />
-             <TextField
-             style={{"width":"100%", "margin":"7px"}}
-             label ={"Fifth option"}
-             onChange={text => setOption5Submission(text.target.value)}
-             id="outlined-basic" variant="outlined"
-              />
-              <br />
 
-        <br />
-        <Button
-        onClick={() => createpoll()}
-        >Create poll</Button>
-        </Modal.Body>
-    </Modal>
-
-    <Modal show={show1} onHide={handleClose1} centered>
-        <Modal.Body style={{"padding":"20px"}}>
-        <Slider
-          defaultValue={voteamount}
-          valueLabelDisplay="auto"
-          step={1}
-          min={1}
-          max={getbalance()}
-          onChange={ (e, val) => setVoteAmount(val)}
-          style={{"margin-bottom":"10px", "margin-top":"10px", "color":"#485A70"}}
-        />
-        <br />
-        <center><a>You're voting with: {voteamount} EOS tokens.</a></center>
-        <br/>
-        <Button style={{"width":"100%"}} onClick={() => vote(votekey, votepollkey)}>Vote</Button>
-        </Modal.Body>
-    </Modal>
-
-    </div>
     <TableContainer component={Paper} style={{"margin-top":"10px"}}>
   <Table className={classes.table} size="small" aria-label="a dense table">
     <TableHead>

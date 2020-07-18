@@ -3,37 +3,21 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AnchorLink from 'anchor-link'
 import AnchorLinkBrowserTransport from 'anchor-link-browser-transport'
-import { Modal } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
-import Slider from '@material-ui/core/Slider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Fab from '@material-ui/core/Fab';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import PeopleOutline from '@material-ui/icons/PeopleOutline'
-import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Swal from 'sweetalert2'
-import Tooltip from '@material-ui/core/Tooltip';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {Link} from "react-router-dom";
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Avatar from '@material-ui/core/Avatar';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardActions from '@material-ui/core/CardActions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
@@ -92,26 +76,9 @@ const useStyles = makeStyles((theme) => ({
 export default function App() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
-  const [databalance, setDataBalance] = useState();
-  const [questionsubmission, setQuestionSubmission] = useState("")
-  const [questiondescription, setQuestionDescription] = useState("")
-  const [option1submission, setOption1Submission] = useState("")
-  const [option2submission, setOption2Submission] = useState("")
-  const [option3submission, setOption3Submission] = useState("")
-  const [option4submission, setOption4Submission] = useState("")
-  const [option5submission, setOption5Submission] = useState("")
-  const [voteamount, setVoteAmount] = useState(1)
   const [sessionresult, setSessionResult] = useState("")
   const [searchvalue, setSearch] = useState()
-  const [show, setShow] = useState(false);
-  const [show1, setShow1] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const handleClose1 = () => setShow1(false);
-  const handleShow1 = () => setShow1(true);
-  const [votekey, setVoteKey] = useState()
-  const [votepollkey, setVotePollKey] = useState()
   const AppBarOffset = () => {
     return <div className={classes.offset} />;
   }
