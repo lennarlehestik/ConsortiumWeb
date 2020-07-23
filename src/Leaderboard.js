@@ -121,8 +121,6 @@ export default function App() {
   data.rows.sort((a, b) => (a.rewardsreceived < b.rewardsreceived) ? 1 : -1)
   }
 
-  console.log(data)
-
 
   useEffect(() => {
     if(sessionresult){
@@ -181,89 +179,7 @@ export default function App() {
 
 
 
-  /* ASK TO SIGN AND BROADCAST TO CHAIN */
-  const createpoll = () => {
-    if (sessionresult){
-      var optionslist = [];
-      var voteslist = [];
-      if (option1submission !== "") {
-          optionslist.push(option1submission);
-      }
-      if (option2submission !== "") {
-          optionslist.push(option2submission);
-      }
-      if (option3submission !== "") {
-          optionslist.push(option3submission);
-      }
-      if (option4submission !== "") {
-          optionslist.push(option4submission);
-      }
-      if (option5submission !== "") {
-          optionslist.push(option5submission);
-      }
-      for (let i = 0; i < optionslist.length; i++) {
-        voteslist.push(0)
-      }
-      const uniqueurl = Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 15)
-      const action = {
-          account: 'andrtestcons',
-          name: 'createpollz',
-          authorization: [sessionresult.auth],
-          data: {
-            question: questionsubmission,
-            answers: optionslist,
-            totalvote: voteslist,
-            community: "eyaltestcons",
-            creator: sessionresult.auth.actor,
-            description: questiondescription,
-            uniqueurl: uniqueurl
-          }
-      }
 
-      link.transact({action}).then(() => window.location.reload(false))
-    }
-    else{
-      Swal.fire({
-        title: '<strong>Please log in with Anchor</strong>',
-        icon: 'info',
-        html:
-          'You can get the Anchor wallet ' +
-          '<a target="_blank" href="https://greymass.com/anchor/">here.</a> ',
-
-      })
-    }
-  }
-
-
-  const vote = (option, pollkey) => {
-    if (sessionresult){
-    const optionnumber = Number(option) + 1
-    const amount = Number(voteamount)
-    const action = {
-        account: 'andrtestcons',
-        name: 'votez',
-        authorization: [sessionresult.auth],
-        data: {
-          usersvote: amount,
-          pollkey:pollkey,
-          option:optionnumber,
-          community: 'eyaltestcons',
-          voter: sessionresult.auth.actor
-        }
-    }
-    link.transact({action}).then(() => window.location.reload(false))
-    }
-    else{
-      Swal.fire({
-        title: '<strong>Please log in with Anchor</strong>',
-        icon: 'info',
-        html:
-          'You can get the Anchor wallet ' +
-          '<a target="_blank" href="https://greymass.com/anchor/">here.</a> ',
-
-      })
-    }
-  }
 
 
   const getbalance = () => {
@@ -312,7 +228,6 @@ export default function App() {
       <Typography variant="h6" style={{"color":"#2A3747","text-decoration":"none"}} className={classes.title} component={Link} to={'/'}>
         Consortium
       </Typography>
-      <Button color="inherit" onClick={handleShow}>Create poll</Button>
       {logbutton()}
     </Toolbar>
     </AppBar>

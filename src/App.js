@@ -92,6 +92,7 @@ function sortBySum(a, b) {
 export default function App() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
+  const [stakedata, setStakeData] = useState({"rows":[]});
   const [communitydata, setCommunityData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState("")
@@ -100,6 +101,7 @@ export default function App() {
   const [sessionresult, setSessionResult] = useState("")
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
 
   const [votinglist, setVotingList] = useState(["",""]);
 
@@ -112,6 +114,8 @@ export default function App() {
   const handleShow = () => setShow(true);
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
+  const handleClose2 = () => setShow2(false);
+  const handleShow2 = () => setShow2(true);
   const [votekey, setVoteKey] = useState()
   const [votepollkey, setVotePollKey] = useState()
   const AppBarOffset = () => {
@@ -140,7 +144,7 @@ export default function App() {
       body: JSON.stringify({
         json: true,
         code: 'andrtestcons',
-        table: 'commped',
+        table: 'community',
         scope: 'andrtestcons',
         limit: 50,
     })
@@ -170,6 +174,9 @@ export default function App() {
         <Typography variant="body2" color="textSecondary" component="p">
           {commdata[0].description}
         </Typography>
+        <Typography variant="body2" color="textSecondary" component="p">
+          <Button onClick={handleShow2}>Stake</Button>
+        </Typography>
       </CardContent>
       <CardActions disableSpacing style={{"justifyContent":"right", color:"#485A70", "margin-right":"20px", "margin-bottom":"10px"}}>
       <Tooltip title="Total tokens used for voting"><AccountBalanceWalletIcon /></Tooltip> &nbsp;{commdata[0].totaltokensvoted} &nbsp;<Tooltip title="Total voters"><PeopleOutline /></Tooltip>&nbsp;{commdata[0].totalvoters}
@@ -179,6 +186,11 @@ export default function App() {
   }
   }
 
+  const stake = () => {
+    if(stakedata.rows[0]){
+      return(<a>{stakedata.rows[0].totalstaked}</a>)
+    }
+  }
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -226,6 +238,44 @@ export default function App() {
 
       }
   }, databalance);
+
+ const getstake = () => {
+   if(!stakedata.rows[0] & sessionresult) {
+   fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+     method: 'POST',
+     headers: {
+       Accept: 'application/json',
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify({
+       json: true,
+       code: 'andrtestcons',
+       table: 'indtotalstkh',
+       scope: 'andrtestcons',
+       key_type: 'name',
+       index_position: 1,
+       lower_bound: sessionresult.auth.actor,
+       upper_bound: sessionresult.auth.actor,
+       limit: 50,
+   })
+   })
+   .then(response =>
+       response.json().then(data => setStakeData(data))
+   )
+ }
+ }
+
+//DISPLAY STAKE DATA
+  const displaystake = () => {
+    if(stakedata.rows[0]) {
+      return(<a>{stakedata.rows[0].totalstaked}</a>)
+    }
+  }
+
+
+  if(data.rows[0]){
+  data.rows.sort((a, b) => (a.rewardsreceived < b.rewardsreceived) ? 1 : -1)
+  }
 
 
   data.rows.sort(sortBySum);
@@ -496,6 +546,13 @@ export default function App() {
         <center><a>You're voting with: {voteamount} EOS tokens.</a></center>
         <br/>
         <Button style={{"width":"100%"}} onClick={() => vote(votekey, votepollkey)}>Vote</Button>
+        </Modal.Body>
+    </Modal>
+
+    <Modal show={show2} onHide={handleClose2} centered>
+        <Modal.Body style={{"padding":"20px"}}>
+        {getstake()}
+        <a>{displaystake()}</a>
         </Modal.Body>
     </Modal>
 
