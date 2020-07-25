@@ -94,7 +94,7 @@ export default function App() {
       body: JSON.stringify({
         json: true,
         code: 'andrtestcons',
-        table: 'commped',
+        table: 'commdata',
         scope: 'andrtestcons',
         limit: 50,
     })

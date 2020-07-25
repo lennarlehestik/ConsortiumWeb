@@ -92,10 +92,13 @@ function sortBySum(a, b) {
 export default function App() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
-  const [stakedata, setStakeData] = useState({"rows":[]});
+  const [votedata, setVoteData] = useState({"rows":[]});
   const [communitydata, setCommunityData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState("")
+  const [dailyvoted, setDailyVoted] = useState({"rows":[]})
+  const [maxstake, setMaxStake] = useState({"rows":[]})
+  const [stakingbalance, setStakingBalance] = useState({"rows":[]})
   const [questiondescription, setQuestionDescription] = useState("")
   const [voteamount, setVoteAmount] = useState(1)
   const [sessionresult, setSessionResult] = useState("")
@@ -144,7 +147,7 @@ export default function App() {
       body: JSON.stringify({
         json: true,
         code: 'andrtestcons',
-        table: 'community',
+        table: 'commdata',
         scope: 'andrtestcons',
         limit: 50,
     })
@@ -187,8 +190,8 @@ export default function App() {
   }
 
   const stake = () => {
-    if(stakedata.rows[0]){
-      return(<a>{stakedata.rows[0].totalstaked}</a>)
+    if(votedata.rows[0]){
+      return(<a>{votedata.rows[0].totalstaked}</a>)
     }
   }
 
@@ -202,7 +205,7 @@ export default function App() {
       body: JSON.stringify({
         json: true,
         code: 'andrtestcons',
-        table: 'pollud',
+        table: 'allpolls',
         scope: scope,
         limit: 50,
         table_key: 'pollkey',
@@ -235,12 +238,87 @@ export default function App() {
       .then(response =>
           response.json().then(databalance => setDataBalance(databalance))
       )
-
+      .then(getvote())
+      .then(getdailyvoted())
+      .then(getstake())
       }
   }, databalance);
 
- const getstake = () => {
-   if(!stakedata.rows[0] & sessionresult) {
+ const getdailyvoted = () => {
+      fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          json: true,
+          code: 'andrtestcons',
+          table:  'voterstatzaa',
+          scope: scope,
+          key_type: 'name',
+          index_position: 1,
+          lower_bound: sessionresult.auth.actor,
+
+
+      })
+      })
+      .then(response =>
+          response.json().then(dailyvoted => setDailyVoted(dailyvoted))
+      )
+
+
+}
+
+const getstake = () => {
+  fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+            json: true,
+            code: 'andrtestcons',
+            table: 'accounts',
+            scope: sessionresult.auth.actor,
+
+  })
+  })
+  .then(response =>
+      response.json().then(data => setStakingBalance(data))
+  )
+  fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+            json: true,
+            code: 'andrtestcons',
+            table:  'indtotalstkh',
+            scope: 'andrtestcons',
+            key_type: 'name',
+            index_position: 1,
+            lower_bound: 'consortiumte', //CHANGE THIS!!!!!!!!!!!!!!!!!!!!!
+  })
+  })
+  .then(response =>
+      response.json().then(data => setMaxStake(data))
+    )
+}
+
+//DISPLAY STAKE DATA
+  const displaystake = () => {
+    if(maxstake.rows[0] && stakingbalance.rows[0]) {
+      return(<a>{maxstake.rows[0].totalstaked}{stakingbalance.rows[0].balance}</a>)
+    }
+  }
+
+
+ const getvote = () => {
+   if(!votedata.rows[0] && scope=="viggtestcons") {
    fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
      method: 'POST',
      headers: {
@@ -250,27 +328,37 @@ export default function App() {
      body: JSON.stringify({
        json: true,
        code: 'andrtestcons',
-       table: 'indtotalstkh',
-       scope: 'andrtestcons',
-       key_type: 'name',
-       index_position: 1,
-       lower_bound: sessionresult.auth.actor,
-       upper_bound: sessionresult.auth.actor,
-       limit: 50,
+       table: 'accounts',
+       scope: sessionresult.auth.actor,
+
    })
    })
    .then(response =>
-       response.json().then(data => setStakeData(data))
+       response.json().then(data => setVoteData(data))
    )
- }
- }
-
-//DISPLAY STAKE DATA
-  const displaystake = () => {
-    if(stakedata.rows[0]) {
-      return(<a>{stakedata.rows[0].totalstaked}</a>)
-    }
   }
+   if(!votedata.rows[0] && scope=="eosstestcons") {
+   fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+     method: 'POST',
+     headers: {
+       Accept: 'application/json',
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify({
+       json: true,
+       code: 'andrtestcons',
+       table: 'accounts',
+       scope: sessionresult.auth.actor,
+
+   })
+   })
+   .then(response =>
+       response.json().then(data => setVoteData(data))
+   )
+  }
+}
+
+
 
 
   if(data.rows[0]){
@@ -419,9 +507,14 @@ export default function App() {
   }
 
   const getbalance = () => {
-    if(databalance) {
-      return(Math.floor(Number(databalance.rows[0].balance.split(" ")[0])))
+    if(votedata.rows[0]) {
+      var balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]))
     }
+    if(dailyvoted.rows[0]) {
+      var daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted))
+    }
+    const bal = balance - daily
+    return(bal)
   }
 
   const logbutton = () =>{
@@ -551,7 +644,6 @@ export default function App() {
 
     <Modal show={show2} onHide={handleClose2} centered>
         <Modal.Body style={{"padding":"20px"}}>
-        {getstake()}
         <a>{displaystake()}</a>
         </Modal.Body>
     </Modal>
