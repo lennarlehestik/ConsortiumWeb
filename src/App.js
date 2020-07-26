@@ -433,7 +433,7 @@ const getstake = () => {
           authorization: [sessionresult.auth],
           data: {
             question: questionsubmission,
-            answers: optionslist,
+            answers: voteslist,
             totalvote: voteslist,
             community: scope,
             creator: sessionresult.auth.actor,
