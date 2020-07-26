@@ -106,7 +106,7 @@ export default function App() {
       body: JSON.stringify({
         json: true,
         code: 'andrtestcons',
-        table: 'chosenones',
+        table: 'parimad',
         scope: 'eyaltestcons',
         limit: 50,
     })

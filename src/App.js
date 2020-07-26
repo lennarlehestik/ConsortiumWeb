@@ -89,6 +89,23 @@ function sortBySum(a, b) {
   return sumArray(b.totalvote) - sumArray(a.totalvote);
 }
 
+
+
+
+function makeid() {
+  var result = '';
+  var characters = 'abcdefghijklmnopqrstuvwxyz1234';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < 12; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+ 
+return result;
+     
+
+  document.getElementById("eos").textContent= result;
+}
+
 export default function App() {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
@@ -205,7 +222,7 @@ export default function App() {
       body: JSON.stringify({
         json: true,
         code: 'andrtestcons',
-        table: 'allpolls',
+        table: 'kysimused',
         scope: scope,
         limit: 50,
         table_key: 'pollkey',
@@ -254,7 +271,7 @@ export default function App() {
         body: JSON.stringify({
           json: true,
           code: 'andrtestcons',
-          table:  'voterstatzaa',
+          table:  'voterstatzo',
           scope: scope,
           key_type: 'name',
           index_position: 1,
@@ -409,18 +426,20 @@ const getstake = () => {
         voteslist.push(0)
       }
       const uniqueurl = Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 15)
+      const uniquename = makeid()
       const action = {
           account: 'andrtestcons',
           name: 'createpollz',
           authorization: [sessionresult.auth],
           data: {
             question: questionsubmission,
-            answers: answers,
+            answers: optionslist,
             totalvote: voteslist,
             community: scope,
             creator: sessionresult.auth.actor,
             description: questiondescription,
-            uniqueurl: uniqueurl
+            uniqueurl: uniqueurl,
+            schedname: uniquename,
           }
       }
 
@@ -443,6 +462,7 @@ const getstake = () => {
     if (sessionresult){
     const optionnumber = Number(option) + 1
     const amount = Number(voteamount)
+    const uniquename = makeid()
     const action = {
         account: 'andrtestcons',
         name: 'votez',
@@ -452,7 +472,9 @@ const getstake = () => {
           pollkey:pollkey,
           option:optionnumber,
           community: scope,
-          voter: sessionresult.auth.actor
+          voter: sessionresult.auth.actor,
+          schedname: uniquename,
+
         }
     }
     link.transact({action}).then(() => window.location.reload(false))
