@@ -29,6 +29,7 @@ import CardActions from '@material-ui/core/CardActions';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
+import moment from 'moment';
 
 //STYLES FOR EVERYTHING
 const useStyles = makeStyles((theme) => ({
@@ -115,10 +116,12 @@ export default function App() {
   const [questionsubmission, setQuestionSubmission] = useState("")
   const [dailyvoted, setDailyVoted] = useState({"rows":[]})
   const [maxstake, setMaxStake] = useState({"rows":[]})
+  const [mystake, setMyStake] = useState({"rows":[]})
   const [stakingbalance, setStakingBalance] = useState({"rows":[]})
   const [questiondescription, setQuestionDescription] = useState("")
   const [voteamount, setVoteAmount] = useState(1)
   const [stakeamount, setStakeAmount] = useState(1)
+  const [unstakeamount, setUnStakeAmount] = useState(1)
   const [sessionresult, setSessionResult] = useState("")
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
@@ -176,7 +179,7 @@ export default function App() {
     .then(restoreSession())
   }, communitydata["rows"]);
 
-  const topcard = () => {
+  const topcard = () => { //CONTENTS OF THE CARD ON TOP OF THE COMMUNITY PAGE
     var commdata = communitydata.rows.filter(function(e) {
       return e.community == scope;
     });
@@ -195,13 +198,15 @@ export default function App() {
         <Typography variant="body2" color="textSecondary" component="p">
           {commdata[0].description}
         </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          <Button onClick={handleShow2}>Stake</Button>
-        </Typography>
       </CardContent>
-      <CardActions disableSpacing style={{"justifyContent":"right", color:"#485A70", "margin-right":"20px", "margin-bottom":"10px"}}>
+      <div style={{color:"#485A70", "margin-right":"20px", "margin-left":"7px"}}>
+      <Typography variant="body2" color="textSecondary" component="p" style={{"float":"left"}}>
+        <Button onClick={handleShow2}>Stake</Button>
+      </Typography>
+      <div style={{"float":"right"}}>
       <Tooltip title="Total tokens used for voting"><AccountBalanceWalletIcon /></Tooltip> &nbsp;{commdata[0].totaltokensvoted} &nbsp;<Tooltip title="Total voters"><PeopleOutline /></Tooltip>&nbsp;{commdata[0].totalvoters}
-      </CardActions>
+      </div>
+      </div>
     </Card>
     )
   }
@@ -288,7 +293,7 @@ export default function App() {
 
 }
 
-const getstake = () => {
+const getstake = () => { //DOES ALL THE FETCHING FOR THE STAKE MODAL
   fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
     method: 'POST',
     headers: {
@@ -319,11 +324,31 @@ const getstake = () => {
             scope: 'andrtestcons',
             key_type: 'name',
             index_position: 1,
-            lower_bound: 'consortiumte', //CHANGE THIS!!!!!!!!!!!!!!!!!!!!!
+            lower_bound: sessionresult.auth.actor, //CHANGE THIS!!!!!!!!!!!!!!!!!!!!!
   })
   })
   .then(response =>
       response.json().then(data => setMaxStake(data))
+    )
+    fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+              json: true,
+              code: 'andrtestcons',
+              table:  'indtotalstkh',
+              scope: 'andrtestcons',
+              key_type: 'name',
+              index_position: 1,
+              lower_bound: sessionresult.auth.actor,
+              upper_bound: sessionresult.auth.actor,
+    })
+    })
+    .then(response =>
+        response.json().then(data => setMyStake(data))
     )
 }
 
@@ -335,18 +360,38 @@ const getmaxstake = () => {
     return 0;
   }
 }
-//DISPLAY STAKE DATA
+
+const getmystake = () => {
+  if(mystake.rows[0]){
+    return Math.floor(Number(mystake.rows[0].totalstaked.split(" ")[0]));
+  }
+  else {
+    return 0;
+  }
+}
+
+function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
+  const { children, open, value } = props;
+
+  return (
+    <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
+      {children}
+    </Tooltip>
+  );
+}
+
+//CONTENTS OF THE STAKE MODAL
   const displaystake = () => {
     if(stakingbalance.rows[0]) {
-      console.log(getmaxstake())
       const maxstakevalue = Math.floor(Number(stakingbalance.rows[0].balance.split(" ")[0])) - getmaxstake()
       return(
         <div>
         <Slider
           defaultValue={voteamount}
-          valueLabelDisplay="auto"
+          ValueLabelComponent={ValueLabelComponent}
+          aria-label="custom thumb label"
           step={1}
-          min={1}
+          min={0}
           max={maxstakevalue}
           onChange={ (e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
           style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
@@ -354,12 +399,26 @@ const getmaxstake = () => {
         <a>You can stake with: {maxstakevalue}</a> <br/>
         <a>You are staking with: {stakeamount}</a> <br/>
         <Button onClick={() => stakeaction()}>Stake</Button>
+        <hr/>
+        <Slider
+          defaultValue={voteamount}
+          ValueLabelComponent={ValueLabelComponent}
+          aria-label="custom thumb label"
+          step={1}
+          min={0}
+          max={getmystake()}
+          onChange={ (e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
+          style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
+        />
+        <a>You have staked: {getmystake()}</a> <br/>
+        <a>You are unstaking: {unstakeamount}</a> <br/>
+        <Button onClick={() => unstakeaction()}>Unstake</Button>
         </div>
       )
     }
   }
 
-  const stakeaction = () => {
+  const stakeaction = () => { // CALL THIS IF YOU WANT TO STAKE
     if (sessionresult){
     const action = {
           account: 'andrtestcons',
@@ -376,11 +435,30 @@ const getmaxstake = () => {
   }
   }
 
+  const unstakeaction = () => { // CALL THIS IF YOU WANT TO UNSTAKE
+    console.log(mystake)
+    if (sessionresult){
+      const action = {
+                account: 'andrtestcons',
+                name: 'unstkfromcom',
+                authorization: [sessionresult.auth],
+                data: {
+
+                  staker: sessionresult.auth.actor,
+                  community: scope,
+                  quantity: parseFloat(unstakeamount).toFixed(4) + " GOVRN"
+
+                }
+        }
+    link.transact({action}).then(() => window.location.reload(false))
+  }
+  }
 
 
 
- const getvote = () => {
-   if(!votedata.rows[0] && scope=="viggtestcons") {
+
+ const getvote = () => { //READS YOUR TOKEN BALANCE FOR VOTING
+   if(!votedata.rows[0] && scope=="viggtestcons") { //IF WE ARE ON VIGOR PAGE, DO THE FOLLOWING FETCH
    fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
      method: 'POST',
      headers: {
@@ -399,7 +477,7 @@ const getmaxstake = () => {
        response.json().then(data => setVoteData(data))
    )
   }
-   if(!votedata.rows[0] && scope=="eosstestcons") {
+   if(!votedata.rows[0] && scope=="eosstestcons") { //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
    fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
      method: 'POST',
      headers: {
@@ -450,14 +528,14 @@ const getmaxstake = () => {
   const login = () => {
     link.login(identifier).then((result) => {
         session = result.session
-        setSessionResult(session)
-        window.location.reload(false)
+        setSessionResult(session) //PUT THE ACCOUNT IN STATE
+        window.location.reload(false) //RELOAD THE PAGE
     })
   }
 
-    // logout and remove session from storage
+
     const logout = () => {
-        setSessionResult()
+        setSessionResult() //REMOVES SESSIONRESULT FROM STORAGE, THEREFORE LOGGING YOU OUT.
     }
 
 
@@ -478,7 +556,7 @@ const getmaxstake = () => {
           authorization: [sessionresult.auth],
           data: {
             question: questionsubmission,
-            answers: voteslist,
+            answers: votinglist,
             totalvote: voteslist,
             community: scope,
             creator: sessionresult.auth.actor,
@@ -585,7 +663,7 @@ const getmaxstake = () => {
   }
 
   const logbutton = () =>{
-    if(sessionresult){
+    if(sessionresult){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
       return(
         <div>
         <Button
@@ -596,7 +674,7 @@ const getmaxstake = () => {
         </div>
       )
       }
-      else{
+      else{ //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
         return(
           <Button
           color="inherit"
@@ -616,10 +694,15 @@ const getmaxstake = () => {
     votinglist[i] = text
   }
 
-  const addvotingfield = () => {
-    if(votinglist.length < 5){
-    setVotingList([...votinglist,""])
+  const addvotingfield = () => { // FUNCTION THAT GETS CALLED WHEN YOU ADD ANOTHER POLL OPTION FIELD
+    if(votinglist.length < 5){ //IF WE HAVE LESS THAN 5 POLL OPTIONS
+    setVotingList([...votinglist,""]) //ADD ANOTHER POLL OPTION TO THE END OF THE ARRAY
   }
+  }
+
+  const gettimediff = (creationdate) => { //PASS IN THE POLL CREATION TIMESTAMP FROM THE TABLE
+    const curr = new Date().getTime() //GET CURRENT TIME
+    return moment(curr).to(moment(creationdate + 'Z')) //FIND THE DIFFERENCE BETWEEN THE TWO TIMESTAMPS, Z JUST MAKES IT RECOGNIZEABLE UTC
   }
 
   return (
@@ -635,7 +718,7 @@ const getmaxstake = () => {
         Consortium
       </Typography>
       <Button color="inherit" onClick={handleShow}>Create poll</Button>
-      <Button color="inherit" component={Link} to={'/Leaderboard'}>Leaderboard</Button>
+      <Button color="inherit"  href={`${window.location}/Leaderboard`}>Leaderboard</Button>
       {logbutton()}
     </Toolbar>
     </AppBar>
@@ -695,7 +778,8 @@ const getmaxstake = () => {
         <Modal.Body style={{"padding":"20px"}}>
         <Slider
           defaultValue={voteamount}
-          valueLabelDisplay="auto"
+          ValueLabelComponent={ValueLabelComponent}
+          aria-label="custom thumb label"
           step={1}
           min={1}
           max={getbalance()}
@@ -740,7 +824,7 @@ const getmaxstake = () => {
               </IconButton>
             }
             title={u.creator}
-            subheader="Community Member"
+            subheader={gettimediff(u.timecreated)}
           />
 
           <CardContent style={{"paddingTop":"0px"}}>

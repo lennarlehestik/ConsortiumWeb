@@ -24,6 +24,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Link} from "react-router-dom";
+import { useLocation } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,7 +95,8 @@ export default function App() {
   const AppBarOffset = () => {
     return <div className={classes.offset} />;
   }
-
+  const location = useLocation();
+  const scope = location.pathname.split('/')[2]
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -107,18 +109,18 @@ export default function App() {
         json: true,
         code: 'andrtestcons',
         table: 'parimad',
-        scope: 'eyaltestcons',
-        limit: 50,
+        scope: scope,
+        limit: 5000,
     })
     })
     .then(response =>
         response.json().then(data => setData(data))
     )
     .then(restoreSession())
-  }, data["rows"]);
+  }, data["rows"]); //DONT FETCH IF WE HAVE DATA ROWS
 
   if(data.rows[0]){
-  data.rows.sort((a, b) => (a.rewardsreceived < b.rewardsreceived) ? 1 : -1)
+    data.rows.sort((a, b) => (Number(a.rewardsreceived.split(" ")[0]) < Number(b.rewardsreceived.split(" ")[0])) ? 1 : -1) //CUT GOVRN OFF, MAKE IT A NR, AND THEN SORT
   }
 
 
@@ -143,7 +145,7 @@ export default function App() {
       )
 
       }
-  }, databalance);
+  }, databalance);//DONT FETCH IF WE HAVE databalance
 
 
   /* ANCHOR CONNECTION */

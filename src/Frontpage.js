@@ -225,7 +225,7 @@ export default function App() {
           </IconButton>
         }
         title={u.communityname}
-        subheader="An EOS dapp."
+        subheader={u.tokensymbol}
       />
 
       <a href={`${window.location}community/${u.community}`}>

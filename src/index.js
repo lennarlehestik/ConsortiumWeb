@@ -13,7 +13,7 @@ const routing = (
     <div>
       <Route path="/poll/:id/:scope" component={Poll} />
       <Route exact path="/community/:scope" component={App} />
-      <Route exact path="/Leaderboard" component={Leaderboard} />
+      <Route exact path="/community/:scope/Leaderboard" component={Leaderboard} />
       <Route exact path="/" component={Frontpage} />
     </div>
   </Router>
