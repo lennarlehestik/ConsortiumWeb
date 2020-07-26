@@ -99,9 +99,9 @@ function makeid() {
   for ( var i = 0; i < 12; i++ ) {
      result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
- 
+
 return result;
-     
+
 
   document.getElementById("eos").textContent= result;
 }
@@ -118,6 +118,7 @@ export default function App() {
   const [stakingbalance, setStakingBalance] = useState({"rows":[]})
   const [questiondescription, setQuestionDescription] = useState("")
   const [voteamount, setVoteAmount] = useState(1)
+  const [stakeamount, setStakeAmount] = useState(1)
   const [sessionresult, setSessionResult] = useState("")
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
@@ -326,12 +327,56 @@ const getstake = () => {
     )
 }
 
+const getmaxstake = () => {
+  if(maxstake.rows[0]){
+    return Math.floor(Number(maxstake.rows[0].totalstaked.split(" ")[0]));
+  }
+  else {
+    return 0;
+  }
+}
 //DISPLAY STAKE DATA
   const displaystake = () => {
-    if(maxstake.rows[0] && stakingbalance.rows[0]) {
-      return(<a>{maxstake.rows[0].totalstaked}{stakingbalance.rows[0].balance}</a>)
+    if(stakingbalance.rows[0]) {
+      console.log(getmaxstake())
+      const maxstakevalue = Math.floor(Number(stakingbalance.rows[0].balance.split(" ")[0])) - getmaxstake()
+      return(
+        <div>
+        <Slider
+          defaultValue={voteamount}
+          valueLabelDisplay="auto"
+          step={1}
+          min={1}
+          max={maxstakevalue}
+          onChange={ (e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
+          style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
+        />
+        <a>You can stake with: {maxstakevalue}</a> <br/>
+        <a>You are staking with: {stakeamount}</a> <br/>
+        <Button onClick={() => stakeaction()}>Stake</Button>
+        </div>
+      )
     }
   }
+
+  const stakeaction = () => {
+    if (sessionresult){
+    const action = {
+          account: 'andrtestcons',
+          name: 'stakeforcomm',
+          authorization: [sessionresult.auth],
+          data: {
+
+            staker: sessionresult.auth.actor,
+            community: scope,
+            quantity: parseFloat(stakeamount).toFixed(4) + " GOVRN"
+          }
+        }
+    link.transact({action}).then(() => window.location.reload(false))
+  }
+  }
+
+
 
 
  const getvote = () => {
