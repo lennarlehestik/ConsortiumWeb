@@ -30,6 +30,12 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import moment from 'moment';
+import { withUAL } from 'ual-reactjs-renderer'
+
+
+
+
+
 
 //STYLES FOR EVERYTHING
 const useStyles = makeStyles((theme) => ({
@@ -107,7 +113,9 @@ return result;
   document.getElementById("eos").textContent= result;
 }
 
-export default function App() {
+function App(props) {
+  const { ual: { showModal, hideModal } } = props
+
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
   const [votedata, setVoteData] = useState({"rows":[]});
@@ -115,18 +123,33 @@ export default function App() {
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState("")
   const [dailyvoted, setDailyVoted] = useState({"rows":[]})
-  const [maxstake, setMaxStake] = useState({"rows":[]})
   const [mystake, setMyStake] = useState({"rows":[]})
   const [stakingbalance, setStakingBalance] = useState({"rows":[]})
   const [questiondescription, setQuestionDescription] = useState("")
   const [voteamount, setVoteAmount] = useState(1)
   const [stakeamount, setStakeAmount] = useState(1)
   const [unstakeamount, setUnStakeAmount] = useState(1)
-  const [sessionresult, setSessionResult] = useState("")
+
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
 
+  const [accountname, setAccountName] = useState("")
+
+  const { ual: { logout } } = props
+
+  const { ual: {activeUser} } = props
+    if (activeUser) {
+      const accountName = activeUser.getAccountName()
+      accountName.then(function(result){
+        setAccountName(result)
+      })
+    }
+  const displayaccountname = () => {
+    if(accountname){
+      return accountname
+    }
+  }
   const [votinglist, setVotingList] = useState(["",""]);
 
   const handleClose = () => {
@@ -135,6 +158,88 @@ export default function App() {
     setQuestionSubmission("");
     setQuestionDescription("")
   }
+
+  const logmeout = () =>{
+    logout()
+    window.location.reload(false)
+    }
+
+
+
+    const tyra =  () => {
+      fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          json: true,
+          code: 'andrtestcons',
+          table: 'commdata',
+          scope: 'andrtestcons',
+          limit: 50,
+      })
+      })
+      .then(response =>
+          response.json().then(communitydata => setCommunityData(communitydata))
+      )
+      //.then(restoreSession())
+      }
+
+    const lita =  () => {
+      var intervalid = setInterval(() => {
+        
+        
+        
+          tyra()
+
+
+      }, 3000);
+    
+      setTimeout (() => { clearInterval (intervalid);
+      }, 45000);
+     }
+
+
+    const sucessstake =  () => {
+      const Toast = Swal.mixin({
+      toast: true,
+      position: 'bottom-end',
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+      }
+    })
+      Toast.fire({
+        icon: 'success',
+        title: 'Successfully increased voting and polling rewards'
+      })
+    }
+
+
+    const loadingscatter =  () => {
+    
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 20000,
+        timerProgressBar: true,
+        onOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+        Toast.fire({
+          icon: 'info',
+          title: 'Loading wallet...'
+        })
+      }
+
   const handleShow = () => setShow(true);
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
@@ -152,11 +257,42 @@ export default function App() {
   const filtermypolls = () => {
     if(data.rows[0]){
     var datatofilter = data.rows
-    var datafiltered = datatofilter.filter(a=>a.creator==sessionresult.auth.actor);
+    var datafiltered = datatofilter.filter(a=>a.creator==displayaccountname());
     setData({"rows":datafiltered})
     console.log(datafiltered)
     }
   }
+
+  const onLike = async () => {
+  const { ual: {login, displayError} } = props
+  // Via static contextType = UALContext, access to the activeUser object on this.context is now available
+  const { ual: {activeUser} } = props
+  if (activeUser) {
+    try {
+      const transaction = {  actions: [{
+    account: 'eosio.token',
+    name: 'transfer',
+    authorization: [{
+      actor: displayaccountname(), // use account that was logged in
+      permission: 'active',
+    }],
+    data: {
+      from: displayaccountname(), // use account that was logged in
+      to: 'lumeotoken11',
+      quantity: '0.1000 EOS',
+      memo: 'UAL works!',
+    },
+  }],}
+      // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
+      await activeUser.signTransaction(transaction, { broadcast: true, expireSeconds: 300 })
+      alert("GREAT SUCCESS!")
+    } catch (err) {
+      alert(err)
+    }
+  } else {
+    login()
+  }
+}
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -176,7 +312,7 @@ export default function App() {
     .then(response =>
         response.json().then(communitydata => setCommunityData(communitydata))
     )
-    .then(restoreSession())
+    //.then(restoreSession())
   }, communitydata["rows"]);
 
   const topcard = () => { //CONTENTS OF THE CARD ON TOP OF THE COMMUNITY PAGE
@@ -239,11 +375,11 @@ export default function App() {
     .then(response =>
         response.json().then(data => setData(data))
     )
-    .then(restoreSession())
+    //.then(restoreSession())
   }, data["rows"]);
 
   useEffect(() => {
-    if(sessionresult){
+    if(activeUser){
       fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
         method: 'POST',
         headers: {
@@ -254,7 +390,7 @@ export default function App() {
           json: true,
           code: 'eosio.token',
           table: 'accounts',
-          scope: sessionresult.auth.actor,
+          scope: displayaccountname(),
 
       })
       })
@@ -277,11 +413,11 @@ export default function App() {
         body: JSON.stringify({
           json: true,
           code: 'andrtestcons',
-          table:  'voterstatzo',
+          table:  'voterstatzi',
           scope: scope,
           key_type: 'name',
           index_position: 1,
-          lower_bound: sessionresult.auth.actor,
+          lower_bound: displayaccountname(),
 
 
       })
@@ -304,32 +440,15 @@ const getstake = () => { //DOES ALL THE FETCHING FOR THE STAKE MODAL
             json: true,
             code: 'andrtestcons',
             table: 'accounts',
-            scope: sessionresult.auth.actor,
+            scope: displayaccountname(),
 
   })
   })
   .then(response =>
       response.json().then(data => setStakingBalance(data))
   )
-  fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-            json: true,
-            code: 'andrtestcons',
-            table:  'indtotalstkh',
-            scope: 'andrtestcons',
-            key_type: 'name',
-            index_position: 1,
-            lower_bound: sessionresult.auth.actor, //CHANGE THIS!!!!!!!!!!!!!!!!!!!!!
-  })
-  })
-  .then(response =>
-      response.json().then(data => setMaxStake(data))
-    )
+
+  
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
       method: 'POST',
       headers: {
@@ -339,12 +458,12 @@ const getstake = () => { //DOES ALL THE FETCHING FOR THE STAKE MODAL
       body: JSON.stringify({
               json: true,
               code: 'andrtestcons',
-              table:  'indtotalstkh',
-              scope: 'andrtestcons',
+              table:  'personstaked',
+              scope: scope,
               key_type: 'name',
               index_position: 1,
-              lower_bound: sessionresult.auth.actor,
-              upper_bound: sessionresult.auth.actor,
+              lower_bound: displayaccountname(),
+              upper_bound: displayaccountname(),
     })
     })
     .then(response =>
@@ -352,18 +471,10 @@ const getstake = () => { //DOES ALL THE FETCHING FOR THE STAKE MODAL
     )
 }
 
-const getmaxstake = () => {
-  if(maxstake.rows[0]){
-    return Math.floor(Number(maxstake.rows[0].totalstaked.split(" ")[0]));
-  }
-  else {
-    return 0;
-  }
-}
 
 const getmystake = () => {
   if(mystake.rows[0]){
-    return Math.floor(Number(mystake.rows[0].totalstaked.split(" ")[0]));
+    return Math.floor(Number(mystake.rows[0].staked.split(" ")[0]));
   }
   else {
     return 0;
@@ -380,10 +491,13 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
   );
 }
 
+
+
 //CONTENTS OF THE STAKE MODAL
   const displaystake = () => {
     if(stakingbalance.rows[0]) {
-      const maxstakevalue = Math.floor(Number(stakingbalance.rows[0].balance.split(" ")[0])) - getmaxstake()
+      const maxstakevalue = Math.floor(Number(stakingbalance.rows[0].balance.split(" ")[0])) - getmystake()
+
       return(
         <div>
         <Slider
@@ -416,8 +530,46 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
         </div>
       )
     }
+    
   }
 
+  
+
+  const stakeaction = async () => {
+    const { ual: {login, displayError} } = props
+    // Via static contextType = UALContext, access to the activeUser object on this.context is now available
+    const { ual: {activeUser} } = props
+    if (activeUser) {
+      loadingscatter()
+      try {
+        const transaction = {  actions: [{
+          account: 'andrtestcons',
+          name: 'stakeforcomm',
+      authorization: [{
+        actor: displayaccountname(), // use account that was logged in
+        permission: 'active',
+      }],
+      data: {
+        staker: displayaccountname(),
+            community: scope,
+            quantity: parseFloat(stakeamount).toFixed(4) + " GOVRN"
+      },
+    }],}
+        // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
+        await activeUser.signTransaction(transaction, { broadcast: true, expireSeconds: 300 })
+        sucessstake()
+        lita()
+
+       // window.location.reload(false)
+      } catch (err) {
+        alert(err)
+      }
+    } else {
+      showModal()
+    }
+  }
+  
+/*
   const stakeaction = () => { // CALL THIS IF YOU WANT TO STAKE
     if (sessionresult){
     const action = {
@@ -426,7 +578,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           authorization: [sessionresult.auth],
           data: {
 
-            staker: sessionresult.auth.actor,
+            staker: displayaccountname(),
             community: scope,
             quantity: parseFloat(stakeamount).toFixed(4) + " GOVRN"
           }
@@ -434,7 +586,41 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
     link.transact({action}).then(() => window.location.reload(false))
   }
   }
+*/
 
+
+const unstakeaction = async () => {
+  const { ual: {login, displayError, showModal} } = props
+  // Via static contextType = UALContext, access to the activeUser object on this.context is now available
+  const { ual: {activeUser} } = props
+  if (activeUser) {
+    try {
+      const transaction = {  actions: [{
+        account: 'andrtestcons',
+                name: 'unstkfromcom',
+    authorization: [{
+      actor: displayaccountname(), // use account that was logged in
+      permission: 'active',
+    }],
+    data: {
+      staker: displayaccountname(),
+          community: scope,
+          quantity: parseFloat(unstakeamount).toFixed(4) + " GOVRN"
+        },
+  }],}
+      // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
+      await activeUser.signTransaction(transaction, { broadcast: true, expireSeconds: 300 })
+      alert("GREAT SUCCESS!")
+      window.location.reload(false)
+    } catch (err) {
+      alert(err)
+    }
+  } else {
+    showModal()
+  }
+}
+
+/*
   const unstakeaction = () => { // CALL THIS IF YOU WANT TO UNSTAKE
     console.log(mystake)
     if (sessionresult){
@@ -444,7 +630,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
                 authorization: [sessionresult.auth],
                 data: {
 
-                  staker: sessionresult.auth.actor,
+                  staker: displayaccountname(),
                   community: scope,
                   quantity: parseFloat(unstakeamount).toFixed(4) + " GOVRN"
 
@@ -453,7 +639,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
     link.transact({action}).then(() => window.location.reload(false))
   }
   }
-
+*/
 
 
 
@@ -469,7 +655,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
        json: true,
        code: 'andrtestcons',
        table: 'accounts',
-       scope: sessionresult.auth.actor,
+       scope: displayaccountname(),
 
    })
    })
@@ -488,7 +674,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
        json: true,
        code: 'andrtestcons',
        table: 'accounts',
-       scope: sessionresult.auth.actor,
+       scope: displayaccountname(),
 
    })
    })
@@ -507,7 +693,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
 
 
   data.rows.sort(sortBySum);
-  /* ANCHOR CONNECTION */
+  /* ANCHOR CONNECTION 
   const transport = new AnchorLinkBrowserTransport()
   // initialize the link, this time we are using the TELOS chain
   const link = new AnchorLink({transport,
@@ -534,13 +720,60 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
   }
 
 
-    const logout = () => {
+    const logoutt = () => {
         setSessionResult() //REMOVES SESSIONRESULT FROM STORAGE, THEREFORE LOGGING YOU OUT.
     }
 
+*/
 
 
-  /* ASK TO SIGN AND BROADCAST TO CHAIN */
+
+    const createpoll = async () => {
+      const { ual: {login, displayError,showModal} } = props
+      // Via static contextType = UALContext, access to the activeUser object on this.context is now available
+      const { ual: {activeUser} } = props
+      if (activeUser) {
+        try {
+          var answers = votinglist.filter(Boolean)
+          var voteslist = [];
+          for (let i = 0; i < answers.length; i++) {
+            voteslist.push(0)
+          }
+          const uniqueurl = Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 15)
+          const uniquename = makeid()
+
+          const transaction = {  actions: [{
+            account: 'andrtestcons',
+            name: 'createpollz',
+        authorization: [{
+          actor: displayaccountname(), // use account that was logged in
+          permission: 'active',
+        }],
+        data: {
+          question: questionsubmission,
+          answers: votinglist,
+          totalvote: voteslist,
+          community: scope,
+          creator: displayaccountname(),
+          description: questiondescription,
+          uniqueurl: uniqueurl,
+          schedname: uniquename,
+        },
+      }],}
+          // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
+          await activeUser.signTransaction(transaction, { broadcast: true, expireSeconds: 300 })
+          alert("GREAT SUCCESS!")
+          window.location.reload(false)
+        } catch (err) {
+          alert(err)
+        }
+      } else {
+        showModal()
+      }
+    }
+
+
+  /* ASK TO SIGN AND BROADCAST TO CHAIN 
   const createpoll = () => {
     if (sessionresult){
       var answers = votinglist.filter(Boolean)
@@ -559,7 +792,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
             answers: votinglist,
             totalvote: voteslist,
             community: scope,
-            creator: sessionresult.auth.actor,
+            creator: displayaccountname(),
             description: questiondescription,
             uniqueurl: uniqueurl,
             schedname: uniquename,
@@ -579,8 +812,57 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
       })
     }
   }
+*/
 
 
+
+
+
+const vote = async (option, pollkey) => {
+  const { ual: {login, displayError,showModal} } = props
+  // Via static contextType = UALContext, access to the activeUser object on this.context is now available
+  const { ual: {activeUser} } = props
+  if (activeUser) {
+    try {
+      const optionnumber = Number(option) + 1
+    const amount = Number(voteamount)
+    const uniquename = makeid()
+    const uniquenamests = makeid()
+
+
+      const transaction = {  actions: [{
+        account: 'andrtestcons',
+        name: 'votez',
+    authorization: [{
+      actor: displayaccountname(), // use account that was logged in
+      permission: 'active',
+    }],
+    data: {
+      usersvote: amount,
+      pollkey:pollkey,
+      option:optionnumber,
+      community: scope,
+      voter: displayaccountname(),
+      schedname: uniquename,
+      schednamests: uniquenamests,
+
+    },
+  }],}
+      // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
+      await activeUser.signTransaction(transaction, { broadcast: true, expireSeconds: 300 })
+      alert("GREAT SUCCESS!")
+      window.location.reload(false)
+    } catch (err) {
+      alert(err)
+    }
+  } else {
+    showModal()
+  }
+}
+
+
+
+/*
   const vote = (option, pollkey) => {
     if (sessionresult){
     const optionnumber = Number(option) + 1
@@ -595,7 +877,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           pollkey:pollkey,
           option:optionnumber,
           community: scope,
-          voter: sessionresult.auth.actor,
+          voter: displayaccountname(),
           schedname: uniquename,
 
         }
@@ -613,6 +895,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
       })
     }
   }
+  */
 
   const getpollurl = (pollkey,uniqueurl) => {
     const url = window.location.origin+"/poll/"+pollkey+"/"+uniqueurl+"/"+scope;
@@ -655,38 +938,62 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
     if(votedata.rows[0]) {
       var balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]))
     }
+    let daily = 0;
     if(dailyvoted.rows[0]) {
-      var daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted))
+      daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted))
     }
     const bal = balance - daily
     return(bal)
   }
 
   const logbutton = () =>{
-    if(sessionresult){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
+    if(accountname){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
       return(
         <div>
         <Button
         color="inherit"
-        onClick={() => logout()}
+        onClick={() => logmeout()}
         >Log out</Button>
-        <Button color="inherit" id="logoutname">{sessionresult.auth.actor}</Button>
+        <Button color="inherit" id="logoutname">{displayaccountname()}</Button>
+
+<div class="dropdown">
+  <button class="button">Menu item</button>
+  <div id="drop" class="dropdown-content">
+    <div class ="line">
+      <a class="identfier"><b>lennyaccount</b></a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Balance</a>
+      <a class="value">45 GOVRN</a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Voting power</a>
+      <a class="value">45 ATMOS</a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Voting power reset</a>
+      <a class="value">5 hrs</a>
+    </div>
+  </div>
+</div> 
+
         </div>
+        
       )
       }
       else{ //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
         return(
           <Button
           color="inherit"
-          onClick={() => login()}
+          onClick={showModal}
           >Log in</Button>
         )
     }
   }
 
   const showusername = () => {
-    if(sessionresult){
-    return(sessionresult.auth.actor)
+    if(activeUser){
+    return(displayaccountname())
   }
   }
 
@@ -704,6 +1011,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
     const curr = new Date().getTime() //GET CURRENT TIME
     return moment(curr).to(moment(creationdate + 'Z')) //FIND THE DIFFERENCE BETWEEN THE TWO TIMESTAMPS, Z JUST MAKES IT RECOGNIZEABLE UTC
   }
+  //<Button color="inherit" onClick={() => onLike()}>Transsex</Button>
 
   return (
     <div>
@@ -787,7 +1095,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
         />
         <br />
-        <center><a>You're voting with: {voteamount} EOS tokens.</a></center>
+        <center><a>You're voting with: {voteamount} EOS tokens.</a></center> 
         <br/>
         <Button style={{"width":"100%"}} onClick={() => vote(votekey, votepollkey)}>Vote</Button>
         </Modal.Body>
@@ -842,3 +1150,5 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
     </div>
   )
 }
+
+export default withUAL(App)
