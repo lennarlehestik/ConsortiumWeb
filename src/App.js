@@ -663,14 +663,14 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
   }
 
   const logbutton = () =>{
-    if(sessionresult){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
+    if(sessionresult && votedata.rows[0]){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
       return(
         <div>
         <Button
         color="inherit"
         onClick={() => logout()}
         >Log out</Button>
-        <Button color="inherit" id="logoutname">{sessionresult.auth.actor}</Button>
+        <Tooltip data-html="true" title={<a style={{"font-size":"12px","font-weight":"400"}}><b>{sessionresult.auth.actor}</b> <br/> Balance: {votedata.rows[0].balance}<br/> Voting power: {getbalance()}<br/> Voting power reset: </a>}><Button color="inherit" id="logoutname">{sessionresult.auth.actor}</Button></Tooltip>
         </div>
       )
       }
