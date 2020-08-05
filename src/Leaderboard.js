@@ -25,6 +25,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Link} from "react-router-dom";
 import { useLocation } from 'react-router-dom'
+import { withUAL } from 'ual-reactjs-renderer'
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +72,27 @@ title: {
 }));
 
 
-export default function App() {
+function App(props) {
+
+  const { ual: { showModal, hideModal, logout } } = props
+
+
+  const [accountname, setAccountName] = useState("")
+  const { ual: {activeUser} } = props
+    if (activeUser) {
+      const accountName = activeUser.getAccountName()
+      accountName.then(function(result){
+        setAccountName(result)
+      })
+    }
+  const displayaccountname = () => {
+    if(accountname){
+      return accountname
+    }
+  }
+
+
+
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
@@ -116,7 +138,7 @@ export default function App() {
     .then(response =>
         response.json().then(data => setData(data))
     )
-    .then(restoreSession())
+    //.then(restoreSession())
   }, data["rows"]); //DONT FETCH IF WE HAVE DATA ROWS
 
   if(data.rows[0]){
@@ -148,38 +170,7 @@ export default function App() {
   }, databalance);//DONT FETCH IF WE HAVE databalance
 
 
-  /* ANCHOR CONNECTION */
-  const transport = new AnchorLinkBrowserTransport()
-  // initialize the link, this time we are using the TELOS chain
-  const link = new AnchorLink({transport,
-      chainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
-      rpc: 'https://kylin-dsp-2.liquidapps.io'
-  })
-
-  const identifier = 'andrtestcons'
-  let session;
-  const restoreSession = () => {
-    link.restoreSession(identifier).then((result) => {
-        setSessionResult(result)
-    })
-  }
-
-
-  // login and store session if sucessful
-  const login = () => {
-    link.login(identifier).then((result) => {
-        session = result.session
-        setSessionResult(session)
-        window.location.reload(false)
-    })
-  }
-
-    // logout and remove session from storage
-    const logout = () => {
-        setSessionResult()
-    }
-
-
+  
 
 
 
@@ -189,32 +180,32 @@ export default function App() {
       return(Math.floor(Number(databalance.rows[0].balance.split(" ")[0])))
     }
   }
-
   const logbutton = () =>{
-    if(sessionresult){
+    if(accountname){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
       return(
+        
         <div>
         <Button
         color="inherit"
-        onClick={() => logout()}
+        onClick={logout}
         >Log out</Button>
-        <Button color="inherit" id="logoutname">{sessionresult.auth.actor}</Button>
+        <Button color="inherit" id="logoutname">{displayaccountname()}</Button>
         </div>
       )
       }
-      else{
+      else{ //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
         return(
           <Button
           color="inherit"
-          onClick={() => login()}
+          onClick={showModal}
           >Log in</Button>
         )
     }
   }
-
+  
   const showusername = () => {
-    if(sessionresult){
-    return(sessionresult.auth.actor)
+    if(activeUser){
+    return(displayaccountname())
   }
   }
 
@@ -267,7 +258,7 @@ export default function App() {
           <TableCell component="th" scope="row">
           {u.governor}
           </TableCell>
-          <TableCell align="right">{u.rewardsreceived}</TableCell>
+          <TableCell align="right">{parseInt(u.rewardsreceived)+ " GOVRN"}</TableCell>
         </TableRow>
       )
     })}
@@ -279,3 +270,5 @@ export default function App() {
     </div>
   )
 }
+
+export default withUAL(App)

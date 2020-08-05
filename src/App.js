@@ -119,6 +119,9 @@ function App(props) {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
   const [votedata, setVoteData] = useState({"rows":[]});
+  const [votedata1, setVoteData1] = useState({"rows":[]});
+  const [votedata2, setVoteData2] = useState({"rows":[]});
+
   const [communitydata, setCommunityData] = useState({"rows":[]});
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState("")
@@ -221,6 +224,16 @@ function App(props) {
     }
 
 
+    const tokensymbol = () => {
+      if(communitydata.rows[0]){
+           var commdata = communitydata.rows.filter(function(e) {
+            return e.community == scope;
+          });
+       return commdata[0].tokensymbol;
+      }
+      }
+
+
     const loadingscatter =  () => {
     
       const Toast = Swal.mixin({
@@ -319,6 +332,9 @@ function App(props) {
     var commdata = communitydata.rows.filter(function(e) {
       return e.community == scope;
     });
+
+    
+
     if(commdata[0]){
     return(
       <Card className={classes.root} style={{"marginBottom":"10px", "margin-top":"10px"}}>
@@ -340,7 +356,7 @@ function App(props) {
         <Button onClick={handleShow2}>Stake</Button>
       </Typography>
       <div style={{"float":"right"}}>
-      <Tooltip title="Total tokens used for voting"><AccountBalanceWalletIcon /></Tooltip> &nbsp;{commdata[0].totaltokensvoted} &nbsp;<Tooltip title="Total voters"><PeopleOutline /></Tooltip>&nbsp;{commdata[0].totalvoters}
+      <Tooltip title="Total tokens used for voting"><AccountBalanceWalletIcon /></Tooltip> &nbsp;{commdata[0].totaltokensvoted} {commdata[0].tokensymbol} &nbsp;<Tooltip title="Total voters"><PeopleOutline /></Tooltip>&nbsp;{commdata[0].totalvoters}
       </div>
       </div>
     </Card>
@@ -353,6 +369,8 @@ function App(props) {
       return(<a>{votedata.rows[0].totalstaked}</a>)
     }
   }
+
+  
 
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
@@ -418,6 +436,8 @@ function App(props) {
           key_type: 'name',
           index_position: 1,
           lower_bound: displayaccountname(),
+          upper_bound: displayaccountname(),
+
 
 
       })
@@ -510,8 +530,8 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           onChange={ (e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
           style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
         />
-        <a>You can stake with: {maxstakevalue}</a> <br/>
-        <a>You are staking with: {stakeamount}</a> <br/>
+        <a>You can stake with: {maxstakevalue} GOVRN</a> <br/>
+        <a>You are staking with: {stakeamount} GOVRN</a> <br/>
         <Button onClick={() => stakeaction()}>Stake</Button>
         <hr/>
         <Slider
@@ -524,8 +544,8 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           onChange={ (e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
           style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
         />
-        <a>You have staked: {getmystake()}</a> <br/>
-        <a>You are unstaking: {unstakeamount}</a> <br/>
+        <a>You have staked: {getmystake()} GOVRN</a> <br/>
+        <a>You are unstaking: {unstakeamount} GOVRN</a> <br/>
         <Button onClick={() => unstakeaction()}>Unstake</Button>
         </div>
       )
@@ -672,7 +692,7 @@ const unstakeaction = async () => {
      },
      body: JSON.stringify({
        json: true,
-       code: 'andrtestcons',
+       code: 'eosio.token',
        table: 'accounts',
        scope: displayaccountname(),
 
@@ -681,6 +701,53 @@ const unstakeaction = async () => {
    .then(response =>
        response.json().then(data => setVoteData(data))
    )
+
+
+
+   fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      json: true,
+        code: 'eosio',
+        table: 'delband',
+        scope: displayaccountname(),
+
+  })
+  })
+  .then(response =>
+      response.json().then(data => setVoteData1(data))
+  )
+
+
+
+
+  fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      json: true,
+        code: 'eosio',
+        table: 'rexbal',
+        scope: 'eosio',
+        lower_bound: displayaccountname(),
+        upper_bound: displayaccountname(),
+
+  })
+  })
+  .then(response =>
+      response.json().then(data => setVoteData2(data))
+  )
+
+
+
+
   }
 }
 
@@ -938,16 +1005,28 @@ const vote = async (option, pollkey) => {
     if(votedata.rows[0]) {
       var balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]))
     }
+    let cpu = 0;
+    let net = 0;
+    if(votedata1.rows[0]) {
+       cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]))
+       net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]))
+    }
+    let rex= 0;
+    if(votedata2.rows[0]) {
+       rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]))
+    }
     let daily = 0;
     if(dailyvoted.rows[0]) {
       daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted))
     }
-    const bal = balance - daily
+    const bal = balance + cpu + net + rex - daily 
     return(bal)
   }
 
+ 
+
   const logbutton = () =>{
-    if(accountname){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
+    if(accountname){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON 
       return(
         <div>
         <Button
@@ -956,6 +1035,11 @@ const vote = async (option, pollkey) => {
         >Log out</Button>
         <Button color="inherit" id="logoutname">{displayaccountname()}</Button>
 
+
+
+
+        </div>
+        /*
 <div class="dropdown">
   <button class="button">Menu item</button>
   <div id="drop" class="dropdown-content">
@@ -976,9 +1060,7 @@ const vote = async (option, pollkey) => {
     </div>
   </div>
 </div> 
-
-        </div>
-        
+*/
       )
       }
       else{ //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
@@ -1012,6 +1094,8 @@ const vote = async (option, pollkey) => {
     return moment(curr).to(moment(creationdate + 'Z')) //FIND THE DIFFERENCE BETWEEN THE TWO TIMESTAMPS, Z JUST MAKES IT RECOGNIZEABLE UTC
   }
   //<Button color="inherit" onClick={() => onLike()}>Transsex</Button>
+  
+   //SIIIN SAAD NÜÜD COMMDATAT KASUTADA, MIS ON ÕIGE COMMUNITY JAOKS
 
   return (
     <div>
@@ -1065,6 +1149,7 @@ const vote = async (option, pollkey) => {
           />
          <br />
          {votinglist.map((u, i) => {
+           
            return (
              <TextField
              style={{"width":"100%", "margin":"7px"}}
@@ -1082,6 +1167,7 @@ const vote = async (option, pollkey) => {
         </Modal.Body>
     </Modal>
 
+   
     <Modal show={show1} onHide={handleClose1} centered>
         <Modal.Body style={{"padding":"20px"}}>
         <Slider
@@ -1095,12 +1181,13 @@ const vote = async (option, pollkey) => {
           style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
         />
         <br />
-        <center><a>You're voting with: {voteamount} EOS tokens.</a></center> 
+        
+        <center><a>You're voting with: {voteamount} {tokensymbol()}  </a></center> 
         <br/>
         <Button style={{"width":"100%"}} onClick={() => vote(votekey, votepollkey)}>Vote</Button>
         </Modal.Body>
     </Modal>
-
+  
     <Modal show={show2} onHide={handleClose2} centered>
         <Modal.Body style={{"padding":"20px"}}>
         <a>{displaystake()}</a>
@@ -1140,7 +1227,7 @@ const vote = async (option, pollkey) => {
             <div style={{"color":"#2A3747"}}>{u.description}</div>
             <br />
             <a style={{"color":"#2A3747"}}>{polloptions(u.totalvote, u.answers, u.pollkey)}</a>
-            <div style={{color:"#485A70"}} class="pollstats"><Tooltip title="Get poll url"><div style={{"float":"left"}}><FileCopyIcon onClick={() => getpollurl(u.pollkey,u.uniqueurl)}/></div></Tooltip> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}><AccountBalanceWalletIcon /> {u.sumofallopt}</div></Tooltip></div>
+            <div style={{color:"#485A70"}} class="pollstats"><Tooltip title="Get poll url"><div style={{"float":"left"}}><FileCopyIcon onClick={() => getpollurl(u.pollkey,u.uniqueurl)}/></div></Tooltip> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}><AccountBalanceWalletIcon /> {u.sumofallopt} {tokensymbol()}</div></Tooltip></div>
             </CardContent>
             </Card>
           </div>

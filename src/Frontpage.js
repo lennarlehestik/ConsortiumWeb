@@ -79,7 +79,6 @@ function App(props) {
 
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
-  const [sessionresult, setSessionResult] = useState("")
   const [searchvalue, setSearch] = useState()
 
   const AppBarOffset = () => {
@@ -255,6 +254,10 @@ const showusername = () => {
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {u.description.substring(0, 90)}{(u.description.length > 90) ? '...' : ''}
+        </Typography>
+        <br></br>
+        <Typography variant="body2" color="textSecondary" component="p">
+          {"Total staked: " +parseFloat(u.staked)+ " GOVRN"}
         </Typography>
       </CardContent>
     </Card>
