@@ -75,15 +75,22 @@ const useStyles = makeStyles((theme) => ({
 
 
 function App(props) {
-  const { ual: { showModal, hideModal, logout } } = props
+  const { ual: { showModal, hideModal } } = props
 
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
+  const [sessionresult, setSessionResult] = useState("")
   const [searchvalue, setSearch] = useState()
+
+  
+
 
   const AppBarOffset = () => {
     return <div className={classes.offset} />;
   }
+  
+
+  const { ual: { logout } } = props
   const [accountname, setAccountName] = useState("")
   const { ual: {activeUser} } = props
     if (activeUser) {
@@ -152,14 +159,25 @@ function App(props) {
         setSessionResult()
     }
 */
+
+
+
+const logmeout = () =>{
+  logout()
+  window.location.reload(false)
+  }
+
+
 const logbutton = () =>{
-  if(accountname){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
+  //if(accountname){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
+    if(accountname){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
+
     return(
       
       <div>
       <Button
       color="inherit"
-      onClick={logout}
+      onClick={logmeout()}
       >Log out</Button>
       <Button color="inherit" id="logoutname">{displayaccountname()}</Button>
       </div>
@@ -254,10 +272,6 @@ const showusername = () => {
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {u.description.substring(0, 90)}{(u.description.length > 90) ? '...' : ''}
-        </Typography>
-        <br></br>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {"Total staked: " +parseFloat(u.staked)+ " GOVRN"}
         </Typography>
       </CardContent>
     </Card>
