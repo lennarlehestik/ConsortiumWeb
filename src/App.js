@@ -332,6 +332,18 @@ function App(props) {
     //.then(restoreSession())
   }, communitydata["rows"]);
 
+  const stakeformatter = (stakenumber) => {
+    if(stakenumber < 1000){
+      return stakenumber
+    }
+    if(stakenumber > 1000 && stakenumber < 1000000){
+      return (stakenumber/1000).toFixed(0) + "K"
+    }
+    if (stakenumber > 1000000){
+      return (stakenumber/1000000).toFixed(1) + "M"
+    }
+  }
+
   const topcard = () => { //CONTENTS OF THE CARD ON TOP OF THE COMMUNITY PAGE
     var commdata = communitydata.rows.filter(function(e) {
       return e.community == scope;
@@ -341,7 +353,7 @@ function App(props) {
 
     if(commdata[0]){
     return(
-      <Card className={classes.root} style={{"marginBottom":"10px", "margin-top":"10px"}}>
+      <Card className={classes.root} style={{"marginBottom":"10px", "margin-top":"10px", "padding-bottom":"10px"}}>
       <CardMedia
         className={classes.media}
         image={commdata[0].backgroundurl}
@@ -355,12 +367,12 @@ function App(props) {
           {commdata[0].description}
         </Typography>
       </CardContent>
-      <div style={{color:"#485A70", "margin-right":"20px", "margin-left":"7px"}}>
+      <div style={{color:"#485A70", "margin-right":"20px", "margin-left":"7px", "margin-top":"20px"}}>
       <Typography variant="body2" color="textSecondary" component="p" style={{"float":"left"}}>
-        <Button onClick={handleShow2}>Stake</Button>
+        <Button class="coloredbutton" onClick={handleShow2}>Stake</Button>
       </Typography>
       <div style={{"float":"right"}}>
-      <Tooltip title="Total tokens used for voting"><AccountBalanceWalletIcon /></Tooltip> &nbsp;{commdata[0].totaltokensvoted} {commdata[0].tokensymbol} &nbsp;<Tooltip title="Total voters"><PeopleOutline /></Tooltip>&nbsp;{commdata[0].totalvoters}
+      <Tooltip title="Total tokens used for voting"><AccountBalanceWalletIcon /></Tooltip> <a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{stakeformatter(commdata[0].totaltokensvoted)} {commdata[0].tokensymbol} &nbsp; </a><Tooltip title="Total voters"><PeopleOutline /></Tooltip><a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{commdata[0].totalvoters}</a>
       </div>
       </div>
     </Card>
@@ -1145,7 +1157,7 @@ const vote = async (option, pollkey) => {
               </div>
               <div class ="line">
                 <a class="identfier">Voting power</a>
-                <a class="value">45 ATMOS</a>
+                <a class="value">{getbalance()}</a>
               </div>
               <div class ="line">
                 <a class="identfier">Voting power reset</a>

@@ -154,3 +154,16 @@ margin-bottom:50px
   display: inline-block;
   font-size: 16px;
 }
+
+.coloredbutton{
+  background-color: #3E546F; /* Green */
+  border-radius: 8px;
+  border: none;
+  color: white;
+  padding: 4px 20px;
+  margin-left:10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
