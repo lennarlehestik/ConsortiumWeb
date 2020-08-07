@@ -26,6 +26,8 @@ import Paper from '@material-ui/core/Paper';
 import {Link} from "react-router-dom";
 import { useLocation } from 'react-router-dom'
 import { withUAL } from 'ual-reactjs-renderer'
+import Avatar from '@material-ui/core/Avatar';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +56,9 @@ title: {
     top: 'auto',
     bottom: 0,
   },
+  avatar: {
+    backgroundColor: "#00003C",
+    },
   grow: {
     flexGrow: 1,
   },
@@ -243,7 +248,7 @@ function App(props) {
 
     <div class="app">
 
-    <TableContainer component={Paper} style={{"margin-top":"10px"}}>
+    <TableContainer component={Paper} style={{"margin-top":"10px","borderRadius": "15px"}}>
   <Table className={classes.table} size="small" aria-label="a dense table">
     <TableHead>
       <TableRow>
@@ -255,9 +260,20 @@ function App(props) {
       {data.rows.map((u, i) => {
         return (
         <TableRow key={i}>
+
+
+<Avatar aria-label="recipe" className={classes.avatar} style={{"margin-right":"100px"}}>
+         {u.governor.charAt(0).toUpperCase()}  
+          </Avatar>
+
           <TableCell component="th" scope="row">
-          {u.governor}
+          {u.governor} 
+          
           </TableCell>
+
+          
+          
+
           <TableCell align="right">{parseInt(u.rewardsreceived)+ " GOVRN"}</TableCell>
         </TableRow>
       )

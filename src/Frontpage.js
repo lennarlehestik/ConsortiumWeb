@@ -20,6 +20,9 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withUAL } from 'ual-reactjs-renderer'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTelegram, faTwitter, faGithub, faYoutube } from '@fortawesome/free-brands-svg-icons';
+
 
 
 //STYLES FOR EVERYTHING
@@ -180,18 +183,26 @@ const showusername = () => {
   return(displayaccountname())
 }
 }
+
+//var str1 = ".png ";
+//var str2 = {u.communityname.substring(0, 90)};
+//var res = str1.concat(str2);
+
   return (
     <div>
     <div class="desktopmenu">
     <div className={classes.root}>
     <AppBar position="fixed" color="transparent" style={{"background-color":"white"}}>
     <Toolbar>
-      <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-        <MenuIcon />
-      </IconButton>
-      <Typography variant="h6" style={{"color":"#2A3747", "text-decoration":"none"}} className={classes.title} component={Link} to={'/'}>
-        Consortium
+    <img src="logo.png" width="54.4" height="34" class="d-inline-block align-top" style={{"margin-bottom":2}}></img>
+      <Typography variant="h6" style={{"color":"#2A3747", "text-decoration":"none", "margin-top":"0px"}} className={classes.title} component={Link} to={'/'}>
+      
+      
+
+      <a> Consortium </a>
+       
       </Typography>
+
       {logbutton()}
     </Toolbar>
     </AppBar>
@@ -212,31 +223,35 @@ const showusername = () => {
     <div class="frontapp">
     <div>
     </div>
-    <div className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px", "display":"flex", "padding-left":"14px", "padding-right":"14px"}}>
+    <div className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px", "display":"flex", "padding-left":"14px", "padding-right":"14px","borderRadius": "15px"}}>
     <Autocomplete
       id="Community search"
       options={data.rows}
       getOptionLabel={(option) => option.communityname}
       onChange={(event, value) => ((value) ? setSearch(value.community) : setSearch(""))}
       style={{ width: "100%"}}
-      renderInput={(params) => <TextField {...params} label="Community name" variant="outlined" style={{backgroundColor:"white"}}/>}
+      renderInput={(params) => <TextField {...params} label="Community name" variant="outlined"  style={{backgroundColor:"white"}}/>}
     />
-    <Button href={`${window.location}community/${searchvalue}`} variant="outlined" style={{"margin-left":"5px", backgroundColor:"white" }}>Search</Button>
+    <Button href={`${window.location}community/${searchvalue}`} variant="outlined" style={{"margin-left":"5px", backgroundColor:"white","borderRadius": "15px" }}>Search</Button>
     </div>
       <div class="parent">
       {data.rows.map((u, i) => {
         return (
       <div class="col">
-      <Card className={classes.root} style={{"margin-bottom":"10px", "height":"270px"}}>
+      <Card className={classes.root} style={{"margin-bottom":"10px", "height":"270px", "borderRadius": "20px"}}>
       <CardHeader
+      
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
-            {u.communityname.charAt(0)}
-          </Avatar>
+            
+           
+
+           <img src= "newdex.png" style={{"height":"36px", }} alt="newdex"></img>
+          
         }
         action={
           <IconButton aria-label="settings">
-            <MoreVertIcon />
+                            <MoreVertIcon />
+
           </IconButton>
         }
         title={u.communityname}
@@ -260,13 +275,74 @@ const showusername = () => {
           {"Total staked: " +parseFloat(u.staked)+ " GOVRN"}
         </Typography>
       </CardContent>
-    </Card>
-    </div>
+     </Card>
+     </div>
         )
       })}
+
+
+
+
+
+
+
+
+          </div>
+
+
+       
+          
+</div>
+
+
+<div class="card bg-light" style={{"margin":1,"margin-top":300} }>
+  <div class="card-body" style={{"font-size":14}}>
+
+      <div style={{"float": "left", "display": "block", "display": "inline-block"}}>
+
+
+       <a href= "https://newdex.io/trade/consortiumlv-govrn-eos"><img src="newdex.png" style={{"height":"36px", }} alt="newdex"></img></a>
+       <a href= "https://xnation.io/eos?base=bntbntbntbnt-BNT&quote=consortiumlv-GOVRN"><img src="bancorgoluboi.png" style={{"height":"36px", "margin-top":"3px", "margin-left":"5px"}} alt="bancor"></img></a>
+       <a href= "https://alcor.exchange/markets/GOVRN-consortiumlv"><img src="alcor.png" style={{"height":"36px", "margin-top":"3px", "margin-left":"3px"}} alt="alcor"></img></a>
+       <br></br>
+       
+
       </div>
+      
+
+      <div style={{"float": "right", "display": "block", "display": "inline-block"}}>
+      <a href={"https://t.me/consortiumdac"}><FontAwesomeIcon icon={faTelegram} style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"12px", "margin-left":"15px"}}/></a>
+      <a href={"https://twitter.com/consortiumdac"}><FontAwesomeIcon icon={faTwitter} style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"10px"}}/></a>
+      <a href={"https://github.com/n0umen0n/ConsortiumSC"}><FontAwesomeIcon icon={faGithub} style={{"height":"36px", "width":"36px", "color":"#00003C"}}/></a>
+      <br></br>
+     
     </div>
-    </div>
+
+          </div>
+</div>
+
+
+
+      </div>
+    
+/*
+<div style={{"float": "left", "display": "block", "display": "inline-block", "margin-top":"7px", "margin-right":"15px"}}>
+       <a style={{"font-size":12, "margin-left":"48px"}}>Exchanges</a>
+       </div>
+  
+<div style={{"float": "right", "display": "block", "display": "inline-block", "margin-top":"7px"}}>
+          <a style={{"font-size":12, "margin-right":"35px"}}>Community</a>
+          </div>
+          */
+
+
+
   )
+
+
+
+  
 }
+
+
 export default withUAL(App)

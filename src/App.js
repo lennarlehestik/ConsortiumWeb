@@ -118,7 +118,7 @@ function App(props) {
 
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
-  const [isOpened, setIsOpened] = useState(false);
+  const [isOpened, setIsOpened] = useState(true);
   const [votedata, setVoteData] = useState({"rows":[]});
   const [votedata1, setVoteData1] = useState({"rows":[]});
   const [votedata2, setVoteData2] = useState({"rows":[]});
@@ -353,7 +353,7 @@ function App(props) {
 
     if(commdata[0]){
     return(
-      <Card className={classes.root} style={{"marginBottom":"10px", "margin-top":"10px", "padding-bottom":"10px"}}>
+      <Card className={classes.root} style={{"marginBottom":"10px", "margin-top":"10px", "padding-bottom":"10px", "borderRadius": "20px"}}>
       <CardMedia
         className={classes.media}
         image={commdata[0].backgroundurl}
@@ -372,7 +372,11 @@ function App(props) {
         <Button class="coloredbutton" onClick={handleShow2}>Stake</Button>
       </Typography>
       <div style={{"float":"right"}}>
-      <Tooltip title="Total tokens used for voting"><AccountBalanceWalletIcon /></Tooltip> <a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{stakeformatter(commdata[0].totaltokensvoted)} {commdata[0].tokensymbol} &nbsp; </a><Tooltip title="Total voters"><PeopleOutline /></Tooltip><a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{commdata[0].totalvoters}</a>
+      <Tooltip title="Total tokens used for voting"><CardMedia
+        className={classes.media}
+        image={commdata[0].tokenurl}
+        title="Community image"
+      /></Tooltip> <a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{stakeformatter(commdata[0].totaltokensvoted)} {commdata[0].tokensymbol} &nbsp; </a><Tooltip title="Total voters"><PeopleOutline /></Tooltip><a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{commdata[0].totalvoters}</a>
       </div>
       </div>
     </Card>
@@ -476,7 +480,7 @@ const countitdown = () => {
   }
 }
 else{
-  return "You haven't voted"
+  return "0h"
 }
 }
 
@@ -1165,6 +1169,8 @@ const vote = async (option, pollkey) => {
               </div>
             </div>
           )}
+                <Button color="inherit"  href={`${window.location}/Leaderboard`}>Leaderboard</Button>
+
       {logbutton()}
     </Toolbar>
     </AppBar>
@@ -1251,14 +1257,14 @@ const vote = async (option, pollkey) => {
     <div>
 
       {topcard()}
-      <Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px", "padding":"5px"}}><Button style={{"color":"gray"}} onClick = {() => filtermypolls()}>My polls</Button><Button style={{"color":"gray"}} onClick = {() => window.location.reload(false)}>Top polls</Button></Card>
+      <Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px", "padding":"5px", "borderRadius": "10px"}}><Button style={{"color":"gray"}} onClick = {() => filtermypolls()}>My polls</Button><Button style={{"color":"gray"}} onClick = {() => window.location.reload(false)}>Top polls</Button></Card>
     </div>
 
     </div>
       {data.rows.map((u, i) => {
         return (
           <div key={i}>
-          <Card className={classes.root} style={{"margin-top":"7px", "padding":"10px", "padding-bottom":"20px"}}>
+          <Card className={classes.root} style={{"margin-top":"7px", "padding":"10px", "padding-bottom":"20px","borderRadius": "20px"}}>
           <CardHeader
             style={{"padding-bottom":"10px"}}
             avatar={
