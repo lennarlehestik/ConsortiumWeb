@@ -101,6 +101,19 @@ function App(props) {
     }
   }
 
+
+  const stakeformatter = (stakenumber) => {
+    if(stakenumber < 1000){
+      return stakenumber
+    }
+    if(stakenumber > 1000 && stakenumber < 1000000){
+      return (stakenumber/1000).toFixed(0) + "k"
+    }
+    if (stakenumber > 1000000){
+      return (stakenumber/1000000).toFixed(1) + "m"
+    }
+  }
+
   useEffect(() => {
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
       method: 'POST',
@@ -272,7 +285,8 @@ const showusername = () => {
         </Typography>
         <br></br>
         <Typography variant="body2" color="textSecondary" component="p">
-          {"Total staked: " +parseFloat(u.staked)+ " GOVRN"}
+        Total staked: {stakeformatter(parseFloat(u.staked))} GOVRN 
+
         </Typography>
       </CardContent>
      </Card>

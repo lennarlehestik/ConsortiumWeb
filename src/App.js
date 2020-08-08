@@ -238,6 +238,17 @@ function App(props) {
       }
 
 
+      const tokenurl = () => {
+        if(communitydata.rows[0]){
+             var commdata = communitydata.rows.filter(function(e) {
+              return e.community == scope;
+            });
+         return commdata[0].tokenurl;
+        }
+        }
+
+
+
     const loadingscatter =  () => {
 
       const Toast = Swal.mixin({
@@ -337,10 +348,10 @@ function App(props) {
       return stakenumber
     }
     if(stakenumber > 1000 && stakenumber < 1000000){
-      return (stakenumber/1000).toFixed(0) + "K"
+      return (stakenumber/1000).toFixed(0) + "k"
     }
     if (stakenumber > 1000000){
-      return (stakenumber/1000000).toFixed(1) + "M"
+      return (stakenumber/1000000).toFixed(1) + "m"
     }
   }
 
@@ -351,7 +362,11 @@ function App(props) {
 
 
 
+
+
     if(commdata[0]){
+      var num = parseFloat((commdata[0].totaltokensvoted/commdata[0].totalcirculation)*100);
+      var comactivity = num.toFixed(2);
     return(
       <Card className={classes.root} style={{"marginBottom":"10px", "margin-top":"10px", "padding-bottom":"10px", "borderRadius": "20px"}}>
       <CardMedia
@@ -369,14 +384,15 @@ function App(props) {
       </CardContent>
       <div style={{color:"#485A70", "margin-right":"20px", "margin-left":"7px", "margin-top":"20px"}}>
       <Typography variant="body2" color="textSecondary" component="p" style={{"float":"left"}}>
-        <Button class="coloredbutton" onClick={handleShow2}>Stake</Button>
+        <Button class="coloredbutton" onClick= {handleShow2}>Stake</Button>
+      
       </Typography>
       <div style={{"float":"right"}}>
-      <Tooltip title="Total tokens used for voting"><CardMedia
+      <Tooltip title={"Voting activity (%) = Total tokens voted ("+ commdata[0].tokensymbol +") / Total circulation ("+ commdata[0].tokensymbol+")"  }><CardMedia
         className={classes.media}
         image={commdata[0].tokenurl}
         title="Community image"
-      /></Tooltip> <a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{stakeformatter(commdata[0].totaltokensvoted)} {commdata[0].tokensymbol} &nbsp; </a><Tooltip title="Total voters"><PeopleOutline /></Tooltip><a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{commdata[0].totalvoters}</a>
+      /></Tooltip> <a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;   {comactivity}%  &nbsp; </a><Tooltip title="Total voters"><PeopleOutline /></Tooltip><a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{commdata[0].totalvoters}</a>
       </div>
       </div>
     </Card>
@@ -526,6 +542,15 @@ const getstake = () => { //DOES ALL THE FETCHING FOR THE STAKE MODAL
     )
 }
 
+const getmybalance = () => {
+  if(stakingbalance.rows[0]){
+    return Math.floor(Number(stakingbalance.rows[0].balance.split(" ")[0]));
+  }
+  else {
+    return 0;
+  }
+}
+
 
 const getmystake = () => {
   if(mystake.rows[0]){
@@ -550,6 +575,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
 
 //CONTENTS OF THE STAKE MODAL
   const displaystake = () => {
+    const { ual: {login, displayError,showModal} } = props
     if(stakingbalance.rows[0]) {
       const maxstakevalue = Math.floor(Number(stakingbalance.rows[0].balance.split(" ")[0])) - getmystake()
 
@@ -567,7 +593,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
         />
         <a>You can stake with: {maxstakevalue} GOVRN</a> <br/>
         <a>You are staking with: {stakeamount} GOVRN</a> <br/>
-        <Button onClick={() => stakeaction()}>Stake</Button>
+        <Button onClick={() => stakeaction()} variant="outline-dark"  >Stake</Button>
         <hr/>
         <Slider
           defaultValue={voteamount}
@@ -585,10 +611,43 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
         </div>
       )
     }
-
+    else {
+      return(
+      <div>
+        <Slider
+          defaultValue={voteamount}
+          ValueLabelComponent={ValueLabelComponent}
+          aria-label="custom thumb label"
+          step={1}
+          min={0}
+          max={0}
+          onChange={ (e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
+          style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
+        />
+        <a>You can stake with: 0 GOVRN</a> <br/>
+        <a>You are staking with: 0 GOVRN</a> <br/>
+        <Button onClick={() => showModal()}>Stake</Button>
+        <hr/>
+        <Slider
+          defaultValue={voteamount}
+          ValueLabelComponent={ValueLabelComponent}
+          aria-label="custom thumb label"
+          step={1}
+          min={0}
+          max={0}
+          onChange={ (e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
+          style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
+        />
+        <a>You have staked: 0 GOVRN</a> <br/>
+        <a>You are unstaking: 0 GOVRN</a> <br/>
+        <Button onClick={() => showModal()}>Unstake</Button>
+        </div>
+      )
+    }
+    
   }
 
-
+  
 
   const stakeaction = async () => {
     const { ual: {login, displayError} } = props
@@ -1065,6 +1124,27 @@ const vote = async (option, pollkey) => {
     if(accountname){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
       return(
         <div>
+{isOpened && (
+            <div id="drop" class="dropdown-content">
+              <div class ="line">
+                <a class="identfier"><b>{displayaccountname()}</b></a>
+              </div>
+              <div class ="line">
+                <a class="identfier">Balance</a>
+                <a class="value">{getmybalance()} GOVRN</a>
+              </div>
+              <div class ="line">
+                <a class="identfier">Voting power</a>
+                <a class="value">{getbalance()} {tokensymbol()}</a>
+              </div>
+              <div class ="line">
+                <a class="identfier">Voting power/rewards reset</a>
+                <a class="value">{countitdown()}</a>
+              </div>
+            </div>
+          )}
+
+
         <Button
         color="inherit"
         onClick={() => logmeout()}
@@ -1150,25 +1230,7 @@ const vote = async (option, pollkey) => {
         Consortium
       </Typography>
       <Button color="inherit" onClick={handleShow}>Create poll</Button>
-          {isOpened && (
-            <div id="drop" class="dropdown-content">
-              <div class ="line">
-                <a class="identfier"><b>lennyaccount</b></a>
-              </div>
-              <div class ="line">
-                <a class="identfier">Balance</a>
-                <a class="value">45 GOVRN</a>
-              </div>
-              <div class ="line">
-                <a class="identfier">Voting power</a>
-                <a class="value">{getbalance()}</a>
-              </div>
-              <div class ="line">
-                <a class="identfier">Voting power reset</a>
-                <a class="value">{countitdown()}</a>
-              </div>
-            </div>
-          )}
+          
                 <Button color="inherit"  href={`${window.location}/Leaderboard`}>Leaderboard</Button>
 
       {logbutton()}
@@ -1244,7 +1306,7 @@ const vote = async (option, pollkey) => {
 
         <center><a>You're voting with: {voteamount} {tokensymbol()}  </a></center>
         <br/>
-        <Button style={{"width":"100%"}} onClick={() => vote(votekey, votepollkey)}>Vote</Button>
+        <Button variant="outline-dark" style={{"width":"100%"}} onClick={() => vote(votekey, votepollkey)}>Vote</Button>
         </Modal.Body>
     </Modal>
 
@@ -1261,6 +1323,7 @@ const vote = async (option, pollkey) => {
     </div>
 
     </div>
+
       {data.rows.map((u, i) => {
         return (
           <div key={i}>
@@ -1286,7 +1349,13 @@ const vote = async (option, pollkey) => {
             <div style={{"color":"#2A3747"}}>{u.description}</div>
             <br />
             <a style={{"color":"#2A3747"}}>{polloptions(u.totalvote, u.answers, u.pollkey)}</a>
-            <div style={{color:"#485A70"}} class="pollstats"><Tooltip title="Get poll url"><div style={{"float":"left"}}><FileCopyIcon onClick={() => getpollurl(u.pollkey,u.uniqueurl)}/></div></Tooltip> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}><AccountBalanceWalletIcon /> {u.sumofallopt} {tokensymbol()}</div></Tooltip></div>
+            <div style={{color:"#485A70"}} class="pollstats"><Tooltip title="Get poll url"><div style={{"float":"left"}}><FileCopyIcon onClick={() => getpollurl(u.pollkey,u.uniqueurl)}/></div></Tooltip> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}><CardMedia
+        className={classes.media}
+        image={tokenurl()}
+        title="Community image"
+      />
+      {stakeformatter(u.sumofallopt)} {tokensymbol()}</div></Tooltip></div>
+      
             </CardContent>
             </Card>
           </div>
