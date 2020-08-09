@@ -4,7 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AnchorLink from 'anchor-link'
 import AnchorLinkBrowserTransport from 'anchor-link-browser-transport'
 import { Modal } from 'react-bootstrap';
-import Button from '@material-ui/core/Button';
+import { Button } from 'react-bootstrap';
+//import Button from '@material-ui/core/Button';
 import Slider from '@material-ui/core/Slider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -384,7 +385,7 @@ function App(props) {
       </CardContent>
       <div style={{color:"#485A70", "margin-right":"20px", "margin-left":"7px", "margin-top":"20px"}}>
       <Typography variant="body2" color="textSecondary" component="p" style={{"float":"left"}}>
-        <Button class="coloredbutton" onClick= {handleShow2}>Stake</Button>
+        <Button class="coloredbutton" onClick= {handleShow2}variant="dark" style={{"font-weight": "bold","borderRadius": "15px","width":"80px","height":"33px","margin-left":"7px","fontSize":"14px"}} >Stake</Button>
       
       </Typography>
       <div style={{"float":"right"}}>
@@ -591,9 +592,10 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           onChange={ (e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
           style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
         />
-        <a>You can stake with: {maxstakevalue} GOVRN</a> <br/>
-        <a>You are staking with: {stakeamount} GOVRN</a> <br/>
-        <Button onClick={() => stakeaction()} variant="outline-dark"  >Stake</Button>
+        <a>Available to stake: {maxstakevalue} GOVRN</a> <br/>
+        <a>You are staking: {stakeamount} GOVRN</a> <br/>
+        <br/>
+        <Button onClick={() => stakeaction()} variant="outline-dark" style={{"font-weight": "bold","borderRadius": "15px"}}  >Stake</Button>
         <hr/>
         <Slider
           defaultValue={voteamount}
@@ -605,9 +607,10 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           onChange={ (e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
           style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
         />
-        <a>You have staked: {getmystake()} GOVRN</a> <br/>
+        <a>Currently staked: {getmystake()} GOVRN</a> <br/>
         <a>You are unstaking: {unstakeamount} GOVRN</a> <br/>
-        <Button onClick={() => unstakeaction()}>Unstake</Button>
+        <br/>
+        <Button onClick={() => unstakeaction()}variant="outline-dark" style={{"font-weight": "bold","borderRadius": "15px"}}>Unstake</Button>
         </div>
       )
     }
@@ -624,8 +627,8 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           onChange={ (e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
           style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
         />
-        <a>You can stake with: 0 GOVRN</a> <br/>
-        <a>You are staking with: 0 GOVRN</a> <br/>
+        <a>Available to stake: 0 GOVRN</a> <br/>
+        <a>You are staking: 0 GOVRN</a> <br/>
         <Button onClick={() => showModal()}>Stake</Button>
         <hr/>
         <Slider
@@ -638,7 +641,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           onChange={ (e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
           style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
         />
-        <a>You have staked: 0 GOVRN</a> <br/>
+        <a>Currently staked: 0 GOVRN</a> <br/>
         <a>You are unstaking: 0 GOVRN</a> <br/>
         <Button onClick={() => showModal()}>Unstake</Button>
         </div>
