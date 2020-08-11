@@ -39,6 +39,12 @@ margin-bottom:50px
   }
 }
 
+@media only screen and (max-width: 600px) {
+  .bottommenu {
+    display:none;
+  }
+}
+
 .app {
   padding-bottom:70px;
 }
@@ -58,10 +64,34 @@ margin-bottom:50px
   box-shadow: 3px 4px 4px 3px rgba(0,0,0,0.1);
 }
 
-/* Add some padding inside the card container */
+/* Add some padding inside the card container  //margin-bottom: 30px  margin-top: 30px;
+;
+ */
 .container {
   padding: 2px 16px;
 }
+
+
+.navbar {
+  width:100%;
+  display:flex;
+}
+.imagesleft{
+  float:left;
+  margin-left: 45px;
+
+ 
+
+}
+.imagesright{
+  float:right;
+  margin-left: auto;
+
+  margin-right: 45px;
+
+
+}
+
 
 .question {
   font-size:20px;

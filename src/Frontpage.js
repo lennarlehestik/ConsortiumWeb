@@ -27,6 +27,7 @@ import { faTelegram, faTwitter, faGithub, faYoutube } from '@fortawesome/free-br
 
 //STYLES FOR EVERYTHING
 const useStyles = makeStyles((theme) => ({
+
   root: {
   flexGrow: 1,
   },
@@ -51,6 +52,10 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     top: 'auto',
     bottom: 0,
+  },
+  bottomBar: {
+    bottom: 'auto',
+    
   },
   grow: {
     flexGrow: 1,
@@ -236,7 +241,7 @@ const showusername = () => {
     <div class="frontapp">
     <div>
     </div>
-    <div className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px", "display":"flex", "padding-left":"14px", "padding-right":"14px","borderRadius": "15px"}}>
+    <div className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px", "display":"flex","padding-left":"14px", "padding-right":"14px","borderRadius": "15px"}}>
     <Autocomplete
       id="Community search"
       options={data.rows}
@@ -309,37 +314,37 @@ const showusername = () => {
 </div>
 
 
-<div class="card bg-light" style={{"margin":1,"margin-top":300} }>
-  <div class="card-body" style={{"font-size":14}}>
 
-      <div style={{"float": "left", "display": "block", "display": "inline-block"}}>
 
+
+<div class="bottommenu">
+    <AppBar position="fixed" className={classes.appBar} color="transparent" style={{"background-color":"white"}}>
+    <div class="navbar">
+        <div class="imagesleft">
 
        <a href= "https://newdex.io/trade/consortiumlv-govrn-eos"><img src="newdex.png" style={{"height":"36px", }} alt="newdex"></img></a>
        <a href= "https://xnation.io/eos?base=bntbntbntbnt-BNT&quote=consortiumlv-GOVRN"><img src="bancorgoluboi.png" style={{"height":"36px", "margin-top":"3px", "margin-left":"5px"}} alt="bancor"></img></a>
        <a href= "https://alcor.exchange/markets/GOVRN-consortiumlv"><img src="alcor.png" style={{"height":"36px", "margin-top":"3px", "margin-left":"3px"}} alt="alcor"></img></a>
        <br></br>
-       
-
-      </div>
+       </div>
       
+       <div class="imagesright">
 
-      <div style={{"float": "right", "display": "block", "display": "inline-block"}}>
-      <a href={"https://t.me/consortiumdac"}><FontAwesomeIcon icon={faTelegram} style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"12px", "margin-left":"15px"}}/></a>
-      <a href={"https://twitter.com/consortiumdac"}><FontAwesomeIcon icon={faTwitter} style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"10px"}}/></a>
-      <a href={"https://github.com/n0umen0n/ConsortiumSC"}><FontAwesomeIcon icon={faGithub} style={{"height":"36px", "width":"36px", "color":"#00003C"}}/></a>
+      <a href={"https://t.me/consortiumdac"}><FontAwesomeIcon icon={faTelegram}  style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"12px", "margin-left":"15px"}}/></a>
+      <a href={"https://twitter.com/consortiumdac"}><FontAwesomeIcon icon={faTwitter} style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"10px",}}/></a>
+      <a href={"https://github.com/n0umen0n/ConsortiumSC"}><FontAwesomeIcon icon={faGithub} style={{"height":"36px", "width":"36px", "color":"#00003C",}}/></a>
       <br></br>
-     
-    </div>
-
-          </div>
+      </div>
+      </div>
+      </AppBar>
 </div>
-
 
 
       </div>
     
-/*
+/*      //<div style={{"float": "left", "display": "block", "display": "inline-block"}}>      //</div>
+
+
 <div style={{"float": "left", "display": "block", "display": "inline-block", "margin-top":"7px", "margin-right":"15px"}}>
        <a style={{"font-size":12, "margin-left":"48px"}}>Exchanges</a>
        </div>

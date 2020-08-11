@@ -4,8 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AnchorLink from 'anchor-link'
 import AnchorLinkBrowserTransport from 'anchor-link-browser-transport'
 import { Modal } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
-//import Button from '@material-ui/core/Button';
+import ReactTooltip from 'react-tooltip'
+import { Button as BootstrapButton} from 'react-bootstrap';
+import Button from '@material-ui/core/Button';
 import Slider from '@material-ui/core/Slider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -31,6 +32,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import moment from 'moment';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withUAL } from 'ual-reactjs-renderer'
 
 
@@ -138,6 +141,7 @@ function App(props) {
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
+
 
   const [accountname, setAccountName] = useState("")
 
@@ -274,6 +278,7 @@ function App(props) {
   const handleShow1 = () => setShow1(true);
   const handleClose2 = () => setShow2(false);
   const handleShow2 = () => setShow2(true);
+ 
   const [votekey, setVoteKey] = useState()
   const [votepollkey, setVotePollKey] = useState()
   const AppBarOffset = () => {
@@ -385,15 +390,13 @@ function App(props) {
       </CardContent>
       <div style={{color:"#485A70", "margin-right":"20px", "margin-left":"7px", "margin-top":"20px"}}>
       <Typography variant="body2" color="textSecondary" component="p" style={{"float":"left"}}>
-        <Button class="coloredbutton" onClick= {handleShow2}variant="dark" style={{"font-weight": "bold","borderRadius": "15px","width":"80px","height":"33px","margin-left":"7px","fontSize":"14px"}} >Stake</Button>
+        <BootstrapButton class="coloredbutton" onClick= {handleShow2}variant="outline-dark" style={{"font-weight": "bold","borderRadius": "15px","width":"80px","height":"33px","margin-left":"7px","fontSize":"14px"}} >Stake</BootstrapButton>
       
       </Typography>
       <div style={{"float":"right"}}>
-      <Tooltip title={"Voting activity (%) = Total tokens voted ("+ commdata[0].tokensymbol +") / Total circulation ("+ commdata[0].tokensymbol+")"  }><CardMedia
-        className={classes.media}
-        image={commdata[0].tokenurl}
-        title="Community image"
-      /></Tooltip> <a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;   {comactivity}%  &nbsp; </a><Tooltip title="Total voters"><PeopleOutline /></Tooltip><a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{commdata[0].totalvoters}</a>
+      <Tooltip title={"Voting activity (%) = Total tokens voted ("+ commdata[0].tokensymbol +") / Total circulation ("+ commdata[0].tokensymbol+")"  }>
+      <img src={commdata[0].tokenurl} width="16px"/>
+</Tooltip><a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;   {comactivity}%  &nbsp; </a><Tooltip title="Total voters"><PeopleOutline /></Tooltip><a style={{"font-size":"14px", "font-weight":"600"}}>&nbsp;{commdata[0].totalvoters}</a>
       </div>
       </div>
     </Card>
@@ -581,6 +584,7 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
       const maxstakevalue = Math.floor(Number(stakingbalance.rows[0].balance.split(" ")[0])) - getmystake()
 
       return(
+        
         <div>
         <Slider
           defaultValue={voteamount}
@@ -590,12 +594,12 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           min={0}
           max={maxstakevalue}
           onChange={ (e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
-          style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
+          style={{"marginBottom":"10px", "margin-top":"10px", "color":"black"}}
         />
-        <a>Available to stake: {maxstakevalue} GOVRN</a> <br/>
-        <a>You are staking: {stakeamount} GOVRN</a> <br/>
+        <a style={{"font-weight": "500"}}>  Available to stake: {maxstakevalue} GOVRN</a> <br/>
+        <a style={{"font-weight": "500"}} >You are staking: {stakeamount} GOVRN</a> <br/>
         <br/>
-        <Button onClick={() => stakeaction()} variant="outline-dark" style={{"font-weight": "bold","borderRadius": "15px"}}  >Stake</Button>
+        <BootstrapButton onClick={() => stakeaction()} variant="dark" style={{"font-weight": "bold","borderRadius": "15px","fontSize":"15px",}}  >Stake</BootstrapButton>
         <hr/>
         <Slider
           defaultValue={voteamount}
@@ -605,13 +609,14 @@ function ValueLabelComponent(props) { //CUSTOM TOOLTIP COMPONENT FOR ALL SLIDERS
           min={0}
           max={getmystake()}
           onChange={ (e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
-          style={{"marginBottom":"10px", "margin-top":"10px", "color":"#485A70"}}
+          style={{"marginBottom":"10px", "margin-top":"10px", "color":"black"}}
         />
-        <a>Currently staked: {getmystake()} GOVRN</a> <br/>
-        <a>You are unstaking: {unstakeamount} GOVRN</a> <br/>
+        <a style={{"font-weight": "500"}}>Currently staked: {getmystake()} GOVRN</a> <br/>
+        <a style={{"font-weight": "500"}}>You are unstaking: {unstakeamount} GOVRN</a> <br/>
         <br/>
-        <Button onClick={() => unstakeaction()}variant="outline-dark" style={{"font-weight": "bold","borderRadius": "15px"}}>Unstake</Button>
+        <BootstrapButton onClick={() => unstakeaction()}variant="dark" style={{"font-weight": "bold","borderRadius": "15px","fontSize":"15px"}}>Unstake</BootstrapButton>
         </div>
+        
       )
     }
     else {
@@ -1232,7 +1237,7 @@ const vote = async (option, pollkey) => {
       <Typography variant="h6" style={{"color":"#2A3747", "text-decoration":"none"}} className={classes.title} component={Link} to={'/'}>
         Consortium
       </Typography>
-      <Button color="inherit" onClick={handleShow}>Create poll</Button>
+      
           
                 <Button color="inherit"  href={`${window.location}/Leaderboard`}>Leaderboard</Button>
 
@@ -1259,15 +1264,29 @@ const vote = async (option, pollkey) => {
     <div class="app">
     <div>
     <Modal show={show} onHide={handleClose} centered>
+    <Modal.Header>
+    <Typography  style={{"fontSize":"22px","font-weight": "bold","margin-left":"7px"}}  data-html = "true" data-for='signalprogress' 
+    data-tip={'*Your poll will be active for 3 days <br/><br /> *If your community participates in the poll, at the end of the 3rd day,<br /> you can get rewards starting from 10k and up to 80k GOVRN tokens <br/><br /> *To create a poll your account must have 5k GOVRN that will get burned'}
+         ><ReactTooltip id = 'signalprogress' type = "dark" effect = "solid" backgroundColor = "black" place ="bottom" /> 
+    
+    
+    
+    Poll creation<FontAwesomeIcon icon={faInfoCircle} style={{"height":"16px", "width":"16px", "color":"black", "margin-bottom":"6px","opacity":"0.7","margin-left":"2px"}}/>
+    
+  </Typography>
+      </Modal.Header>
         <Modal.Body>
+       
+
+
         <TextField
-        style={{"width":"100%", "margin":"7px"}}
+        style={{"width":"97%", "margin":"7px"}}
         label ={"Poll question"}
         onChange={text => setQuestionSubmission(text.target.value)}
         id="outlined-basic" variant="outlined"
          />
          <TextField
-         style={{"width":"100%", "margin":"7px"}}
+         style={{"width":"97%", "margin":"7px"}}
          label ={"Poll description"}
          onChange={text => setQuestionDescription(text.target.value)}
          id="outlined-basic" variant="outlined"
@@ -1277,19 +1296,24 @@ const vote = async (option, pollkey) => {
 
            return (
              <TextField
-             style={{"width":"100%", "margin":"7px"}}
-             label ={"Option " + (i+1)}
+             style={{"width":"97%", "margin":"7px"}}
+             label ={"Answer option " + (i+1)}
              onChange={text => votingfield(text.target.value, i)}
              id="outlined-basic" variant="outlined"
               />
            )
          })}
-         <Button onClick={() => addvotingfield()}>Add option</Button>
+         <BootstrapButton variant="outline-dark" style={{"width":"97%","margin-left":"7px","text-align":"left","margin-top":"7px","height":"53px"}} onClick={() => addvotingfield()}>Add option</BootstrapButton>
         <br />
-        <Button
+        <br />
+        <center><BootstrapButton variant="dark" style={{"font-weight": "bold","borderRadius": "15px","height":"38px","fontSize":"15px","width":"97%","margin-top":"3px"}}
         onClick={() => createpoll()}
-        >Create poll</Button>
+        >Create poll</BootstrapButton></center>
         </Modal.Body>
+<hr  style={{"width":"90%","margin-top":"9px","margin-bottom":"10px"}} /> 
+  <center> <Typography style={{"fontSize":"12px","margin-bottom":"16px","font-weight": "bold"}}> Polls and votes are stored fully
+
+<a href="https://bloks.io/account/consortium11#keys"> on-chain</a></Typography></center>
     </Modal>
 
 
@@ -1309,20 +1333,36 @@ const vote = async (option, pollkey) => {
 
         <center><a>You're voting with: {voteamount} {tokensymbol()}  </a></center>
         <br/>
-        <Button variant="outline-dark" style={{"width":"100%"}} onClick={() => vote(votekey, votepollkey)}>Vote</Button>
+        <center> <BootstrapButton variant="outline-dark" style={{"width":"30%","font-weight": "bold","borderRadius": "15px","align": "center",}} onClick={() => vote(votekey, votepollkey)}>Vote</BootstrapButton></center>
         </Modal.Body>
     </Modal>
 
     <Modal show={show2} onHide={handleClose2} centered>
+    <Modal.Header>
+    <Typography  style={{"fontSize":"22px","font-weight": "bold","margin-left":"7px"}}  data-html = "true" data-for='signalprogress' 
+    data-tip={'*The more GOVRN tokens staked the higher the rewards for voting and poll creation your community gets'}
+         ><ReactTooltip id = 'signalprogress' type = "dark" effect = "solid" backgroundColor = "black" place ="bottom" /> 
+    
+    
+    
+    Staking<FontAwesomeIcon icon={faInfoCircle} style={{"height":"16px", "width":"16px", "color":"black", "margin-bottom":"6px","opacity":"0.7","margin-left":"2px"}}/>
+    
+  </Typography>
+      </Modal.Header>
         <Modal.Body style={{"padding":"20px"}}>
         <a>{displaystake()}</a>
         </Modal.Body>
+        <hr  style={{"width":"90%","margin-top":"9px","margin-bottom":"10px"}} /> 
+  <center> <Typography style={{"fontSize":"12px","margin-bottom":"16px","font-weight": "bold"}}> No time delay for unstaking
+
+</Typography></center>
     </Modal>
 
     <div>
 
       {topcard()}
-      <Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px", "padding":"5px", "borderRadius": "10px"}}><Button style={{"color":"gray"}} onClick = {() => filtermypolls()}>My polls</Button><Button style={{"color":"gray"}} onClick = {() => window.location.reload(false)}>Top polls</Button></Card>
+      <Card className={classes.root} style={{"margin-top":"7px", "padding-left":"25px", "padding":"5px", "borderRadius": "10px", "height":"50px"}}>
+<Button style={{"color":"gray","margin-left":"6px"}} onClick = {() => filtermypolls()}>My polls</Button> | <Button style={{"color":"gray","margin-right":"500px"}} onClick = {() => window.location.reload(false)}>Top polls</Button> <BootstrapButton color="inherit" onClick={handleShow}variant="outline-dark" style={{"font-weight": "bold","borderRadius": "15px","width":"120px","height":"35px","margin-left":"39px","fontSize":"14px", "margin-top":"3px"}}>Create poll</BootstrapButton></Card>
     </div>
 
     </div>
@@ -1352,11 +1392,8 @@ const vote = async (option, pollkey) => {
             <div style={{"color":"#2A3747"}}>{u.description}</div>
             <br />
             <a style={{"color":"#2A3747"}}>{polloptions(u.totalvote, u.answers, u.pollkey)}</a>
-            <div style={{color:"#485A70"}} class="pollstats"><Tooltip title="Get poll url"><div style={{"float":"left"}}><FileCopyIcon onClick={() => getpollurl(u.pollkey,u.uniqueurl)}/></div></Tooltip> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}><CardMedia
-        className={classes.media}
-        image={tokenurl()}
-        title="Community image"
-      />
+            <div style={{color:"#485A70"}} class="pollstats"><Tooltip title="Get poll url"><div style={{"float":"left"}}><FileCopyIcon onClick={() => getpollurl(u.pollkey,u.uniqueurl)}/></div></Tooltip> <Tooltip title="Total voters"><div style={{"float":"right"}}>&nbsp;&nbsp;&nbsp;<PeopleOutline /> {u.nrofvoters}</div></Tooltip><Tooltip title="Total tokens voted with"><div style={{"float":"right"}}>
+            <img src={tokenurl()} width="16px"/>
       {stakeformatter(u.sumofallopt)} {tokensymbol()}</div></Tooltip></div>
       
             </CardContent>
