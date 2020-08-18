@@ -19,7 +19,11 @@ margin-bottom:50px
 }
 
 
-
+@media only screen and (max-width: 600px) {
+  .frontpagecard{
+       height: 300px;
+  }
+}
 
 @media only screen and (min-width: 600px) {
   .mobilemenu {
@@ -64,7 +68,8 @@ margin-bottom:50px
   box-shadow: 3px 4px 4px 3px rgba(0,0,0,0.1);
 }
 
-/* Add some padding inside the card container  //margin-bottom: 30px  margin-top: 30px;
+/* Add some padding inside the card container  //margin-bottom: 30px  margin-top: 30px; background-color: #697A90;
+
 ;
  */
 .container {
@@ -108,8 +113,9 @@ margin-bottom:50px
   background-color: #EDEDEE;
 }
 
-.progressbar>div {
-  background-color: #697A90;
+
+.progressbar>div {  
+  background-color: #323333;
   height: 5px;
 }
 

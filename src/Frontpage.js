@@ -22,6 +22,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withUAL } from 'ual-reactjs-renderer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTelegram, faTwitter, faGithub, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { Button as BootstrapButton} from 'react-bootstrap';
+
 
 
 
@@ -88,6 +90,8 @@ function App(props) {
   const classes = useStyles();
   const [data, setData] = useState({"rows":[]});
   const [searchvalue, setSearch] = useState()
+  const [totalstaked, setTotalStaked] = useState({"rows":[]});
+
 
   const AppBarOffset = () => {
     return <div className={classes.offset} />;
@@ -120,6 +124,9 @@ function App(props) {
   }
 
   useEffect(() => {
+
+
+
     fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
       method: 'POST',
       headers: {
@@ -139,6 +146,32 @@ function App(props) {
     )
     //.then(restoreSession())
   }, data["rows"]);
+
+
+
+
+  useEffect(() => {
+    fetch('https://api.kylin.alohaeos.com/v1/chain/get_table_rows', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        json: true,
+        code: 'andrtestcons',
+        table:  'totalstk',
+        scope: 'andrtestcons',
+        limit: 1,
+      
+    })
+    })
+    .then(response =>
+        response.json().then(totalstaked => setTotalStaked(totalstaked))
+    )
+})
+
+
 
   /* ANCHOR CONNECTION */
 
@@ -173,6 +206,8 @@ function App(props) {
         setSessionResult()
     }
 */
+
+
 const logbutton = () =>{
   if(accountname){ //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
     return(
@@ -181,8 +216,9 @@ const logbutton = () =>{
       <Button
       color="inherit"
       onClick={logout}
+      style={{"font-weight": "bold","fontFamily":"helvetica"}}
       >Log out</Button>
-      <Button color="inherit" id="logoutname">{displayaccountname()}</Button>
+      <Button style={{"font-weight": "bold",}} color="inherit" id="logoutname">{displayaccountname()}</Button>
       </div>
     )
     }
@@ -190,6 +226,7 @@ const logbutton = () =>{
       return(
         <Button
         color="inherit"
+        style={{"font-weight": "bold","fontFamily":"helvetica"}}
         onClick={showModal}
         >Log in</Button>
       )
@@ -202,9 +239,30 @@ const showusername = () => {
 }
 }
 
+
+const gettotalstaked = () => {
+  if(totalstaked.rows[0]){
+    return Math.floor(Number(totalstaked.rows[0].totalstaked.split(" ")[0]));
+    }
+  }
+
+const pollrewards = (fullstake,communitystake) => {
+  return(parseInt((Math.pow(communitystake/fullstake, 1/3) * 70000 + 10000) / 8)) //LISA KUUP JUUR communitystake/fullstake sellele
+}
+
+const voterewards = (fullstake,communitystake) => {
+  return(parseInt((Math.pow(communitystake/fullstake, 1/3) * 8500 + 2500) / 8)) //LISA KUUP JUUR communitystake/fullstake sellele
+}
+
+
+
+
 //var str1 = ".png ";
-//var str2 = {u.communityname.substring(0, 90)};
+//var str2 = {u.communityname.substring(0, 90)};    return(<a>{totalstaked.rows[0].totalstaked}</a>)
+
 //var res = str1.concat(str2);
+//#2A3747"
+
 
   return (
     <div>
@@ -212,13 +270,12 @@ const showusername = () => {
     <div className={classes.root}>
     <AppBar position="fixed" color="transparent" style={{"background-color":"white"}}>
     <Toolbar>
-    <img src="logo.png" width="54.4" height="34" class="d-inline-block align-top" style={{"margin-bottom":2}}></img>
-      <Typography variant="h6" style={{"color":"#2A3747", "text-decoration":"none", "margin-top":"0px"}} className={classes.title} component={Link} to={'/'}>
+    <img src="logo.png" width="54.4" height="34" class="d-inline-block align-top" style={{"margin-bottom":2,"opacity":0.8}}></img>
+      <Typography variant="h6" style={{"color":"black", "text-decoration":"none", "margin-top":"3px","font-weight": "700", "margin-left":"5px", "fontFamily":"helvetica","font-size":"21px"}} className={classes.title} component={Link} to={'/'}>
       
       
 
-      <a> Consortium </a>
-       
+      <a>Consortium</a>
       </Typography>
 
       {logbutton()}
@@ -241,7 +298,7 @@ const showusername = () => {
     <div class="frontapp">
     <div>
     </div>
-    <div className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px", "display":"flex","padding-left":"14px", "padding-right":"14px","borderRadius": "15px"}}>
+    <div className={classes.root} style={{"margin-bottom":"10px","margin-top":"10px" ,"display":"flex","padding-left":"14px", "padding-right":"14px","borderRadius": "15px"}}>
     <Autocomplete
       id="Community search"
       options={data.rows}
@@ -250,13 +307,17 @@ const showusername = () => {
       style={{ width: "100%"}}
       renderInput={(params) => <TextField {...params} label="Community name" variant="outlined"  style={{backgroundColor:"white"}}/>}
     />
-    <Button href={`${window.location}community/${searchvalue}`} variant="outlined" style={{"margin-left":"5px", backgroundColor:"white","borderRadius": "15px" }}>Search</Button>
+        <BootstrapButton href={`${window.location}community/${searchvalue}`} variant="dark" color="inherit"  textAlign="right"  style={{"margin-left":"5px","borderRadius": "15px","fontSize":"14px","font-weight": "bold"}}><a style={{"margin-top":"20px"}}>Search</a></BootstrapButton>
+
     </div>
+
       <div class="parent">
       {data.rows.map((u, i) => {
         return (
+          <div class="frontpagecard">
+
       <div class="col">
-      <Card className={classes.root} style={{"margin-bottom":"10px", "height":"270px", "borderRadius": "20px"}}>
+      <Card className={classes.root} style={{"margin-bottom":"10px", "height":"320px", "borderRadius": "20px"}}>
       <CardHeader
       
         avatar={
@@ -286,16 +347,34 @@ const showusername = () => {
 
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          {u.description.substring(0, 90)}{(u.description.length > 90) ? '...' : ''}
+          {u.description.substring(0, 90)}{(u.description.length > 90) ? ' ...' : ''}
         </Typography>
         <br></br>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <div style={{"position":"absolute","bottom":"0","margin-bottom":"20px"}}> 
+        <Typography variant="body2" color="textSecondary" component="p" style={{"font-weight":"700"}} >
         Total staked: {stakeformatter(parseFloat(u.staked))} GOVRN 
-
         </Typography>
+
+        <Typography variant="body2" color="textSecondary" component="p">
+        Voting reward: {voterewards(gettotalstaked(),parseInt(u.staked))} GOVRN 
+        </Typography>
+
+        <Typography variant="body2" color="textSecondary" component="p">
+        Poll reward: {pollrewards(gettotalstaked(),parseInt(u.staked))} GOVRN 
+        </Typography>
+        </div>
+
       </CardContent>
      </Card>
      </div>
+
+     </div>
+
+//        Total staked: {stakeformatter(parseFloat(u.staked))} GOVRN 
+
+
+
+
         )
       })}
 
@@ -310,6 +389,39 @@ const showusername = () => {
 
 
        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
           
 </div>
 
@@ -318,21 +430,21 @@ const showusername = () => {
 
 
 <div class="bottommenu">
-    <AppBar position="fixed" className={classes.appBar} color="transparent" style={{"background-color":"white"}}>
+    <AppBar position="fixed" className={classes.appBar} color="transparent" style={{"background-color":"white", "height":"65px"}}>
     <div class="navbar">
         <div class="imagesleft">
 
-       <a href= "https://newdex.io/trade/consortiumlv-govrn-eos"><img src="newdex.png" style={{"height":"36px", }} alt="newdex"></img></a>
-       <a href= "https://xnation.io/eos?base=bntbntbntbnt-BNT&quote=consortiumlv-GOVRN"><img src="bancorgoluboi.png" style={{"height":"36px", "margin-top":"3px", "margin-left":"5px"}} alt="bancor"></img></a>
-       <a href= "https://alcor.exchange/markets/GOVRN-consortiumlv"><img src="alcor.png" style={{"height":"36px", "margin-top":"3px", "margin-left":"3px"}} alt="alcor"></img></a>
+       <a href= "https://newdex.io/trade/consortiumlv-govrn-eos"><img src="newdex.png" style={{"height":"36px","margin-top":"7px" }} alt="newdex"></img></a>
+       <a href= "https://xnation.io/eos?base=bntbntbntbnt-BNT&quote=consortiumlv-GOVRN"><img src="bancorgoluboi.png" style={{"height":"36px", "margin-top":"7px", "margin-left":"30px"}} alt="bancor"></img></a>
+       <a href= "https://alcor.exchange/markets/GOVRN-consortiumlv"><img src="alcor.png" style={{"height":"36px", "margin-top":"7px", "margin-left":"28px"}} alt="alcor"></img></a>
        <br></br>
        </div>
       
        <div class="imagesright">
 
-      <a href={"https://t.me/consortiumdac"}><FontAwesomeIcon icon={faTelegram}  style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"12px", "margin-left":"15px"}}/></a>
-      <a href={"https://twitter.com/consortiumdac"}><FontAwesomeIcon icon={faTwitter} style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"10px",}}/></a>
-      <a href={"https://github.com/n0umen0n/ConsortiumSC"}><FontAwesomeIcon icon={faGithub} style={{"height":"36px", "width":"36px", "color":"#00003C",}}/></a>
+      <a href={"https://t.me/consortiumdac"}><FontAwesomeIcon icon={faTelegram}  style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"30px", "margin-left":"15px","margin-top":"7px"}}/></a>
+      <a href={"https://twitter.com/consortiumdac"}><FontAwesomeIcon icon={faTwitter} style={{"height":"36px", "width":"36px", "color":"#00003C", "margin-right":"28px","margin-top":"7px"}}/></a>
+      <a href={"https://github.com/n0umen0n/ConsortiumSC"}><FontAwesomeIcon icon={faGithub} style={{"height":"36px", "width":"36px", "color":"#00003C","margin-top":"7px",}}/></a>
       <br></br>
       </div>
       </div>
