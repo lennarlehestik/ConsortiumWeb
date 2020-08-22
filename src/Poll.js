@@ -37,6 +37,10 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
+  media: {
+    height: 0,
+    paddingTop: "30%",
+  },
   root: {
     flexGrow: 1,
   },
@@ -1273,7 +1277,7 @@ function App(props) {
               }}
             >
               <img
-                src={commdata[0].tokenurl}
+                src={tokenurl()}
                 width="30px"
                 height="30px"
                 marginRight="0px"

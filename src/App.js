@@ -127,6 +127,8 @@ function App(props) {
   const [databalance, setDataBalance] = useState();
   const [questionsubmission, setQuestionSubmission] = useState("");
   const [dailyvoted, setDailyVoted] = useState({ rows: [] });
+  const [nrofvotes, setNumberofVotes] = useState({ rows: [] });
+
   const [mystake, setMyStake] = useState({ rows: [] });
   const [dataind, setMyindStake] = useState({ rows: [] });
 
@@ -566,6 +568,7 @@ function App(props) {
         )
         .then(getvote())
         .then(getdailyvoted())
+        .then(getnrofvotes())
         .then(getstake());
     }
   }, databalance);
@@ -604,6 +607,57 @@ function App(props) {
       }
     } else {
       return "0h";
+    }
+  };
+
+  const getnrofvotes = () => {
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "paljuvoted",
+        scope: "andrtestcons",
+        key_type: "name",
+        index_position: 1,
+        lower_bound: displayaccountname(),
+        upper_bound: displayaccountname(),
+      }),
+    }).then((response) =>
+      response.json().then((nrofvotes) => setNumberofVotes(nrofvotes))
+    );
+  };
+
+  const countitdownvotes = () => {
+    if (nrofvotes.rows[0]) {
+      const firstvotetime = new Date(nrofvotes.rows[0].timefirstvote + "Z");
+      const current = new Date();
+      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      if (difference > 1) {
+        return Math.floor(difference) + " h";
+      } else {
+        return Math.floor(difference * 60) + " min";
+      }
+    } else {
+      return "0h";
+    }
+  };
+
+  const rewardsleft = () => {
+    if (nrofvotes.rows[0]) {
+      const nrofvote = nrofvotes.rows[0].nrofvotes;
+      const rewardsleft = 3 - nrofvote;
+      if (rewardsleft > 0) {
+        return nrofvote;
+      } else {
+        return "0";
+      }
+    } else {
+      return "0";
     }
   };
 
@@ -1408,8 +1462,16 @@ Swal.fire({
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Voting power/rewards reset</a>
+                <a class="identfier">Voting power reset</a>
                 <a class="value">{countitdown()}</a>
+              </div>
+              <div class="line">
+                <a class="identfier">Rewards reset</a>
+                <a class="value">{countitdownvotes()}</a>
+              </div>
+              <div class="line">
+                <a class="identfier">Vote rewards left</a>
+                <a class="value">{rewardsleft()}</a>
               </div>
             </div>
           )}
@@ -1679,7 +1741,7 @@ Swal.fire({
                 data-html="true"
                 data-for="signalprogress"
                 data-tip={
-                  "*first 3 daily votes are rewarded <br/><br /> *based on Quadratic Voting principles<br /> a) voting power equalling to square root of the tokens voted with <br />  b) daily limit on voting power equalling to token holdings"
+                  "*first 3 daily votes are rewarded <br/> (three per all communities, not per community) <br/><br /> *based on Quadratic Voting principles<br /> a) voting power equalling to square root of the tokens voted with <br />  b) daily limit on voting power equalling to token holdings"
                 }
               >
                 <ReactTooltip
