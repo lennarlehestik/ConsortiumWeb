@@ -21,6 +21,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { withUAL } from "ual-reactjs-renderer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Swal from "sweetalert2";
+import ShareIcon from '@material-ui/icons/Share';
 import {
   faTelegram,
   faTwitter,
@@ -81,6 +83,9 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     flexGrow: 1,
   },
+  Card: {
+    height:"500px"
+  },
 }));
 
 function App(props) {
@@ -140,7 +145,33 @@ function App(props) {
       }),
     }).then((response) => response.json().then((data) => setData(data)));
     //.then(restoreSession())
-  }, data["rows"]);
+  }, data["rows"][0]);
+
+  const getcommunityurl = (community) => {
+    const url =
+      window.location.origin +
+      "/community/" +
+      community
+    navigator.clipboard.writeText(url);
+
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "middle",
+
+      showConfirmButton: false,
+      timer: 1000,
+      timerProgressBar: false,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+
+    Toast.fire({
+      icon: "success",
+      title: "Copied to clipboard",
+    });
+  };
 
   useEffect(() => {
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
@@ -160,6 +191,8 @@ function App(props) {
       response.json().then((totalstaked) => setTotalStaked(totalstaked))
     );
   });
+
+
 
   /* ANCHOR CONNECTION */
 
@@ -203,12 +236,10 @@ function App(props) {
           <Button
             color="inherit"
             onClick={logout}
-            style={{ "font-weight": "bold", fontFamily: "helvetica" }}
           >
             Log out
           </Button>
           <Button
-            style={{ "font-weight": "bold" }}
             color="inherit"
             id="logoutname"
           >
@@ -221,7 +252,6 @@ function App(props) {
       return (
         <Button
           color="inherit"
-          style={{ "font-weight": "bold", fontFamily: "helvetica" }}
           onClick={showModal}
         >
           Log in
@@ -270,30 +300,30 @@ function App(props) {
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-              <img
-                src="logo.png"
-                width="54.4"
-                height="34"
-                class="d-inline-block align-top"
-                style={{ "margin-bottom": 2, opacity: 0.8 }}
-              ></img>
-              <Typography
-                variant="h6"
-                style={{
-                  color: "black",
-                  "text-decoration": "none",
-                  "margin-top": "3px",
-                  "font-weight": "700",
-                  "margin-left": "5px",
-                  fontFamily: "helvetica",
-                  "font-size": "21px",
-                }}
-                className={classes.title}
-                component={Link}
-                to={"/"}
-              >
-                <a>Consortium</a>
-              </Typography>
+            <img
+              src="/logo.png"
+              width="48"
+              class="d-inline-block align-top"
+              style={{ "margin-bottom": 2, opacity: 0.7 }}
+            ></img>
+            <Typography
+              variant="h6"
+              style={{
+                color: "black",
+                "text-decoration": "none",
+                "margin-top": "3px",
+                "font-weight": "600",
+                "margin-left": "5px",
+                fontFamily: "helvetica",
+                "font-size": "21px",
+                opacity:0.7
+              }}
+              className={classes.title}
+              component={Link}
+              to={"/"}
+            >
+              <a>Consortium</a>
+            </Typography>
 
               {logbutton()}
             </Toolbar>
@@ -302,23 +332,6 @@ function App(props) {
         </div>
       </div>
 
-      <div class="mobilemenu">
-        <AppBar
-          position="fixed"
-          color="primary"
-          className={classes.appBar}
-          color="transparent"
-          style={{ "background-color": "white" }}
-        >
-          <Toolbar>
-            {logbutton()}
-            <div className={classes.grow} />
-            <Button style={{ color: "#2A3747" }} color="inherit">
-              {showusername()}
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </div>
 
       <div class="frontapp">
         <div></div>
@@ -330,7 +343,6 @@ function App(props) {
             display: "flex",
             "padding-left": "14px",
             "padding-right": "14px",
-            borderRadius: "15px",
           }}
         >
           <Autocomplete
@@ -346,12 +358,13 @@ function App(props) {
                 {...params}
                 label="Community name"
                 variant="outlined"
-                style={{ backgroundColor: "white" }}
+                className="inputRounded"
+                style={{ backgroundColor: "white", borderRadius:"15px"}}
               />
             )}
           />
           <BootstrapButton
-            href={`${window.location}community/${searchvalue}`}
+            href={typeof(searchvalue) == 'undefined' ? '/' : `${window.location}community/${searchvalue}`}
             variant="dark"
             color="inherit"
             textAlign="right"
@@ -375,9 +388,7 @@ function App(props) {
                   <Card
                     className={classes.root}
                     style={{
-                      "margin-bottom": "10px",
-                      height: "320px",
-                      borderRadius: "20px",
+                      borderRadius: "15px",
                     }}
                   >
                     <CardHeader
@@ -391,7 +402,7 @@ function App(props) {
                       }
                       action={
                         <IconButton aria-label="settings">
-                          <MoreVertIcon />
+                          <ShareIcon onClick={() => getcommunityurl(u.community)} style={{opacity:0.8}}/>
                         </IconButton>
                       }
                       title={u.communityname}
@@ -411,6 +422,7 @@ function App(props) {
                         variant="body2"
                         color="textSecondary"
                         component="p"
+                        style={{"height":"100px"}}
                       >
                         {u.description.substring(0, 90)}
                         {u.description.length > 90 ? " ..." : ""}
@@ -423,14 +435,15 @@ function App(props) {
                           "margin-bottom": "20px",
                         }}
                       >
+
                         <Typography
                           variant="body2"
                           color="textSecondary"
                           component="p"
                           style={{ "font-weight": "700" }}
                         >
-                          Total staked: {stakeformatter(parseFloat(u.staked))}{" "}
-                          GOVRN
+                          Total staked: <a>{stakeformatter(parseFloat(u.staked))}{" "}
+                          GOVRN</a>
                         </Typography>
 
                         <Typography
@@ -555,7 +568,7 @@ function App(props) {
 <div style={{"float": "left", "display": "block", "display": "inline-block", "margin-top":"7px", "margin-right":"15px"}}>
        <a style={{"font-size":12, "margin-left":"48px"}}>Exchanges</a>
        </div>
-  
+
 <div style={{"float": "right", "display": "block", "display": "inline-block", "margin-top":"7px"}}>
           <a style={{"font-size":12, "margin-right":"35px"}}>Community</a>
           </div>

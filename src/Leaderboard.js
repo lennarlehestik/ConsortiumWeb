@@ -275,18 +275,23 @@ function App(props) {
           <Table
             className={classes.table}
             size="small"
-            aria-label="a dense table"
+            aria-label="rewards"
           >
             <TableHead>
               <TableRow>
+              <TableCell width="25px">#</TableCell>
                 <TableCell>Governor</TableCell>
                 <TableCell align="right">Rewards</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data.rows.map((u, i) => {
+                if(i<50){
                 return (
                   <TableRow key={i}>
+                  <TableCell component="th" scope="row">
+                    {i + 1}
+                  </TableCell>
                     <TableCell component="th" scope="row">
                       {u.governor}
                     </TableCell>
@@ -296,6 +301,7 @@ function App(props) {
                     </TableCell>
                   </TableRow>
                 );
+              }
               })}
             </TableBody>
           </Table>

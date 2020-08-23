@@ -23,7 +23,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Swal from "sweetalert2";
 import Tooltip from "@material-ui/core/Tooltip";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
+import ShareIcon from '@material-ui/icons/Share';
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -37,6 +38,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withUAL } from "ual-reactjs-renderer";
 import SwapHorizOutlinedIcon from "@material-ui/icons/SwapHorizOutlined";
 import HowToRegOutlinedIcon from "@material-ui/icons/HowToRegOutlined";
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 
 //STYLES FOR EVERYTHING
 const useStyles = makeStyles((theme) => ({
@@ -446,8 +451,8 @@ function App(props) {
             >
               <img
                 src={commdata[0].tokenurl}
-                width="30px"
-                height="30px"
+                width="24px"
+                height="24px"
                 marginRight="0px"
               />
               <a
@@ -747,7 +752,7 @@ function App(props) {
     const { children, open, value } = props;
 
     return (
-      <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
+      <Tooltip open={open} enterTouchDelay={0} placement="top" title={isNaN(value) ? 0 : value}>
         {children}
       </Tooltip>
     );
@@ -766,13 +771,13 @@ function App(props) {
       return (
         <div>
           <Slider
-            defaultValue={voteamount}
+            defaultValue={1}
             ValueLabelComponent={ValueLabelComponent}
             aria-label="custom thumb label"
             step={1}
             min={0}
             max={maxstakevalue}
-            onChange={(e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
+            onChangeCommitted={(e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
             style={{
               marginBottom: "10px",
               "margin-top": "10px",
@@ -808,7 +813,7 @@ function App(props) {
             step={1}
             min={0}
             max={getmyindstake()}
-            onChange={(e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
+            onChangeCommitted={(e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
             style={{
               marginBottom: "10px",
               "margin-top": "10px",
@@ -847,7 +852,7 @@ function App(props) {
             step={1}
             min={0}
             max={0}
-            onChange={(e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
+            onChangeCommitted={(e, val) => setStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
             style={{
               marginBottom: "10px",
               "margin-top": "10px",
@@ -878,7 +883,7 @@ function App(props) {
             step={1}
             min={0}
             max={0}
-            onChange={(e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
+            onChangeCommitted={(e, val) => setUnStakeAmount(val)} //SETSTAKEAMOUNT INSTEAD!
             style={{
               marginBottom: "10px",
               "margin-top": "10px",
@@ -1476,10 +1481,10 @@ Swal.fire({
             </div>
           )}
 
-          <Button color="inherit" onClick={() => logmeout()}>
+          <Button color="inherit" onClick={() => logmeout()} style={{"border-radius":"50px"}}>
             Log out
           </Button>
-          <Button onClick={toggle} color="inherit" id="logoutname">
+          <Button onClick={toggle} color="inherit" id="logoutname" style={{"border-radius":"50px"}}>
             {displayaccountname()}
           </Button>
         </div>
@@ -1553,25 +1558,32 @@ Swal.fire({
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography
-                variant="h6"
-                style={{ color: "#2A3747", "text-decoration": "none" }}
-                className={classes.title}
-                component={Link}
-                to={"/"}
-              >
-                Consortium
-              </Typography>
+            <img
+              src="/logo.png"
+              width="48"
+              class="d-inline-block align-top"
+              style={{ "margin-bottom": 2, opacity: 0.7 }}
+            ></img>
+            <Typography
+              variant="h6"
+              style={{
+                color: "black",
+                "text-decoration": "none",
+                "margin-top": "3px",
+                "font-weight": "600",
+                "margin-left": "5px",
+                fontFamily: "helvetica",
+                "font-size": "21px",
+                opacity:0.7
+              }}
+              className={classes.title}
+              component={Link}
+              to={"/"}
+            >
+              <a>Consortium</a>
+            </Typography>
 
-              <Button color="inherit" href={`${window.location}/Leaderboard`}>
+              <Button style={{color:"inherit", "border-radius":"50px"}} href={`${window.location}/Leaderboard`}>
                 Leaderboard
               </Button>
 
@@ -1591,7 +1603,8 @@ Swal.fire({
           style={{ "background-color": "white" }}
         >
           <Toolbar>
-            {logbutton()}
+          <AccountBalanceIcon />
+          <FormatListNumberedIcon />
             <Fab
               style={{ "background-color": "#AFBBC9" }}
               onClick={handleShow}
@@ -1600,10 +1613,8 @@ Swal.fire({
             >
               <AddIcon style={{ color: "white" }} />
             </Fab>
-            <div className={classes.grow} />
-            <Button style={{ color: "#2A3747" }} color="inherit">
-              {showusername()}
-            </Button>
+            <PermIdentityIcon />
+            <ExitToAppIcon />
           </Toolbar>
         </AppBar>
       </div>
@@ -1649,14 +1660,14 @@ Swal.fire({
               <TextField
                 style={{ width: "97%", margin: "7px" }}
                 label={"Poll question"}
-                onChange={(text) => setQuestionSubmission(text.target.value)}
+                onBlur={(text) => setQuestionSubmission(text.target.value)}
                 id="outlined-basic"
                 variant="outlined"
               />
               <TextField
                 style={{ width: "97%", margin: "7px" }}
                 label={"Poll description"}
-                onChange={(text) => setQuestionDescription(text.target.value)}
+                onBlur={(text) => setQuestionDescription(text.target.value)}
                 id="outlined-basic"
                 variant="outlined"
               />
@@ -1666,28 +1677,29 @@ Swal.fire({
                   <TextField
                     style={{ width: "97%", margin: "7px" }}
                     label={"Answer option " + (i + 1)}
-                    onChange={(text) => votingfield(text.target.value, i)}
+                    onBlur={(text) => votingfield(text.target.value, i)}
                     id="outlined-basic"
                     variant="outlined"
                   />
                 );
               })}
+                            <center>
               <BootstrapButton
                 variant="outline-dark"
                 style={{
+                  "font-weight": "bold",
+                  borderRadius: "15px",
+                  height: "38px",
+                  fontSize: "15px",
                   width: "97%",
-                  "margin-left": "7px",
-                  "text-align": "left",
-                  "margin-top": "7px",
-                  height: "53px",
+                  "margin-top": "10px",
                 }}
-                onClick={() => addvotingfield()}
+                onClick={() => createpoll()}
               >
                 Add option
               </BootstrapButton>
               <br />
-              <br />
-              <center>
+
                 <BootstrapButton
                   variant="dark"
                   style={{
@@ -1696,7 +1708,7 @@ Swal.fire({
                     height: "38px",
                     fontSize: "15px",
                     width: "97%",
-                    "margin-top": "3px",
+                    "margin-top": "10px",
                   }}
                   onClick={() => createpoll()}
                 >
@@ -1771,9 +1783,9 @@ Swal.fire({
                 ValueLabelComponent={ValueLabelComponent}
                 aria-label="custom thumb label"
                 step={1}
-                min={1}
+                min={0}
                 max={getbalance()}
-                onChange={(e, val) => setVoteAmount(val)}
+                onChangeCommitted={(e, val) => isNaN(val) ? setVoteAmount(0) : setVoteAmount(val)}
                 style={{
                   marginBottom: "10px",
                   "margin-top": "10px",
@@ -1898,7 +1910,7 @@ Swal.fire({
                 "margin-top": "7px",
                 "padding-left": "25px",
                 padding: "5px",
-                borderRadius: "10px",
+                borderRadius: "15px",
                 height: "50px",
               }}
             >
@@ -1981,6 +1993,7 @@ Swal.fire({
                       data-for="pede3"
                       data-tip={"Get poll url"}
                     >
+                    <ShareIcon onClick={() => getpollurl(u.pollkey, u.uniqueurl)} style={{opacity:0.8}}/>
                       <ReactTooltip
                         id="pede3"
                         type="dark"
@@ -1988,9 +2001,7 @@ Swal.fire({
                         backgroundColor="black"
                         place="bottom"
                       />
-                      <MoreVertIcon
-                        onClick={() => getpollurl(u.pollkey, u.uniqueurl)}
-                      />
+
                     </IconButton>
                   }
                   title={u.creator}
@@ -2043,7 +2054,7 @@ Swal.fire({
                         backgroundColor="black"
                         place="bottom"
                       />
-                      <img src={tokenurl()} width="28px" height="28px" />
+                      <img src={tokenurl()} height="24px"/>
                       &nbsp;
                       {stakeformatter(u.sumofallopt)} {tokensymbol()}
                     </div>
