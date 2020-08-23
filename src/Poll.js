@@ -101,6 +101,8 @@ function App(props) {
   const [questionsubmission, setQuestionSubmission] = useState({
     question: "",
   });
+  const [nrofvotes, setNumberofVotes] = useState({ rows: [] });
+  const [totalstaked, setTotalStaked] = useState({ rows: [] });
   const [stakingbalance, setStakingBalance] = useState({ rows: [] });
   const [mystake, setMyStake] = useState({ rows: [] });
   const [dataind, setMyindStake] = useState({ rows: [] });
@@ -284,6 +286,7 @@ function App(props) {
         )
         .then(getvote())
         .then(getdailyvoted())
+        .then(getnrofvotes())
         .then(getstake());
     }
   }, databalance);
@@ -308,6 +311,84 @@ function App(props) {
     }).then((response) =>
       response.json().then((dailyvoted) => setDailyVoted(dailyvoted))
     );
+  };
+  const countitdownvotes = () => {
+    if (nrofvotes.rows[0]) {
+      const firstvotetime = new Date(nrofvotes.rows[0].timefirstvote + "Z");
+      const current = new Date();
+      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      if (difference > 1) {
+        return Math.floor(difference) + " h";
+      } else {
+        return Math.floor(difference * 60) + " min";
+      }
+    } else {
+      return "0h";
+    }
+  };
+
+  const getnrofvotes = () => {
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "paljuvoted",
+        scope: "andrtestcons",
+        key_type: "name",
+        index_position: 1,
+        lower_bound: displayaccountname(),
+        upper_bound: displayaccountname(),
+      }),
+    }).then((response) =>
+      response.json().then((nrofvotes) => setNumberofVotes(nrofvotes))
+    );
+  };
+
+  const rewardsleft = () => {
+    if (nrofvotes.rows[0]) {
+      const nrofvote = nrofvotes.rows[0].nrofvotes;
+      const rewardsleft = 3 - nrofvote;
+      if (rewardsleft > 0) {
+        return nrofvote;
+      } else {
+        return "0";
+      }
+    } else {
+      return "0";
+    }
+  };
+
+  const pollrewards = (fullstake, communitystake) => {
+      return parseInt(
+        (Math.pow(communitystake / fullstake, 1 / 3) * 70000 + 10000) / 8
+      ); //LISA KUUP JUUR communitystake/fullstake sellele
+    };
+
+  const voterewards = (fullstake, communitystake) => {
+    return parseInt(
+      (Math.pow(communitystake / fullstake, 1 / 3) * 8500 + 2500) / 8
+    ); //LISA KUUP JUUR communitystake/fullstake sellele
+  };
+
+const gettotalstaked = () => {
+    if (totalstaked.rows[0]) {
+      return Math.floor(Number(totalstaked.rows[0].totalstaked.split(" ")[0]));
+    }
+  };
+
+
+const stakedforcom = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].staked;
+    }
   };
 
   const getstake = () => {
@@ -1128,26 +1209,52 @@ function App(props) {
       //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
       return (
         <div>
-          {isOpened && (
-            <div id="drop" class="dropdown-content">
+        {isOpened && (
+            <div id="drop" class="dropdown-content" style={{"font-family":"Roboto"}}>
               <div class="line">
                 <a class="identfier">
                   <b>{displayaccountname()}</b>
                 </a>
               </div>
-              <div class="line">
-                <a class="identfier">Balance</a>
+              <hr />
+              <div class="line" style={{ "font-weight": "bold"}}>
+                <a class="identfier"    >Balance:</a>
                 <a class="value">{getmybalance()} GOVRN</a>
               </div>
+              <hr />
               <div class="line">
-                <a class="identfier">Voting power</a>
+                <a class="identfier">Voting power:</a>
                 <a class="value">
                   {getbalance()} {tokensymbol()}
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Voting power/rewards reset</a>
+                <a class="identfier">Voting power reset:</a>
                 <a class="value">{countitdown()}</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Vote rewards left:</a>
+                <a class="value">{rewardsleft()}</a>
+              </div>
+              <div class="line">
+                <a class="identfier">Vote rewards reset:</a>
+                <a class="value">{countitdownvotes()}</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Voting reward:</a>
+                <a class="value">
+                  {voterewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
+                  GOVRN
+                </a>
+              </div>
+              <div class="line">
+                <a class="identfier">Poll reward:</a>
+                <a class="value">
+                  {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
+                  GOVRN
+                </a>
               </div>
             </div>
           )}

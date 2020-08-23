@@ -82,10 +82,7 @@ const useStyles = makeStyles((theme) => ({
   offset: {
     ...theme.mixins.toolbar,
     flexGrow: 1,
-  },
-  Card: {
-    height:"500px"
-  },
+  }
 }));
 
 function App(props) {
@@ -97,6 +94,8 @@ function App(props) {
   const [data, setData] = useState({ rows: [] });
   const [searchvalue, setSearch] = useState();
   const [totalstaked, setTotalStaked] = useState({ rows: [] });
+  const [isOpened, setIsOpened] = useState(true);
+  const [totalcircu, setTotalCircu] = useState({ rows: [] });
 
   const AppBarOffset = () => {
     return <div className={classes.offset} />;
@@ -117,6 +116,12 @@ function App(props) {
     }
   };
 
+
+
+  function toggle() {
+    setIsOpened((wasOpened) => !wasOpened);
+  }
+
   const stakeformatter = (stakenumber) => {
     if (stakenumber < 1000) {
       return stakenumber;
@@ -128,6 +133,51 @@ function App(props) {
       return (stakenumber / 1000000).toFixed(1) + "m";
     }
   };
+
+  const gettotalcircu = () => {
+    if (totalcircu.rows[0]) {
+      return Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0]));
+    }
+  };
+
+  const tonexthalving = (totalcirc) => {
+    if (totalcirc < 100000000) {
+      return 100000000 - totalcirc;
+    } else if (totalcirc >> 100000000 && totalcirc < 200000000) {
+      return 200000000 - totalcirc;
+    } else if (totalcirc >> 200000000 && totalcirc < 300000000) {
+      return 300000000 - totalcirc;
+    }
+  };
+
+  const halvings = (totalcirc) => {
+    if (totalcirc < 100000000) {
+      return 0;
+    } else if (totalcirc >> 100000000 && totalcirc < 200000000) {
+      return 1;
+    } else if (totalcirc >> 200000000 && totalcirc < 300000000) {
+      return 2;
+    }
+  };
+
+  useEffect(() => {
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "stat",
+        scope: "GOVRN",
+        limit: 1,
+      }),
+    }).then((response) =>
+      response.json().then((totalcircu) => setTotalCircu(totalcircu))
+    );
+  },totalcircu["rows"][0]);
 
   useEffect(() => {
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
@@ -236,12 +286,14 @@ function App(props) {
           <Button
             color="inherit"
             onClick={logout}
+            style={{"border-radius":"15px"}}
           >
             Log out
           </Button>
           <Button
             color="inherit"
             id="logoutname"
+            style={{"border-radius":"15px"}}
           >
             {displayaccountname()}
           </Button>
@@ -316,7 +368,8 @@ function App(props) {
                 "margin-left": "5px",
                 fontFamily: "helvetica",
                 "font-size": "21px",
-                opacity:0.7
+                opacity:0.7,
+                width: "200px"
               }}
               className={classes.title}
               component={Link}
@@ -417,33 +470,26 @@ function App(props) {
                       />
                     </a>
 
-                    <CardContent>
+                    <CardContent style={{"padding-bottom":"14px"}}>
                       <Typography
                         variant="body2"
                         color="textSecondary"
                         component="p"
-                        style={{"height":"100px"}}
+                        style={{"margin-bottom":"10px"}}
                       >
                         {u.description.substring(0, 90)}
                         {u.description.length > 90 ? " ..." : ""}
                       </Typography>
-                      <br></br>
                       <div
-                        style={{
-                          position: "absolute",
-                          bottom: "0",
-                          "margin-bottom": "20px",
-                        }}
                       >
-
+                      <hr/>
                         <Typography
                           variant="body2"
                           color="textSecondary"
                           component="p"
-                          style={{ "font-weight": "700" }}
+                          style={{ "font-weight": "700"}}
                         >
-                          Total staked: <a>{stakeformatter(parseFloat(u.staked))}{" "}
-                          GOVRN</a>
+                          Total staked: <a style={{"float":"right"}}>{stakeformatter(parseFloat(u.staked))} GOVRN</a>
                         </Typography>
 
                         <Typography
@@ -451,9 +497,9 @@ function App(props) {
                           color="textSecondary"
                           component="p"
                         >
-                          Voting reward:{" "}
-                          {voterewards(gettotalstaked(), parseInt(u.staked))}{" "}
-                          GOVRN
+                          Voting reward:
+                          <a style={{"float":"right"}}>{voterewards(gettotalstaked(), parseInt(u.staked))} GOVRN</a>
+
                         </Typography>
 
                         <Typography
@@ -461,9 +507,8 @@ function App(props) {
                           color="textSecondary"
                           component="p"
                         >
-                          Poll reward:{" "}
-                          {pollrewards(gettotalstaked(), parseInt(u.staked))}{" "}
-                          GOVRN
+                          Poll reward:
+                          <a style={{"float":"right"}}>{pollrewards(gettotalstaked(), parseInt(u.staked))} GOVRN</a>
                         </Typography>
                       </div>
                     </CardContent>
@@ -484,12 +529,25 @@ function App(props) {
           color="transparent"
           style={{ "background-color": "white", height: "65px" }}
         >
+        {isOpened && (
+            <div id="drop" class="dropdown-content2"  style={{"font-family":"Roboto"}}>
+              <div class="line">
+                <a class="identfier">Number of halvings:</a>
+                <a class="value">{halvings(gettotalcircu())}</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">To mine until next halving:</a>
+                <a class="value">{stakeformatter(tonexthalving(gettotalcircu()))} GOVRN</a>
+              </div>
+            </div>
+          )}
           <div class="navbar">
             <div class="imagesleft">
               <a href="https://newdex.io/trade/consortiumlv-govrn-eos">
                 <img
                   src="newdex.png"
-                  style={{ height: "36px", "margin-top": "7px" }}
+                  style={{ height: "36px", "margin-top": "7px", "opacity":"0.7" }}
                   alt="newdex"
                 ></img>
               </a>
@@ -500,6 +558,7 @@ function App(props) {
                     height: "36px",
                     "margin-top": "7px",
                     "margin-left": "30px",
+                    "opacity":"0.7"
                   }}
                   alt="bancor"
                 ></img>
@@ -511,6 +570,7 @@ function App(props) {
                     height: "36px",
                     "margin-top": "7px",
                     "margin-left": "28px",
+                    "opacity":"0.7"
                   }}
                   alt="alcor"
                 ></img>
@@ -525,10 +585,10 @@ function App(props) {
                   style={{
                     height: "36px",
                     width: "36px",
-                    color: "#00003C",
+                    color: "black",
                     "margin-right": "30px",
                     "margin-left": "15px",
-                    "margin-top": "7px",
+                    "margin-top": "7px", "opacity":"0.7"
                   }}
                 />
               </a>
@@ -538,9 +598,9 @@ function App(props) {
                   style={{
                     height: "36px",
                     width: "36px",
-                    color: "#00003C",
+                    color: "black",
                     "margin-right": "28px",
-                    "margin-top": "7px",
+                    "margin-top": "7px", "opacity":"0.7",
                   }}
                 />
               </a>
@@ -550,8 +610,8 @@ function App(props) {
                   style={{
                     height: "36px",
                     width: "36px",
-                    color: "#00003C",
-                    "margin-top": "7px",
+                    color: "black",
+                    "margin-top": "7px", "opacity":"0.7",
                   }}
                 />
               </a>
