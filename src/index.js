@@ -1,4 +1,4 @@
-import React from 'react';
+zimport React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -17,6 +17,7 @@ import { TokenPocket } from 'ual-token-pocket'
 import { Ledger } from 'ual-ledger'
 import { Lynx } from 'ual-lynx'
 
+import './fonts/Roboto-Regular.ttf'
 
 
 

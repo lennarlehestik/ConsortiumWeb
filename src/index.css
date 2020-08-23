@@ -13,6 +13,6 @@ code {
 }
 
 @font-face {
-  font-family: 'FiraSans';
-  src: local('FiraSans'), ur;(./fonts/FiraSans-Regular.ttf) format('truetype');
+  font-family: 'Roboto';
+  src: local('Roboto'), url(./fonts/Roboto.ttf) format('truetype');
 }
