@@ -1,69 +1,66 @@
 @media only screen and (min-width: 600px) {
   .app {
-    width:50%;
-    margin-left:25%;
-    margin-right:25%;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
   }
 }
 
 @media only screen and (min-width: 600px) {
   .frontapp {
-    width:80%;
-    margin-left:10%;
-    margin-right:10%;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
   }
 }
 
 .frontapp {
-margin-bottom:50px
+  margin-bottom: 50px;
 }
-
-
-
 
 @media only screen and (min-width: 600px) {
   .mobilemenu {
-    display:none;
+    display: none;
   }
 }
 
 @media only screen and (max-width: 600px) {
   #logoutname {
-    display:none;
+    display: none;
   }
 }
 
 @media only screen and (max-width: 600px) {
   .desktopmenu {
-    display:none;
+    display: none;
   }
 }
 
 @media only screen and (max-width: 600px) {
   .bottommenu {
-    display:none;
+    display: none;
   }
 }
 
 .app {
-  padding-bottom:70px;
-  padding-right:5px;
-  padding-left:5px;
+  padding-bottom: 70px;
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 .card {
   /* Add shadows to create the "card" effect */
-  box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.1);
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
-  padding:10px;
-  padding-left:20px;
-  padding-right:20px;
-  margin:10px;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 10px;
 }
 
 /* On mouse-over, add a deeper shadow */
 .card:hover {
-  box-shadow: 3px 4px 4px 3px rgba(0,0,0,0.1);
+  box-shadow: 3px 4px 4px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Add some padding inside the card container  //margin-bottom: 30px  margin-top: 30px; background-color: #697A90;
@@ -74,61 +71,53 @@ margin-bottom:50px
   padding: 2px 16px;
 }
 
-
 .navbar {
-  width:100%;
-  display:flex;
+  width: 100%;
+  display: flex;
 }
-.imagesleft{
-  float:left;
+.imagesleft {
+  float: left;
   margin-left: 45px;
-
-
-
 }
-.imagesright{
-  float:right;
+.imagesright {
+  float: right;
   margin-left: auto;
 
   margin-right: 45px;
-
-
 }
 
-
 .question {
-  font-size:20px;
+  font-size: 20px;
   font-weight: 600;
 }
 
 .pollstats {
-  font-size:16px;
+  font-size: 16px;
   font-weight: 600;
-  width:100%
+  width: 100%;
 }
 
 .progressbar {
-  background-color: #EDEDEE;
+  background-color: #ededee;
 }
 
-
-.progressbar>div {
+.progressbar > div {
   background-color: #5a6269;
   height: 5px;
 }
 
 .polloption {
   cursor: pointer;
-  margin-bottom:15px;
+  margin-bottom: 15px;
   border-left: 3px solid #d3d3d3;
-  padding:3px;
-  padding-left:7px;
+  padding: 3px;
+  padding-left: 7px;
 }
 
 .answer {
-  margin-bottom:10px;
-  width:100%;
-  display:inline
+  margin-bottom: 10px;
+  width: 100%;
+  display: inline;
 }
 
 .parent {
@@ -146,28 +135,28 @@ margin-bottom:50px
   display: inline-block;
 }
 
-.inputRounded .MuiOutlinedInput-root{
-   border-radius: 15px;
+.inputRounded .MuiOutlinedInput-root {
+  border-radius: 15px;
 }
 
-.modal-content  {
-    -webkit-border-radius: 15px !important;
-    -moz-border-radius: 15px !important;
-    border-radius: 15px !important;
+.modal-content {
+  -webkit-border-radius: 15px !important;
+  -moz-border-radius: 15px !important;
+  border-radius: 15px !important;
 }
 
 .dropdown-content {
   position: absolute;
   background-color: #f9f9f9;
   min-width: 200px;
-  max-width:250px;
-  right:50px;
-  top:80px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  max-width: 250px;
+  right: 50px;
+  top: 80px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   padding: 12px 16px;
   z-index: 1;
-  font-size:13px;
-  color:rgba(0,0,0,0.87);
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.87);
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 15px;
 }
@@ -176,14 +165,14 @@ margin-bottom:50px
   position: absolute;
   background-color: #f9f9f9;
   min-width: 300px;
-  max-width:400px;
-  left:30px;
-  bottom:75px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  max-width: 400px;
+  left: 30px;
+  bottom: 75px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   padding: 12px 16px;
   z-index: 1;
-  font-size:13px;
-  color:#192841;
+  font-size: 13px;
+  color: #192841;
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 15px;
 }
@@ -196,17 +185,17 @@ margin-bottom:50px
   display: block;
 }
 
-.line{
+.line {
   display: inline-block;
-  width:100%;
+  width: 100%;
 }
 
-.identifier{
-  float:left;
+.identifier {
+  float: left;
 }
 
-.value{
-  float:right;
+.value {
+  float: right;
 }
 
 .button {
@@ -220,17 +209,17 @@ margin-bottom:50px
   font-size: 16px;
 }
 
-.nodecor:hover{
-  text-decoration:none;
+.nodecor:hover {
+  text-decoration: none;
 }
 
-.coloredbutton{
-  background-color: #3E546F; /* Green */
+.coloredbutton {
+  background-color: #3e546f; /* Green */
   border-radius: 8px;
   border: none;
   color: white;
   padding: 4px 20px;
-  margin-left:10px;
+  margin-left: 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;

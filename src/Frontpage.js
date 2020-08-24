@@ -22,7 +22,10 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { withUAL } from "ual-reactjs-renderer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from "sweetalert2";
-import ShareIcon from '@material-ui/icons/Share';
+import ShareIcon from "@material-ui/icons/Share";
+import ReactTooltip from "react-tooltip";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+
 import {
   faTelegram,
   faTwitter,
@@ -82,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   offset: {
     ...theme.mixins.toolbar,
     flexGrow: 1,
-  }
+  },
 }));
 
 function App(props) {
@@ -116,21 +119,24 @@ function App(props) {
     }
   };
 
-
-
   function toggle() {
     setIsOpened((wasOpened) => !wasOpened);
   }
+
+  const logmeout = () => {
+    logout();
+    window.location.reload(false);
+  };
 
   const stakeformatter = (stakenumber) => {
     if (stakenumber < 1000) {
       return stakenumber;
     }
     if (stakenumber > 1000 && stakenumber < 1000000) {
-      return (stakenumber / 1000).toFixed(0) + "k";
+      return (stakenumber / 1000).toFixed(0) + " k";
     }
     if (stakenumber > 1000000) {
-      return (stakenumber / 1000000).toFixed(1) + "m";
+      return (stakenumber / 1000000).toFixed(1) + " m";
     }
   };
 
@@ -177,7 +183,7 @@ function App(props) {
     }).then((response) =>
       response.json().then((totalcircu) => setTotalCircu(totalcircu))
     );
-  },totalcircu["rows"][0]);
+  }, totalcircu["rows"][0]);
 
   useEffect(() => {
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
@@ -198,10 +204,7 @@ function App(props) {
   }, data["rows"][0]);
 
   const getcommunityurl = (community) => {
-    const url =
-      window.location.origin +
-      "/community/" +
-      community
+    const url = window.location.origin + "/community/" + community;
     navigator.clipboard.writeText(url);
 
     const Toast = Swal.mixin({
@@ -241,8 +244,6 @@ function App(props) {
       response.json().then((totalstaked) => setTotalStaked(totalstaked))
     );
   });
-
-
 
   /* ANCHOR CONNECTION */
 
@@ -285,15 +286,15 @@ function App(props) {
         <div>
           <Button
             color="inherit"
-            onClick={logout}
-            style={{"border-radius":"15px"}}
+            onClick={() => logmeout()}
+            style={{ "border-radius": "15px" }}
           >
             Log out
           </Button>
           <Button
             color="inherit"
             id="logoutname"
-            style={{"border-radius":"15px"}}
+            style={{ "border-radius": "15px" }}
           >
             {displayaccountname()}
           </Button>
@@ -302,10 +303,7 @@ function App(props) {
     } else {
       //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
       return (
-        <Button
-          color="inherit"
-          onClick={showModal}
-        >
+        <Button color="inherit" onClick={showModal}>
           Log in
         </Button>
       );
@@ -352,31 +350,31 @@ function App(props) {
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-            <img
-              src="/logo.png"
-              width="48"
-              class="d-inline-block align-top"
-              style={{ "margin-bottom": 2, opacity: 0.7 }}
-            ></img>
-            <Typography
-              variant="h6"
-              style={{
-                color: "black",
-                "text-decoration": "none",
-                "margin-top": "3px",
-                "font-weight": "600",
-                "margin-left": "5px",
-                fontFamily: "helvetica",
-                "font-size": "21px",
-                opacity:0.7,
-                width: "200px"
-              }}
-              className={classes.title}
-              component={Link}
-              to={"/"}
-            >
-              <a>Consortium</a>
-            </Typography>
+              <img
+                src="/logo.png"
+                width="48"
+                class="d-inline-block align-top"
+                style={{ "margin-bottom": 2, opacity: 0.7 }}
+              ></img>
+              <Typography
+                variant="h6"
+                style={{
+                  color: "black",
+                  "text-decoration": "none",
+                  "margin-top": "3px",
+                  "font-weight": "600",
+                  "margin-left": "5px",
+                  fontFamily: "helvetica",
+                  "font-size": "21px",
+                  opacity: 0.7,
+                  width: "200px",
+                }}
+                className={classes.title}
+                component={Link}
+                to={"/"}
+              >
+                <a>Consortium</a>
+              </Typography>
 
               {logbutton()}
             </Toolbar>
@@ -384,7 +382,6 @@ function App(props) {
           <AppBarOffset />
         </div>
       </div>
-
 
       <div class="frontapp">
         <div></div>
@@ -412,12 +409,16 @@ function App(props) {
                 label="Community name"
                 variant="outlined"
                 className="inputRounded"
-                style={{ backgroundColor: "white", borderRadius:"15px"}}
+                style={{ backgroundColor: "white", borderRadius: "15px" }}
               />
             )}
           />
           <BootstrapButton
-            href={typeof(searchvalue) == 'undefined' ? '/' : `${window.location}community/${searchvalue}`}
+            href={
+              typeof searchvalue == "undefined"
+                ? "/"
+                : `${window.location}community/${searchvalue}`
+            }
             variant="dark"
             color="inherit"
             textAlign="right"
@@ -455,7 +456,10 @@ function App(props) {
                       }
                       action={
                         <IconButton aria-label="settings">
-                          <ShareIcon onClick={() => getcommunityurl(u.community)} style={{opacity:0.8}}/>
+                          <ShareIcon
+                            onClick={() => getcommunityurl(u.community)}
+                            style={{ opacity: 0.8 }}
+                          />
                         </IconButton>
                       }
                       title={u.communityname}
@@ -470,26 +474,28 @@ function App(props) {
                       />
                     </a>
 
-                    <CardContent style={{"padding-bottom":"14px"}}>
+                    <CardContent style={{ "padding-bottom": "14px" }}>
                       <Typography
                         variant="body2"
                         color="textSecondary"
                         component="p"
-                        style={{"margin-bottom":"10px"}}
+                        style={{ "margin-bottom": "10px" }}
                       >
                         {u.description.substring(0, 90)}
                         {u.description.length > 90 ? " ..." : ""}
                       </Typography>
-                      <div
-                      >
-                      <hr/>
+                      <div>
+                        <hr />
                         <Typography
                           variant="body2"
                           color="textSecondary"
                           component="p"
-                          style={{ "font-weight": "700"}}
+                          style={{ "font-weight": "700" }}
                         >
-                          Total staked: <a style={{"float":"right"}}>{stakeformatter(parseFloat(u.staked))} GOVRN</a>
+                          Total staked:{" "}
+                          <a style={{ float: "right" }}>
+                            {stakeformatter(parseFloat(u.staked))} GOVRN
+                          </a>
                         </Typography>
 
                         <Typography
@@ -498,8 +504,10 @@ function App(props) {
                           component="p"
                         >
                           Voting reward:
-                          <a style={{"float":"right"}}>{voterewards(gettotalstaked(), parseInt(u.staked))} GOVRN</a>
-
+                          <a style={{ float: "right" }}>
+                            {voterewards(gettotalstaked(), parseInt(u.staked))}{" "}
+                            GOVRN
+                          </a>
                         </Typography>
 
                         <Typography
@@ -508,7 +516,10 @@ function App(props) {
                           component="p"
                         >
                           Poll reward:
-                          <a style={{"float":"right"}}>{pollrewards(gettotalstaked(), parseInt(u.staked))} GOVRN</a>
+                          <a style={{ float: "right" }}>
+                            {pollrewards(gettotalstaked(), parseInt(u.staked))}{" "}
+                            GOVRN
+                          </a>
                         </Typography>
                       </div>
                     </CardContent>
@@ -529,16 +540,65 @@ function App(props) {
           color="transparent"
           style={{ "background-color": "white", height: "65px" }}
         >
-        {isOpened && (
-            <div id="drop" class="dropdown-content2"  style={{"font-family":"Roboto"}}>
+          {isOpened && (
+            <div
+              id="drop"
+              class="dropdown-content2"
+              style={{ "font-family": "Roboto" }}
+            >
               <div class="line">
-                <a class="identfier">Number of halvings:</a>
-                <a class="value">{halvings(gettotalcircu())}</a>
+                <a
+                  class="identfier"
+                  style={{
+                    "margin-top": "15px",
+                  }}
+                >
+                  Halving events:
+                </a>
+                <a
+                  class="value"
+                  style={{
+                    "margin-top": "4px",
+                    fontWeight: "bold",
+                  }}
+                  data-html="true"
+                  data-for="pede"
+                  data-tip={
+                    "*each halving divides the poll and vote rewards by 2<br/><br /> *halving occurs each time additional 100m GOVRN are issued<br /><br /> *in total there will be 11 halvings until the total supply of GOVRN tokens<br /> reaches 1.2bn, followed by a switch to stable inflation"
+                  }
+                >
+                  <ReactTooltip
+                    id="pede"
+                    type="dark"
+                    effect="solid"
+                    backgroundColor="black"
+                    place="top"
+                  />{" "}
+                  {halvings(gettotalcircu())}
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    style={{
+                      height: "14px",
+                      width: "14px",
+                      color: "black",
+                      "margin-bottom": "6px",
+                      opacity: "0.7",
+                      "margin-left": "2px",
+                    }}
+                  />
+                </a>
               </div>
               <hr />
               <div class="line">
                 <a class="identfier">To mine until next halving:</a>
-                <a class="value">{stakeformatter(tonexthalving(gettotalcircu()))} GOVRN</a>
+                <a
+                  class="value"
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  {stakeformatter(tonexthalving(gettotalcircu()))} GOVRN
+                </a>
               </div>
             </div>
           )}
@@ -547,7 +607,11 @@ function App(props) {
               <a href="https://newdex.io/trade/consortiumlv-govrn-eos">
                 <img
                   src="newdex.png"
-                  style={{ height: "36px", "margin-top": "7px", "opacity":"0.7" }}
+                  style={{
+                    height: "36px",
+                    "margin-top": "7px",
+                    opacity: "0.7",
+                  }}
                   alt="newdex"
                 ></img>
               </a>
@@ -558,7 +622,7 @@ function App(props) {
                     height: "36px",
                     "margin-top": "7px",
                     "margin-left": "30px",
-                    "opacity":"0.7"
+                    opacity: "0.7",
                   }}
                   alt="bancor"
                 ></img>
@@ -570,7 +634,7 @@ function App(props) {
                     height: "36px",
                     "margin-top": "7px",
                     "margin-left": "28px",
-                    "opacity":"0.7"
+                    opacity: "0.7",
                   }}
                   alt="alcor"
                 ></img>
@@ -588,7 +652,8 @@ function App(props) {
                     color: "black",
                     "margin-right": "30px",
                     "margin-left": "15px",
-                    "margin-top": "7px", "opacity":"0.7"
+                    "margin-top": "7px",
+                    opacity: "0.7",
                   }}
                 />
               </a>
@@ -600,7 +665,8 @@ function App(props) {
                     width: "36px",
                     color: "black",
                     "margin-right": "28px",
-                    "margin-top": "7px", "opacity":"0.7",
+                    "margin-top": "7px",
+                    opacity: "0.7",
                   }}
                 />
               </a>
@@ -611,7 +677,8 @@ function App(props) {
                     height: "36px",
                     width: "36px",
                     color: "black",
-                    "margin-top": "7px", "opacity":"0.7",
+                    "margin-top": "7px",
+                    opacity: "0.7",
                   }}
                 />
               </a>

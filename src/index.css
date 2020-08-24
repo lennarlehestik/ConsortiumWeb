@@ -1,18 +1,34 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
 @font-face {
-  font-family: 'Roboto';
-  src: local('Roboto'), url(./fonts/Roboto.ttf) format('truetype');
+  font-family: "Roboto";
+  src: local("Roboto"), url(./fonts/Roboto-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: 700;
+  src: local("Roboto"), url(./fonts/Roboto-Bold.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Roboto";
+  font-weight: 900;
+  src: local("Roboto"), url(./fonts/Roboto-Black.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Roboto";
+  font-weight: 600;
+  src: local("Roboto"), url(./fonts/Roboto-Medium.ttf) format("truetype");
 }

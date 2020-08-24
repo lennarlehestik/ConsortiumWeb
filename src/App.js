@@ -23,8 +23,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Swal from "sweetalert2";
 import Tooltip from "@material-ui/core/Tooltip";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
-import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
-import ShareIcon from '@material-ui/icons/Share';
+import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import ShareIcon from "@material-ui/icons/Share";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -38,10 +38,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withUAL } from "ual-reactjs-renderer";
 import SwapHorizOutlinedIcon from "@material-ui/icons/SwapHorizOutlined";
 import HowToRegOutlinedIcon from "@material-ui/icons/HowToRegOutlined";
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 
 //STYLES FOR EVERYTHING
 const useStyles = makeStyles((theme) => ({
@@ -341,25 +341,23 @@ function App(props) {
   };
 
   useEffect(() => {
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          json: true,
-          code: "andrtestcons",
-          table: "totalstk",
-          scope: "andrtestcons",
-          limit: 1,
-        }),
-      }).then((response) =>
-        response.json().then((totalstaked) => setTotalStaked(totalstaked))
-      );
-    },communitydata["rows"]);
-
-
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "totalstk",
+        scope: "andrtestcons",
+        limit: 1,
+      }),
+    }).then((response) =>
+      response.json().then((totalstaked) => setTotalStaked(totalstaked))
+    );
+  }, communitydata["rows"]);
 
   useEffect(() => {
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
@@ -679,7 +677,7 @@ function App(props) {
       const nrofvote = nrofvotes.rows[0].nrofvotes;
       const rewardsleft = 3 - nrofvote;
       if (rewardsleft > 0) {
-        return nrofvote;
+        return rewardsleft;
       } else {
         return "0";
       }
@@ -689,33 +687,31 @@ function App(props) {
   };
 
   const pollrewards = (fullstake, communitystake) => {
-      return parseInt(
-        (Math.pow(communitystake / fullstake, 1 / 3) * 70000 + 10000) / 8
-      ); //LISA KUUP JUUR communitystake/fullstake sellele
-    };
+    return parseInt(
+      (Math.pow(communitystake / fullstake, 1 / 3) * 70000 + 10000) / 8
+    ); //LISA KUUP JUUR communitystake/fullstake sellele
+  };
 
-    const voterewards = (fullstake, communitystake) => {
-      return parseInt(
-        (Math.pow(communitystake / fullstake, 1 / 3) * 8500 + 2500) / 8
-      ); //LISA KUUP JUUR communitystake/fullstake sellele
-    };
+  const voterewards = (fullstake, communitystake) => {
+    return parseInt(
+      (Math.pow(communitystake / fullstake, 1 / 3) * 8500 + 2500) / 8
+    ); //LISA KUUP JUUR communitystake/fullstake sellele
+  };
 
   const gettotalstaked = () => {
-      if (totalstaked.rows[0]) {
-        return Math.floor(Number(totalstaked.rows[0].totalstaked.split(" ")[0]));
-      }
-    };
-
+    if (totalstaked.rows[0]) {
+      return Math.floor(Number(totalstaked.rows[0].totalstaked.split(" ")[0]));
+    }
+  };
 
   const stakedforcom = () => {
-      if (communitydata.rows[0]) {
-        var commdata = communitydata.rows.filter(function (e) {
-          return e.community == scope;
-        });
-        return commdata[0].staked;
-      }
-    };
-
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].staked;
+    }
+  };
 
   const getstake = () => {
     //DOES ALL THE FETCHING FOR THE STAKE MODAL
@@ -803,7 +799,12 @@ function App(props) {
     const { children, open, value } = props;
 
     return (
-      <Tooltip open={open} enterTouchDelay={0} placement="top" title={isNaN(value) ? 0 : value}>
+      <Tooltip
+        open={open}
+        enterTouchDelay={0}
+        placement="top"
+        title={isNaN(value) ? 0 : value}
+      >
         {children}
       </Tooltip>
     );
@@ -835,12 +836,12 @@ function App(props) {
               color: "black",
             }}
           />
-          <a style={{ "font-weight": "500", "font-family":"Roboto"}}>
+          <a style={{ "font-weight": "500" }}>
             {" "}
             Available to stake: {maxstakevalue} GOVRN
           </a>{" "}
           <br />
-          <a style={{ "font-weight": "500" , "font-family":"Roboto"}}>
+          <a style={{ "font-weight": "500" }}>
             You are staking: {stakeamount} GOVRN
           </a>{" "}
           <br />
@@ -910,9 +911,9 @@ function App(props) {
               color: "black",
             }}
           />
-          <a style={{ "font-weight": "500" ,  "font-family":"Roboto"}}>Available to stake: 0 GOVRN</a>{" "}
+          <a style={{ "font-weight": "500" }}>Available to stake: 0 GOVRN</a>{" "}
           <br />
-          <a style={{ "font-weight": "500" , "font-family":"Roboto" }}>You are staking: 0 GOVRN</a>{" "}
+          <a style={{ "font-weight": "500" }}>You are staking: 0 GOVRN</a>{" "}
           <br />
           <br />
           <BootstrapButton
@@ -941,9 +942,9 @@ function App(props) {
               color: "black",
             }}
           />
-          <a style={{ "font-weight": "500" , "font-family":"Roboto"}}>Currently staked: 0 GOVRN</a>{" "}
+          <a style={{ "font-weight": "500" }}>Currently staked: 0 GOVRN</a>{" "}
           <br />
-          <a style={{ "font-weight": "500" ,  "font-family":"Roboto"}}>
+          <a style={{ "font-weight": "500" }}>
             You are unstaking: 0 GOVRN
           </a>{" "}
           <br />
@@ -1463,7 +1464,10 @@ Swal.fire({
         </div>
         <div class="progressbar">
           <div
-            style={{ width: `${percentage(votes, votes[key]).toFixed(0)}%` }}
+            style={{
+              width: `${percentage(votes, votes[key]).toFixed(0)}%`,
+              borderRadius: "15px",
+            }}
           />
         </div>
       </div>
@@ -1502,16 +1506,20 @@ Swal.fire({
       //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
       return (
         <div>
-        {isOpened && (
-            <div id="drop" class="dropdown-content" style={{"font-family":"Roboto"}}>
+          {isOpened && (
+            <div
+              id="drop"
+              class="dropdown-content"
+              style={{ "font-family": "roboto" }}
+            >
               <div class="line">
                 <a class="identfier">
                   <b>{displayaccountname()}</b>
                 </a>
               </div>
               <hr />
-              <div class="line" style={{ "font-weight": "bold"}}>
-                <a class="identfier"    >Balance:</a>
+              <div class="line" style={{ "font-weight": "bold" }}>
+                <a class="identfier">Balance:</a>
                 <a class="value">{getmybalance()} GOVRN</a>
               </div>
               <hr />
@@ -1552,10 +1560,19 @@ Swal.fire({
             </div>
           )}
 
-          <Button color="inherit" onClick={() => logmeout()} style={{"border-radius":"50px"}}>
+          <Button
+            color="inherit"
+            onClick={() => logmeout()}
+            style={{ "border-radius": "50px" }}
+          >
             Log out
           </Button>
-          <Button onClick={toggle} color="inherit" id="logoutname" style={{"border-radius":"50px"}}>
+          <Button
+            onClick={toggle}
+            color="inherit"
+            id="logoutname"
+            style={{ "border-radius": "50px" }}
+          >
             {displayaccountname()}
           </Button>
         </div>
@@ -1585,7 +1602,11 @@ Swal.fire({
     } else {
       //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
       return (
-        <Button color="inherit" onClick={showModal} style={{borderRadius:"15px"}}>
+        <Button
+          color="inherit"
+          onClick={showModal}
+          style={{ borderRadius: "15px" }}
+        >
           Log in
         </Button>
       );
@@ -1620,7 +1641,7 @@ Swal.fire({
   //SIIIN SAAD NÜÜD COMMDATAT KASUTADA, MIS ON ÕIGE COMMUNITY JAOKS
 
   return (
-    <div style={{"font-family":"Roboto"}}>
+    <div style={{ "font-family": "roboto" }}>
       <div class="desktopmenu">
         <div className={classes.root}>
           <AppBar
@@ -1629,31 +1650,36 @@ Swal.fire({
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-            <img
-              src="/logo.png"
-              width="48"
-              class="d-inline-block align-top"
-              style={{ "margin-bottom": 2, opacity: 0.7 }}
-            ></img>
-            <Typography
-              variant="h6"
-              style={{
-                color: "black",
-                "text-decoration": "none",
-                "margin-top": "3px",
-                "font-weight": "600",
-                "margin-left": "5px",
-                "font-size": "21px",
-                opacity:0.7
-              }}
-              className={classes.title}
-              component={Link}
-              to={"/"}
-            >
-              <a>Consortium</a>
-            </Typography>
+              <img
+                src="/logo.png"
+                width="48"
+                class="d-inline-block align-top"
+                style={{ "margin-bottom": 2, opacity: 0.7 }}
+              ></img>
+              <Typography
+                variant="h6"
+                style={{
+                  color: "black",
+                  "text-decoration": "none",
+                  "margin-top": "3px",
+                  "font-weight": "600",
+                  "margin-left": "5px",
+                  fontFamily: "helvetica",
+                  "font-size": "21px",
+                  opacity: 0.7,
+                  width: "200px",
+                }}
+                className={classes.title}
+                component={Link}
+                to={"/"}
+              >
+                <a>Consortium</a>
+              </Typography>
 
-              <Button style={{color:"inherit", "border-radius":"50px"}} href={`${window.location}/Leaderboard`}>
+              <Button
+                style={{ color: "inherit", "border-radius": "50px" }}
+                href={`${window.location}/Leaderboard`}
+              >
                 Leaderboard
               </Button>
 
@@ -1673,17 +1699,40 @@ Swal.fire({
           style={{ "background-color": "white" }}
         >
           <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="open drawer" style={{"margin-left":"auto", "margin-right":"auto"}} component={Link} to={"/"}>
-          <AccountBalanceIcon />
-          </IconButton>
-          <IconButton edge="start" color="inherit" aria-label="open drawer" style={{"margin-left":"auto", "margin-right":"auto"}} omponent={Link}>
-          <FormatListNumberedIcon />
-          </IconButton>
-            <IconButton edge="end" color="inherit" aria-label="open drawer" style={{"margin-left":"auto", "margin-right":"auto"}}>
-            <PermIdentityIcon />
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              component={Link}
+              to={"/"}
+            >
+              <AccountBalanceIcon />
             </IconButton>
-            <IconButton edge="end" color="inherit" aria-label="open drawer" style={{"margin-left":"auto", "margin-right":"auto"}}>
-            <ExitToAppIcon />
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              omponent={Link}
+            >
+              <FormatListNumberedIcon />
+            </IconButton>
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+            >
+              <PermIdentityIcon />
+            </IconButton>
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+            >
+              <ExitToAppIcon />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -1702,7 +1751,7 @@ Swal.fire({
                 data-html="true"
                 data-for="signalprogress"
                 data-tip={
-                  "*Your poll will be active for 3 days <br/><br /> *If your community participates in the poll, at the end of the 3rd day,<br /> you can get rewards starting from 10k and up to 80k GOVRN tokens <br/><br /> *To create a poll your account must have 5k GOVRN that will get burned"
+                  "*your poll will be active for 3 days <br/><br /> *if your community participates in the poll, at the end of the 3rd day,<br /> you can get rewarded starting from 10k and up to 80k GOVRN tokens <br/><br /> *to create a poll your account must hold 5k GOVRN that will get burned"
                 }
               >
                 <ReactTooltip
@@ -1753,22 +1802,22 @@ Swal.fire({
                   />
                 );
               })}
-                            <center>
-              <BootstrapButton
-                variant="outline-dark"
-                style={{
-                  "font-weight": "bold",
-                  borderRadius: "15px",
-                  height: "38px",
-                  fontSize: "15px",
-                  width: "97%",
-                  "margin-top": "10px",
-                }}
-                onClick={() => addvotingfield()}
-              >
-                Add option
-              </BootstrapButton>
-              <br />
+              <center>
+                <BootstrapButton
+                  variant="outline-dark"
+                  style={{
+                    "font-weight": "bold",
+                    borderRadius: "15px",
+                    height: "38px",
+                    fontSize: "15px",
+                    width: "97%",
+                    "margin-top": "10px",
+                  }}
+                  onClick={() => addvotingfield()}
+                >
+                  Add option
+                </BootstrapButton>
+                <br />
 
                 <BootstrapButton
                   variant="dark"
@@ -1779,7 +1828,6 @@ Swal.fire({
                     fontSize: "15px",
                     width: "97%",
                     "margin-top": "10px",
-                    "font-family": "Roboto"
                   }}
                   onClick={() => createpoll()}
                 >
@@ -1856,7 +1904,9 @@ Swal.fire({
                 step={1}
                 min={0}
                 max={getbalance()}
-                onChangeCommitted={(e, val) => isNaN(val) ? setVoteAmount(0) : setVoteAmount(val)}
+                onChangeCommitted={(e, val) =>
+                  isNaN(val) ? setVoteAmount(0) : setVoteAmount(val)
+                }
                 style={{
                   marginBottom: "10px",
                   "margin-top": "10px",
@@ -1866,7 +1916,7 @@ Swal.fire({
               <br />
 
               <center>
-                <a style={{ "font-weight": "500", "font-family":"Roboto" }}>
+                <a style={{ "font-weight": "500", "font-family": "roboto" }}>
                   You're voting with: {voteamount} {tokensymbol()}{" "}
                 </a>
               </center>
@@ -1924,7 +1974,7 @@ Swal.fire({
                 data-html="true"
                 data-for="signalprogress"
                 data-tip={
-                  "*The more GOVRN tokens staked the higher the rewards for voting and poll creation your community gets"
+                  "*the more GOVRN tokens staked the higher the rewards for voting and poll creation your community gets"
                 }
               >
                 <ReactTooltip
@@ -1989,7 +2039,7 @@ Swal.fire({
                   color: "gray",
                   "margin-left": "6px",
                   fontSize: "13px",
-                  borderRadius:"15px"
+                  borderRadius: "15px",
                 }}
                 onClick={() => filtermypolls()}
               >
@@ -2008,7 +2058,7 @@ Swal.fire({
                   color: "gray",
                   "margin-right": "0px",
                   fontSize: "13px",
-                  borderRadius:"15px"
+                  borderRadius: "15px",
                 }}
                 onClick={() => window.location.reload(false)}
               >
@@ -2044,7 +2094,7 @@ Swal.fire({
                   padding: "10px",
                   "padding-bottom": "20px",
                   borderRadius: "20px",
-                  fontFamily:"Roboto"
+                  fontFamily: "roboto",
                 }}
               >
                 <CardHeader
@@ -2062,7 +2112,7 @@ Swal.fire({
                       data-tip={"Get poll url"}
                       onClick={() => getpollurl(u.pollkey, u.uniqueurl)}
                     >
-                    <ShareIcon style={{opacity:0.8}}/>
+                      <ShareIcon style={{ opacity: 0.8 }} />
                       <ReactTooltip
                         id="pede3"
                         type="dark"
@@ -2070,16 +2120,18 @@ Swal.fire({
                         backgroundColor="black"
                         place="bottom"
                       />
-
                     </IconButton>
                   }
                   title={u.creator}
                   subheader={gettimediff(u.timecreated)}
                 />
 
-                <CardContent style={{ paddingTop: "0px" }}>
+                <CardContent style={{ paddingTop: "8px" }}>
                   <Typography
-                    style={{ color: "rgba(0, 0, 0, 0.87)", "font-weight": "500" }}
+                    style={{
+                      color: "rgba(0, 0, 0, 0.87)",
+                      "font-weight": "500",
+                    }}
                     class="question"
                     target="_blank"
                     component={Link}
@@ -2087,9 +2139,22 @@ Swal.fire({
                   >
                     {u.question}
                   </Typography>
-                  <div style={{ color: "rgba(0, 0, 0, 0.54)", "font-size":"14px", "margin-top":"5px"}}>{u.description}</div>
-                  <br />
-                  <a style={{ color: "rgba(0, 0, 0, 0.87)", "font-size":"14px" }}>
+                  <div
+                    style={{
+                      color: "rgba(0, 0, 0, 0.54)",
+                      "font-size": "15px",
+                      "margin-top": "8px",
+                      "margin-bottom": "19px",
+                    }}
+                  >
+                    {u.description}
+                  </div>
+                  <a
+                    style={{
+                      color: "rgba(0, 0, 0, 0.74)",
+                      "font-size": "16px",
+                    }}
+                  >
                     {polloptions(u.totalvote, u.answers, u.pollkey)}
                   </a>
                   <div style={{ color: "#485A70" }} class="pollstats">
@@ -2123,7 +2188,7 @@ Swal.fire({
                         backgroundColor="black"
                         place="bottom"
                       />
-                      <img src={tokenurl()} height="24px"/>
+                      <img src={tokenurl()} height="24px" />
                       &nbsp;
                       {stakeformatter(u.sumofallopt)} {tokensymbol()}
                     </div>

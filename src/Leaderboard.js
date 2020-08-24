@@ -27,6 +27,11 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { withUAL } from "ual-reactjs-renderer";
 import Avatar from "@material-ui/core/Avatar";
+import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,6 +98,11 @@ function App(props) {
     if (accountname) {
       return accountname;
     }
+  };
+
+  const logmeout = () => {
+    logout();
+    window.location.reload(false);
   };
 
   const classes = useStyles();
@@ -178,15 +188,24 @@ function App(props) {
       return Math.floor(Number(databalance.rows[0].balance.split(" ")[0]));
     }
   };
+
   const logbutton = () => {
     if (accountname) {
       //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
       return (
         <div>
-          <Button color="inherit" onClick={logout}>
+          <Button
+            color="inherit"
+            onClick={() => logmeout()}
+            style={{ "border-radius": "50px" }}
+          >
             Log out
           </Button>
-          <Button color="inherit" id="logoutname">
+          <Button
+            color="inherit"
+            id="logoutname"
+            style={{ "border-radius": "50px" }}
+          >
             {displayaccountname()}
           </Button>
         </div>
@@ -208,7 +227,7 @@ function App(props) {
   };
 
   return (
-    <div>
+    <div style={{ "font-family": "roboto" }}>
       <div class="desktopmenu">
         <div className={classes.root}>
           <AppBar
@@ -217,23 +236,30 @@ function App(props) {
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-              >
-                <MenuIcon />
-              </IconButton>
+              <img
+                src="/logo.png"
+                width="48"
+                class="d-inline-block align-top"
+                style={{ "margin-bottom": 2, opacity: 0.7 }}
+              ></img>
               <Typography
                 variant="h6"
-                style={{ color: "#2A3747", "text-decoration": "none" }}
+                style={{
+                  color: "black",
+                  "text-decoration": "none",
+                  "margin-top": "3px",
+                  "font-weight": "600",
+                  "margin-left": "5px",
+                  "font-size": "21px",
+                  opacity: 0.7,
+                }}
                 className={classes.title}
                 component={Link}
                 to={"/"}
               >
-                Consortium
+                <a>Consortium</a>
               </Typography>
+
               {logbutton()}
             </Toolbar>
           </AppBar>
@@ -250,19 +276,41 @@ function App(props) {
           style={{ "background-color": "white" }}
         >
           <Toolbar>
-            {logbutton()}
-            <Fab
-              style={{ "background-color": "#AFBBC9" }}
-              onClick={handleShow}
-              aria-label="add"
-              className={classes.fabButton}
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              component={Link}
+              to={"/"}
             >
-              <AddIcon style={{ color: "white" }} />
-            </Fab>
-            <div className={classes.grow} />
-            <Button style={{ color: "#2A3747" }} color="inherit">
-              {showusername()}
-            </Button>
+              <AccountBalanceIcon />
+            </IconButton>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              omponent={Link}
+            >
+              <FormatListNumberedIcon />
+            </IconButton>
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+            >
+              <PermIdentityIcon />
+            </IconButton>
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+            >
+              <ExitToAppIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
       </div>
@@ -272,36 +320,36 @@ function App(props) {
           component={Paper}
           style={{ "margin-top": "10px", borderRadius: "15px" }}
         >
-          <Table
-            className={classes.table}
-            size="small"
-            aria-label="rewards"
-          >
+          <Table className={classes.table} size="small" aria-label="rewards">
             <TableHead>
               <TableRow>
-              <TableCell width="25px">#</TableCell>
-                <TableCell>Governor</TableCell>
-                <TableCell align="right">Rewards</TableCell>
+                <TableCell style={{ fontWeight: "bold" }} width="25px">
+                  #
+                </TableCell>
+                <TableCell style={{ fontWeight: "bold" }}>GOVERNOR</TableCell>
+                <TableCell style={{ fontWeight: "bold" }} align="right">
+                  REWARDS
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data.rows.map((u, i) => {
-                if(i<50){
-                return (
-                  <TableRow key={i}>
-                  <TableCell component="th" scope="row">
-                    {i + 1}
-                  </TableCell>
-                    <TableCell component="th" scope="row">
-                      {u.governor}
-                    </TableCell>
+                if (i < 50) {
+                  return (
+                    <TableRow key={i}>
+                      <TableCell component="th" scope="row">
+                        {i + 1}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {u.governor}
+                      </TableCell>
 
-                    <TableCell align="right">
-                      {parseInt(u.rewardsreceived) + " GOVRN"}
-                    </TableCell>
-                  </TableRow>
-                );
-              }
+                      <TableCell align="right">
+                        {parseInt(u.rewardsreceived) + " GOVRN"}
+                      </TableCell>
+                    </TableRow>
+                  );
+                }
               })}
             </TableBody>
           </Table>

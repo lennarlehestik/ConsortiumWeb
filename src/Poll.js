@@ -35,11 +35,20 @@ import CardMedia from "@material-ui/core/CardMedia";
 import { withUAL } from "ual-reactjs-renderer";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
+import ShareIcon from "@material-ui/icons/Share";
 
 const useStyles = makeStyles((theme) => ({
   media: {
     height: 0,
     paddingTop: "30%",
+  },
+  avatar: {
+    backgroundColor: "#343A40",
+    opacity: 0.7,
   },
   root: {
     flexGrow: 1,
@@ -125,8 +134,9 @@ function App(props) {
   const [communitydata, setCommunityData] = useState({ rows: [] });
   const [show2, setShow2] = useState(false);
   const [accountname, setAccountName] = useState("");
+  const [questiondescription, setQuestionDescription] = useState("");
+  const [votinglist, setVotingList] = useState(["", ""]);
 
-  const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleClose1 = () => setShow1(false);
@@ -143,6 +153,13 @@ function App(props) {
   function toggle() {
     setIsOpened((wasOpened) => !wasOpened);
   }
+
+  const handleClose = () => {
+    setShow(false);
+    setVotingList(["", ""]);
+    setQuestionSubmission("");
+    setQuestionDescription("");
+  };
 
   const sucessstake = () => {
     const Toast = Swal.mixin({
@@ -244,6 +261,25 @@ function App(props) {
     const curr = new Date().getTime(); //GET CURRENT TIME
     return moment(curr).to(moment(creationdate + "Z")); //FIND THE DIFFERENCE BETWEEN THE TWO TIMESTAMPS, Z JUST MAKES IT RECOGNIZEABLE UTC
   };
+
+  useEffect(() => {
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "totalstk",
+        scope: "andrtestcons",
+        limit: 1,
+      }),
+    }).then((response) =>
+      response.json().then((totalstaked) => setTotalStaked(totalstaked))
+    );
+  }, communitydata["rows"]);
 
   useEffect(() => {
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
@@ -364,10 +400,10 @@ function App(props) {
   };
 
   const pollrewards = (fullstake, communitystake) => {
-      return parseInt(
-        (Math.pow(communitystake / fullstake, 1 / 3) * 70000 + 10000) / 8
-      ); //LISA KUUP JUUR communitystake/fullstake sellele
-    };
+    return parseInt(
+      (Math.pow(communitystake / fullstake, 1 / 3) * 70000 + 10000) / 8
+    ); //LISA KUUP JUUR communitystake/fullstake sellele
+  };
 
   const voterewards = (fullstake, communitystake) => {
     return parseInt(
@@ -375,14 +411,13 @@ function App(props) {
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
-const gettotalstaked = () => {
+  const gettotalstaked = () => {
     if (totalstaked.rows[0]) {
       return Math.floor(Number(totalstaked.rows[0].totalstaked.split(" ")[0]));
     }
   };
 
-
-const stakedforcom = () => {
+  const stakedforcom = () => {
     if (communitydata.rows[0]) {
       var commdata = communitydata.rows.filter(function (e) {
         return e.community == scope;
@@ -501,6 +536,7 @@ const stakedforcom = () => {
                   padding: "10px",
                   "padding-bottom": "20px",
                   borderRadius: "20px",
+                  fontFamily: "roboto",
                 }}
               >
                 <CardHeader
@@ -516,7 +552,9 @@ const stakedforcom = () => {
                       data-html="true"
                       data-for="pede3"
                       data-tip={"Get poll url"}
+                      onClick={() => getpollurl(u.pollkey, u.uniqueurl)}
                     >
+                      <ShareIcon style={{ opacity: 0.8 }} />
                       <ReactTooltip
                         id="pede3"
                         type="dark"
@@ -524,17 +562,18 @@ const stakedforcom = () => {
                         backgroundColor="black"
                         place="bottom"
                       />
-                      <MoreVertIcon
-                        onClick={() => getpollurl(u.pollkey, u.uniqueurl)}
-                      />
                     </IconButton>
                   }
                   title={u.creator}
                   subheader={gettimediff(u.timecreated)}
                 />
-                <CardContent style={{ paddingTop: "0px" }}>
+
+                <CardContent style={{ paddingTop: "8px" }}>
                   <Typography
-                    style={{ color: "black", "font-weight": "450" }}
+                    style={{
+                      color: "rgba(0, 0, 0, 0.87)",
+                      "font-weight": "500",
+                    }}
                     class="question"
                     target="_blank"
                     component={Link}
@@ -542,9 +581,22 @@ const stakedforcom = () => {
                   >
                     {u.question}
                   </Typography>
-                  <div style={{ color: "#2A3747" }}>{u.description}</div>
-                  <br />
-                  <a style={{ color: "#2A3747" }}>
+                  <div
+                    style={{
+                      color: "rgba(0, 0, 0, 0.54)",
+                      "font-size": "15px",
+                      "margin-top": "8px",
+                      "margin-bottom": "19px",
+                    }}
+                  >
+                    {u.description}
+                  </div>
+                  <a
+                    style={{
+                      color: "rgba(0, 0, 0, 0.74)",
+                      "font-size": "16px",
+                    }}
+                  >
                     {polloptions(u.totalvote, u.answers, u.pollkey)}
                   </a>
                   <div style={{ color: "#485A70" }} class="pollstats">
@@ -578,7 +630,7 @@ const stakedforcom = () => {
                         backgroundColor="black"
                         place="bottom"
                       />
-                      <img src={tokenurl()} width="28px" height="28px" />
+                      <img src={tokenurl()} height="24px" />
                       &nbsp;
                       {stakeformatter(u.sumofallopt)} {tokensymbol()}
                     </div>
@@ -782,7 +834,9 @@ const stakedforcom = () => {
       <div class="polloption" onClick={() => votingmodal(key, pollkey)}>
         <div class="answer">
           <a>{answers[key]}</a>{" "}
-          <a style={{ float: "right", "font-size": "12px" }}>
+          <a
+            style={{ float: "right", fontSize: "14px", "font-weight": "bold" }}
+          >
             {percentage(votes, votes[key]).toFixed(0)}%
           </a>
         </div>
@@ -827,7 +881,12 @@ const stakedforcom = () => {
     const { children, open, value } = props;
 
     return (
-      <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
+      <Tooltip
+        open={open}
+        enterTouchDelay={0}
+        placement="top"
+        title={isNaN(value) ? 0 : value}
+      >
         {children}
       </Tooltip>
     );
@@ -1209,16 +1268,20 @@ const stakedforcom = () => {
       //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
       return (
         <div>
-        {isOpened && (
-            <div id="drop" class="dropdown-content" style={{"font-family":"Roboto"}}>
+          {isOpened && (
+            <div
+              id="drop"
+              class="dropdown-content"
+              style={{ "font-family": "Roboto" }}
+            >
               <div class="line">
                 <a class="identfier">
                   <b>{displayaccountname()}</b>
                 </a>
               </div>
               <hr />
-              <div class="line" style={{ "font-weight": "bold"}}>
-                <a class="identfier"    >Balance:</a>
+              <div class="line" style={{ "font-weight": "bold" }}>
+                <a class="identfier">Balance:</a>
                 <a class="value">{getmybalance()} GOVRN</a>
               </div>
               <hr />
@@ -1461,7 +1524,7 @@ const stakedforcom = () => {
   };
 
   return (
-    <div>
+    <div style={{ "font-family": "roboto" }}>
       <div class="desktopmenu">
         <div className={classes.root}>
           <AppBar
@@ -1470,25 +1533,36 @@ const stakedforcom = () => {
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-              >
-                <MenuIcon />
-              </IconButton>
+              <img
+                src="/logo.png"
+                width="48"
+                class="d-inline-block align-top"
+                style={{ "margin-bottom": 2, opacity: 0.7 }}
+              ></img>
               <Typography
                 variant="h6"
-                style={{ color: "#2A3747", "text-decoration": "none" }}
+                style={{
+                  color: "black",
+                  "text-decoration": "none",
+                  "margin-top": "3px",
+                  "font-weight": "600",
+                  "margin-left": "5px",
+                  fontFamily: "helvetica",
+                  "font-size": "21px",
+                  opacity: 0.7,
+                  width: "200px",
+                }}
                 className={classes.title}
                 component={Link}
                 to={"/"}
               >
-                Consortium
+                <a>Consortium</a>
               </Typography>
 
-              <Button color="inherit" href={`${window.location}/Leaderboard`}>
+              <Button
+                style={{ color: "inherit", "border-radius": "50px" }}
+                href={`${window.location}/Leaderboard`}
+              >
                 Leaderboard
               </Button>
 
@@ -1508,19 +1582,41 @@ const stakedforcom = () => {
           style={{ "background-color": "white" }}
         >
           <Toolbar>
-            {logbutton()}
-            <Fab
-              style={{ "background-color": "#AFBBC9" }}
-              onClick={handleShow}
-              aria-label="add"
-              className={classes.fabButton}
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              component={Link}
+              to={"/"}
             >
-              <AddIcon style={{ color: "white" }} />
-            </Fab>
-            <div className={classes.grow} />
-            <Button style={{ color: "#2A3747" }} color="inherit">
-              {showusername()}
-            </Button>
+              <AccountBalanceIcon />
+            </IconButton>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              omponent={Link}
+            >
+              <FormatListNumberedIcon />
+            </IconButton>
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+            >
+              <PermIdentityIcon />
+            </IconButton>
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="open drawer"
+              style={{ "margin-left": "auto", "margin-right": "auto" }}
+            >
+              <ExitToAppIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
       </div>
@@ -1625,7 +1721,9 @@ const stakedforcom = () => {
                 step={1}
                 min={1}
                 max={getbalance()}
-                onChange={(e, val) => setVoteAmount(val)}
+                onChangeCommitted={(e, val) =>
+                  isNaN(val) ? setVoteAmount(0) : setVoteAmount(val)
+                }
                 style={{
                   marginBottom: "10px",
                   "margin-top": "10px",
