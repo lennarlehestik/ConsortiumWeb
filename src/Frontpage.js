@@ -544,13 +544,13 @@ function App(props) {
             <div
               id="drop"
               class="dropdown-content2"
-              style={{ "font-family": "Roboto" }}
+              style={{ "font-family": "Roboto", "padding-top": "16x" }}
             >
-              <div class="line">
+              <div class="line" style={{ "padding-top": "7px" }}>
                 <a
                   class="identfier"
                   style={{
-                    "margin-top": "15px",
+                    "vertical-align": "top",
                   }}
                 >
                   Halving events:
@@ -558,8 +558,8 @@ function App(props) {
                 <a
                   class="value"
                   style={{
-                    "margin-top": "4px",
                     fontWeight: "bold",
+                    "vertical-align": "top",
                   }}
                   data-html="true"
                   data-for="pede"
@@ -581,23 +581,24 @@ function App(props) {
                       height: "14px",
                       width: "14px",
                       color: "black",
-                      "margin-bottom": "6px",
                       opacity: "0.7",
                       "margin-left": "2px",
+                      "vertical-align": "top",
+                      "margin-top": "-4px",
                     }}
                   />
                 </a>
               </div>
               <hr />
-              <div class="line">
+              <div class="line" style={{ "padding-bottom": "7px" }}>
                 <a class="identfier">To mine until next halving:</a>
                 <a
                   class="value"
                   style={{
-                    fontWeight: "bold",
+                    "font-weight": "",
                   }}
                 >
-                  {stakeformatter(tonexthalving(gettotalcircu()))} GOVRN
+                  <b>{stakeformatter(tonexthalving(gettotalcircu()))} GOVRN</b>
                 </a>
               </div>
             </div>
