@@ -572,7 +572,7 @@ function App(props) {
                   <Typography
                     style={{
                       color: "rgba(0, 0, 0, 0.87)",
-                      "font-weight": "500",
+                      "font-weight": "400",
                     }}
                     class="question"
                     target="_blank"
@@ -781,6 +781,7 @@ function App(props) {
         const amount = Number(voteamount);
         const uniquename = makeid();
         const uniquenamests = makeid();
+        const uniquenamevtb = makeid();
 
         const transaction = {
           actions: [
@@ -801,6 +802,7 @@ function App(props) {
                 voter: displayaccountname(),
                 schedname: uniquename,
                 schednamests: uniquenamests,
+                schednamevtb: uniquenamevtb,
               },
             },
           ],
@@ -835,14 +837,20 @@ function App(props) {
         <div class="answer">
           <a>{answers[key]}</a>{" "}
           <a
-            style={{ float: "right", fontSize: "14px", "font-weight": "bold" }}
+            style={{
+              float: "right",
+              fontSize: "14px",
+              "font-weight": "bold",
+            }}
           >
             {percentage(votes, votes[key]).toFixed(0)}%
           </a>
         </div>
         <div class="progressbar">
           <div
-            style={{ width: `${percentage(votes, votes[key]).toFixed(0)}%` }}
+            style={{
+              width: `${percentage(votes, votes[key]).toFixed(0)}%`,
+            }}
           />
         </div>
       </div>

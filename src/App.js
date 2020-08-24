@@ -1466,7 +1466,6 @@ Swal.fire({
           <div
             style={{
               width: `${percentage(votes, votes[key]).toFixed(0)}%`,
-              borderRadius: "15px",
             }}
           />
         </div>
@@ -1518,7 +1517,7 @@ Swal.fire({
                 </a>
               </div>
               <hr />
-              <div class="line" style={{ "font-weight": "bold" }}>
+              <div class="line" style={{ "font-weight": "600" }}>
                 <a class="identfier">Balance:</a>
                 <a class="value">{getmybalance()} GOVRN</a>
               </div>
@@ -2130,7 +2129,7 @@ Swal.fire({
                   <Typography
                     style={{
                       color: "rgba(0, 0, 0, 0.87)",
-                      "font-weight": "500",
+                      "font-weight": "400",
                     }}
                     class="question"
                     target="_blank"

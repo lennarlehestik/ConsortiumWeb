@@ -99,11 +99,13 @@
 
 .progressbar {
   background-color: #ededee;
+  border-radius: 15px;
 }
 
 .progressbar > div {
-  background-color: #5a6269;
+  background-color: #737b81;
   height: 5px;
+  border-radius: 15px 0px 0px 15px;
 }
 
 .polloption {
