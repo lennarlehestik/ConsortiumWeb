@@ -151,9 +151,6 @@ function App(props) {
 
   const [accountname, setAccountName] = useState("");
 
-  ReactGA.initialize("UA-160289361-1");
-  ReactGA.pageview(window.location);
-
   const {
     ual: { logout },
   } = props;
@@ -557,6 +554,9 @@ function App(props) {
   };
 
   useEffect(() => {
+    ReactGA.initialize("UA-160289361-1");
+    ReactGA.pageview(window.location);
+
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
@@ -1670,7 +1670,7 @@ Swal.fire({
             <Toolbar>
               <img
                 src="/logo.png"
-                width="48"
+                width="66"
                 class="d-inline-block align-top"
                 style={{ "margin-bottom": 2, opacity: 0.7 }}
               ></img>
@@ -1679,10 +1679,10 @@ Swal.fire({
                 style={{
                   color: "black",
                   "text-decoration": "none",
-                  "margin-top": "3px",
+                  "margin-top": "4px",
                   "font-weight": "600",
-                  "margin-left": "5px",
-                  fontFamily: "helvetica",
+                  "margin-left": "3px",
+                  fontFamily: "arial",
                   "font-size": "21px",
                   opacity: 0.7,
                   width: "200px",
