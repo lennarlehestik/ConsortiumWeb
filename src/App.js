@@ -42,6 +42,7 @@ import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
+import ReactGA from "react-ga";
 
 //STYLES FOR EVERYTHING
 const useStyles = makeStyles((theme) => ({
@@ -149,6 +150,9 @@ function App(props) {
   const [show2, setShow2] = useState(false);
 
   const [accountname, setAccountName] = useState("");
+
+  ReactGA.initialize("UA-160289361-1");
+  ReactGA.pageview(window.location);
 
   const {
     ual: { logout },
@@ -1002,6 +1006,11 @@ function App(props) {
         });
         window.location.reload(false);
 
+        ReactGA.event({
+          category: "Chain acion",
+          action: "User staked.",
+        });
+
         sucessstake();
         //lita()
       } catch (err) {
@@ -1254,6 +1263,11 @@ function App(props) {
         });
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
+
+        ReactGA.event({
+          category: "Chain acion",
+          action: "User created a poll.",
+        });
       } catch (err) {
         alert(err);
       }
@@ -1351,6 +1365,11 @@ function App(props) {
         });
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
+
+        ReactGA.event({
+          category: "Chain acion",
+          action: "User voted.",
+        });
       } catch (err) {
         alert(err);
       }

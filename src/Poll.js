@@ -40,6 +40,10 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import ShareIcon from "@material-ui/icons/Share";
+import ReactGA from "react-ga";
+
+ReactGA.initialize("UA-160289361-1");
+ReactGA.pageview(window.location);
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -814,6 +818,11 @@ function App(props) {
         });
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
+
+        ReactGA.event({
+          category: "Chain acion",
+          action: "User voted in individual poll.",
+        });
       } catch (err) {
         alert(err);
       }

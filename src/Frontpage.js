@@ -25,6 +25,7 @@ import Swal from "sweetalert2";
 import ShareIcon from "@material-ui/icons/Share";
 import ReactTooltip from "react-tooltip";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import ReactGA from "react-ga";
 
 import {
   faTelegram,
@@ -165,6 +166,9 @@ function App(props) {
       return 2;
     }
   };
+
+  ReactGA.initialize("UA-160289361-1");
+  ReactGA.pageview(window.location);
 
   useEffect(() => {
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
