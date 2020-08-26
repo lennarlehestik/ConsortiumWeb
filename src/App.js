@@ -44,6 +44,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import ReactGA from "react-ga";
+import * as clipboard from "clipboard-polyfill/text";
 
 //STYLES FOR EVERYTHING
 const useStyles = makeStyles((theme) => ({
@@ -1448,7 +1449,7 @@ Swal.fire({
       uniqueurl +
       "/" +
       scope;
-    navigator.clipboard.writeText(url);
+    clipboard.writeText(url);
 
     const Toast = Swal.mixin({
       toast: true,
