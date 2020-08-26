@@ -415,7 +415,7 @@ function App(props) {
         <Card
           className={classes.root}
           style={{
-            marginBottom: "10px",
+            marginBottom: "7px",
             "margin-top": "10px",
             "padding-bottom": "10px",
             borderRadius: "20px",
@@ -1885,7 +1885,7 @@ Swal.fire({
       <div class="app">
         <div>
           <Modal show={show} onHide={handleClose} centered>
-            <Modal.Header>
+            <Modal.Header closeButton>
               <Typography
                 style={{
                   fontSize: "22px",
@@ -2006,7 +2006,7 @@ Swal.fire({
           </Modal>
 
           <Modal show={show1} onHide={handleClose1} centered>
-            <Modal.Header>
+            <Modal.Header closeButton>
               <Typography
                 style={{
                   fontSize: "22px",
@@ -2108,7 +2108,7 @@ Swal.fire({
           </Modal>
 
           <Modal show={show2} onHide={handleClose2} centered>
-            <Modal.Header>
+            <Modal.Header closeButton>
               <Typography
                 style={{
                   fontSize: "22px",
