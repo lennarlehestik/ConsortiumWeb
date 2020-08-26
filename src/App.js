@@ -24,6 +24,7 @@ import Swal from "sweetalert2";
 import Tooltip from "@material-ui/core/Tooltip";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import OpenInBrowserRoundedIcon from "@material-ui/icons/OpenInBrowserRounded";
 import ShareIcon from "@material-ui/icons/Share";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -38,7 +39,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withUAL } from "ual-reactjs-renderer";
 import SwapHorizOutlinedIcon from "@material-ui/icons/SwapHorizOutlined";
 import HowToRegOutlinedIcon from "@material-ui/icons/HowToRegOutlined";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import AccountBalanceRoundedIcon from "@material-ui/icons/AccountBalanceRounded";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
@@ -125,6 +126,8 @@ function App(props) {
   const classes = useStyles();
   const [data, setData] = useState({ rows: [] });
   const [isOpened, setIsOpened] = useState(true);
+  const [isOpenedmob, setIsOpenedmob] = useState(false);
+
   const [votedata, setVoteData] = useState({ rows: [] });
   const [votedata1, setVoteData1] = useState({ rows: [] });
   const [votedata2, setVoteData2] = useState({ rows: [] });
@@ -185,6 +188,10 @@ function App(props) {
 
   function toggle() {
     setIsOpened((wasOpened) => !wasOpened);
+  }
+
+  function togglemob() {
+    setIsOpenedmob((wasOpened) => !wasOpened);
   }
 
   const tyra = () => {
@@ -556,6 +563,7 @@ function App(props) {
   useEffect(() => {
     ReactGA.initialize("UA-160289361-1");
     ReactGA.pageview(window.location);
+    console.log("pede");
 
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
       method: "POST",
@@ -1631,6 +1639,112 @@ Swal.fire({
     }
   };
 
+  const logbuttonmob = () => {
+    if (accountname) {
+      //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
+      return (
+        <div>
+          {isOpenedmob && (
+            <div
+              id="drop"
+              class="dropdown-contentmob"
+              style={{ "font-family": "roboto" }}
+            >
+              <div class="line">
+                <a class="identfier">
+                  <b>{displayaccountname()}</b>
+                </a>
+              </div>
+              <hr />
+              <div class="line" style={{ "font-weight": "600" }}>
+                <a class="identfier">Balance:</a>
+                <a class="value">{getmybalance()} GOVRN</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Voting power:</a>
+                <a class="value">
+                  {getbalance()} {tokensymbol()}
+                </a>
+              </div>
+              <div class="line">
+                <a class="identfier">Voting power reset:</a>
+                <a class="value">{countitdown()}</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Vote rewards left:</a>
+                <a class="value">{rewardsleft()}</a>
+              </div>
+              <div class="line">
+                <a class="identfier">Vote rewards reset:</a>
+                <a class="value">{countitdownvotes()}</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Voting reward:</a>
+                <a class="value">
+                  {voterewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
+                  GOVRN
+                </a>
+              </div>
+              <div class="line">
+                <a class="identfier">Poll reward:</a>
+                <a class="value">
+                  {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
+                  GOVRN
+                </a>
+              </div>
+            </div>
+          )}
+          <Button
+            color="inherit"
+            onClick={() => logmeout()}
+            style={{ "border-radius": "50px", "margin-right": "auto" }}
+          >
+            Log out
+          </Button>
+        </div>
+        /*
+<div class="dropdown">
+  <button class="button">Menu item</button>
+  <div id="drop" class="dropdown-content">
+    <div class ="line">
+      <a class="identfier"><b>lennyaccount</b></a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Balance</a>
+      <a class="value">45 GOVRN</a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Voting power</a>
+      <a class="value">45 ATMOS</a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Voting power reset</a>
+      <a class="value">5 hrs</a>
+    </div>
+  </div>
+</div>
+*/
+      );
+    } else {
+      //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
+      return (
+        <Button
+          color="inherit"
+          onClick={showModal}
+          style={{
+            borderRadius: "50px",
+            "margin-right": "auto",
+          }}
+        >
+          Log in
+        </Button>
+      );
+    }
+  };
+
   const showusername = () => {
     if (activeUser) {
       return displayaccountname();
@@ -1725,33 +1839,29 @@ Swal.fire({
               component={Link}
               to={"/"}
             >
-              <AccountBalanceIcon />
+              <AccountBalanceRoundedIcon style={{ fontSize: 28 }} />
             </IconButton>
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
               style={{ "margin-left": "auto", "margin-right": "auto" }}
-              omponent={Link}
+              //component={Link}
+              //to={`${window.location}/Leaderboard`}
+              href={`${window.location}/Leaderboard`}
             >
-              <FormatListNumberedIcon />
+              <img src="/wreathp.png" width="36"></img>
             </IconButton>
             <IconButton
               edge="end"
               color="inherit"
               aria-label="open drawer"
               style={{ "margin-left": "auto", "margin-right": "auto" }}
+              onClick={togglemob}
             >
-              <PermIdentityIcon />
+              <OpenInBrowserRoundedIcon style={{ fontSize: 30 }} />
             </IconButton>
-            <IconButton
-              edge="end"
-              color="inherit"
-              aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
-            >
-              <ExitToAppIcon />
-            </IconButton>
+            {logbuttonmob()}
           </Toolbar>
         </AppBar>
       </div>
@@ -1769,7 +1879,7 @@ Swal.fire({
                 data-html="true"
                 data-for="signalprogress"
                 data-tip={
-                  "*your poll will be active for 3 days <br/><br /> *if your community participates in the poll, at the end of the 3rd day,<br /> you can get rewarded starting from 10k and up to 80k GOVRN tokens <br/><br /> *to create a poll your account must hold 5k GOVRN that will get burned"
+                  "*your poll will be active for 3 days <br/><br /> *if your community participates in the poll,<br /> at the end of the 3rd day you can get rewarded <br /> starting from 10k and up to 80k GOVRN tokens <br/><br /> *to create a poll your account must hold 5k <br />  GOVRN that will get burned"
                 }
               >
                 <ReactTooltip
@@ -1777,7 +1887,7 @@ Swal.fire({
                   type="dark"
                   effect="solid"
                   backgroundColor="black"
-                  place="bottom"
+                  place="right"
                 />
                 Poll creation
                 <FontAwesomeIcon
@@ -1898,7 +2008,7 @@ Swal.fire({
                   type="dark"
                   effect="solid"
                   backgroundColor="black"
-                  place="bottom"
+                  place="right"
                 />
                 Voting
                 <FontAwesomeIcon
@@ -1992,7 +2102,7 @@ Swal.fire({
                 data-html="true"
                 data-for="signalprogress"
                 data-tip={
-                  "*the more GOVRN tokens staked the higher the rewards for voting and poll creation your community gets"
+                  "*the more GOVRN tokens staked the higher the <br/> rewards for voting and poll creation your community gets"
                 }
               >
                 <ReactTooltip
@@ -2000,7 +2110,7 @@ Swal.fire({
                   type="dark"
                   effect="solid"
                   backgroundColor="black"
-                  place="bottom"
+                  place="right"
                 />
                 Staking
                 <FontAwesomeIcon

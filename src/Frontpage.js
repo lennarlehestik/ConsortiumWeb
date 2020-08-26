@@ -229,6 +229,9 @@ function App(props) {
   };
 
   useEffect(() => {
+    ReactGA.initialize("UA-160289361-1");
+    ReactGA.pageview(window.location);
+
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
@@ -245,12 +248,7 @@ function App(props) {
     }).then((response) =>
       response.json().then((totalstaked) => setTotalStaked(totalstaked))
     );
-  });
-
-  useEffect(() => {
-    ReactGA.initialize("UA-160289361-1");
-    ReactGA.pageview(window.location);
-  });
+  }, totalstaked["rows"][0]);
 
   /* ANCHOR CONNECTION */
 

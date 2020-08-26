@@ -1,4 +1,4 @@
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 768px) {
   .app {
     width: 50%;
     margin-left: 25%;
@@ -6,7 +6,7 @@
   }
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 768px) {
   .frontapp {
     width: 80%;
     margin-left: 10%;
@@ -18,25 +18,25 @@
   margin-bottom: 50px;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 768px) {
   .mobilemenu {
     display: none;
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
   #logoutname {
     display: none;
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
   .desktopmenu {
     display: none;
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
   .bottommenu {
     display: none;
   }
@@ -154,6 +154,23 @@
   max-width: 250px;
   right: 50px;
   top: 80px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  z-index: 1;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.87);
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 15px;
+}
+
+.dropdown-contentmob {
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 200px;
+  max-width: 250px;
+
+  bottom: 80px;
+  right: 20px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   padding: 12px 16px;
   z-index: 1;
