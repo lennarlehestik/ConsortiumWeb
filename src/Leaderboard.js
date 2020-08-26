@@ -32,6 +32,7 @@ import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
+import * as clipboard from "clipboard-polyfill/text";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -236,29 +237,35 @@ function App(props) {
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-              <img
-                src="/logo.png"
-                width="48"
-                class="d-inline-block align-top"
-                style={{ "margin-bottom": 2, opacity: 0.7 }}
-              ></img>
+              <IconButton
+                component={Link}
+                to={"/"}
+                style={{ "background-color": "white" }}
+              >
+                <img
+                  src="/logo.png"
+                  width="66"
+                  class="d-inline-block align-top"
+                  style={{ "margin-bottom": 2, opacity: 0.7 }}
+                ></img>
+              </IconButton>
               <Typography
                 variant="h6"
                 style={{
                   color: "black",
                   "text-decoration": "none",
-                  "margin-top": "3px",
+                  "margin-top": "4px",
                   "font-weight": "600",
-                  "margin-left": "5px",
+                  "margin-left": "3px",
+                  fontFamily: "arial",
                   "font-size": "21px",
                   opacity: 0.7,
+                  width: "200px",
                 }}
                 className={classes.title}
                 component={Link}
                 to={"/"}
-              >
-                <a>Consortium</a>
-              </Typography>
+              ></Typography>
 
               {logbutton()}
             </Toolbar>

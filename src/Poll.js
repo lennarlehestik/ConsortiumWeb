@@ -41,6 +41,9 @@ import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import ShareIcon from "@material-ui/icons/Share";
 import ReactGA from "react-ga";
+import * as clipboard from "clipboard-polyfill/text";
+import AccountBalanceRoundedIcon from "@material-ui/icons/AccountBalanceRounded";
+import OpenInBrowserRoundedIcon from "@material-ui/icons/OpenInBrowserRounded";
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -121,6 +124,8 @@ function App(props) {
   const [option3submission, setOption3Submission] = useState("");
   const [option4submission, setOption4Submission] = useState("");
   const [isOpened, setIsOpened] = useState(true);
+  const [isOpenedmob, setIsOpenedmob] = useState(false);
+
   const [dailyvoted, setDailyVoted] = useState({ rows: [] });
   const [votedata, setVoteData] = useState({ rows: [] });
   const [votedata1, setVoteData1] = useState({ rows: [] });
@@ -153,6 +158,10 @@ function App(props) {
 
   function toggle() {
     setIsOpened((wasOpened) => !wasOpened);
+  }
+
+  function togglemob() {
+    setIsOpenedmob((wasOpened) => !wasOpened);
   }
 
   const handleClose = () => {
@@ -236,7 +245,7 @@ function App(props) {
       uniqueurl +
       "/" +
       scope;
-    navigator.clipboard.writeText(url);
+    clipboard.writeText(url);
 
     const Toast = Swal.mixin({
       toast: true,
@@ -1379,6 +1388,112 @@ function App(props) {
     }
   };
 
+  const logbuttonmob = () => {
+    if (accountname) {
+      //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
+      return (
+        <div>
+          {isOpenedmob && (
+            <div
+              id="drop"
+              class="dropdown-contentmob"
+              style={{ "font-family": "roboto" }}
+            >
+              <div class="line">
+                <a class="identfier">
+                  <b>{displayaccountname()}</b>
+                </a>
+              </div>
+              <hr />
+              <div class="line" style={{ "font-weight": "600" }}>
+                <a class="identfier">Balance:</a>
+                <a class="value">{getmybalance()} GOVRN</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Voting power:</a>
+                <a class="value">
+                  {getbalance()} {tokensymbol()}
+                </a>
+              </div>
+              <div class="line">
+                <a class="identfier">Voting power reset:</a>
+                <a class="value">{countitdown()}</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Vote rewards left:</a>
+                <a class="value">{rewardsleft()}</a>
+              </div>
+              <div class="line">
+                <a class="identfier">Vote rewards reset:</a>
+                <a class="value">{countitdownvotes()}</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Voting reward:</a>
+                <a class="value">
+                  {voterewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
+                  GOVRN
+                </a>
+              </div>
+              <div class="line">
+                <a class="identfier">Poll reward:</a>
+                <a class="value">
+                  {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
+                  GOVRN
+                </a>
+              </div>
+            </div>
+          )}
+          <Button
+            color="inherit"
+            onClick={() => logmeout()}
+            style={{ "border-radius": "50px", "margin-right": "auto" }}
+          >
+            Log out
+          </Button>
+        </div>
+        /*
+<div class="dropdown">
+  <button class="button">Menu item</button>
+  <div id="drop" class="dropdown-content">
+    <div class ="line">
+      <a class="identfier"><b>lennyaccount</b></a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Balance</a>
+      <a class="value">45 GOVRN</a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Voting power</a>
+      <a class="value">45 ATMOS</a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Voting power reset</a>
+      <a class="value">5 hrs</a>
+    </div>
+  </div>
+</div>
+*/
+      );
+    } else {
+      //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
+      return (
+        <Button
+          color="inherit"
+          onClick={showModal}
+          style={{
+            borderRadius: "50px",
+            "margin-right": "auto",
+          }}
+        >
+          Log in
+        </Button>
+      );
+    }
+  };
+
   const showusername = () => {
     if (sessionresult) {
       return sessionresult.auth.actor;
@@ -1550,12 +1665,18 @@ function App(props) {
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-              <img
-                src="/logo.png"
-                width="66"
-                class="d-inline-block align-top"
-                style={{ "margin-bottom": 2, opacity: 0.7 }}
-              ></img>
+              <IconButton
+                component={Link}
+                to={"/"}
+                style={{ "background-color": "white" }}
+              >
+                <img
+                  src="/logo.png"
+                  width="66"
+                  class="d-inline-block align-top"
+                  style={{ "margin-bottom": 2, opacity: 0.7 }}
+                ></img>
+              </IconButton>
               <Typography
                 variant="h6"
                 style={{
@@ -1572,9 +1693,7 @@ function App(props) {
                 className={classes.title}
                 component={Link}
                 to={"/"}
-              >
-                <a>Consortium</a>
-              </Typography>
+              ></Typography>
 
               <Button
                 style={{ color: "inherit", "border-radius": "50px" }}
@@ -1596,44 +1715,52 @@ function App(props) {
           color="primary"
           className={classes.appBar}
           color="transparent"
-          style={{ "background-color": "white" }}
+          style={{ "background-color": "white", height: "55px" }}
         >
           <Toolbar>
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              style={{
+                "margin-left": "auto",
+                "margin-right": "auto",
+                opacity: "0.8",
+              }}
               component={Link}
               to={"/"}
             >
-              <AccountBalanceIcon />
+              <AccountBalanceRoundedIcon style={{ fontSize: 27 }} />
             </IconButton>
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
-              omponent={Link}
+              style={{
+                "margin-left": "auto",
+                "margin-right": "auto",
+                opacity: "0.8",
+              }}
+              //component={Link}
+              //to={`${window.location}/Leaderboard`}
+              href={`${window.location}/Leaderboard`}
             >
-              <FormatListNumberedIcon />
+              <img src="/wreathp.png" width="35"></img>
             </IconButton>
             <IconButton
               edge="end"
               color="inherit"
               aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              style={{
+                "margin-left": "auto",
+                "margin-right": "auto",
+                opacity: "0.8",
+              }}
+              onClick={togglemob}
             >
-              <PermIdentityIcon />
+              <OpenInBrowserRoundedIcon style={{ fontSize: 29 }} />
             </IconButton>
-            <IconButton
-              edge="end"
-              color="inherit"
-              aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
-            >
-              <ExitToAppIcon />
-            </IconButton>
+            {logbuttonmob()}
           </Toolbar>
         </AppBar>
       </div>

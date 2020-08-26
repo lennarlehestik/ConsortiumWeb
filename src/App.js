@@ -1783,12 +1783,18 @@ Swal.fire({
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-              <img
-                src="/logo.png"
-                width="66"
-                class="d-inline-block align-top"
-                style={{ "margin-bottom": 2, opacity: 0.7 }}
-              ></img>
+              <IconButton
+                component={Link}
+                to={"/"}
+                style={{ "background-color": "white" }}
+              >
+                <img
+                  src="/logo.png"
+                  width="66"
+                  class="d-inline-block align-top"
+                  style={{ "margin-bottom": 2, opacity: 0.7 }}
+                ></img>
+              </IconButton>
               <Typography
                 variant="h6"
                 style={{
@@ -1805,10 +1811,7 @@ Swal.fire({
                 className={classes.title}
                 component={Link}
                 to={"/"}
-              >
-                <a>Consortium</a>
-              </Typography>
-
+              ></Typography>
               <Button
                 style={{ color: "inherit", "border-radius": "50px" }}
                 href={`${window.location}/Leaderboard`}
@@ -1829,38 +1832,50 @@ Swal.fire({
           color="primary"
           className={classes.appBar}
           color="transparent"
-          style={{ "background-color": "white" }}
+          style={{ "background-color": "white", height: "55px" }}
         >
           <Toolbar>
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              style={{
+                "margin-left": "auto",
+                "margin-right": "auto",
+                opacity: "0.8",
+              }}
               component={Link}
               to={"/"}
             >
-              <AccountBalanceRoundedIcon style={{ fontSize: 28 }} />
+              <AccountBalanceRoundedIcon style={{ fontSize: 27 }} />
             </IconButton>
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              style={{
+                "margin-left": "auto",
+                "margin-right": "auto",
+                opacity: "0.8",
+              }}
               //component={Link}
               //to={`${window.location}/Leaderboard`}
               href={`${window.location}/Leaderboard`}
             >
-              <img src="/wreathp.png" width="36"></img>
+              <img src="/wreathp.png" width="35"></img>
             </IconButton>
             <IconButton
               edge="end"
               color="inherit"
               aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              style={{
+                "margin-left": "auto",
+                "margin-right": "auto",
+                opacity: "0.8",
+              }}
               onClick={togglemob}
             >
-              <OpenInBrowserRoundedIcon style={{ fontSize: 30 }} />
+              <OpenInBrowserRoundedIcon style={{ fontSize: 29 }} />
             </IconButton>
             {logbuttonmob()}
           </Toolbar>

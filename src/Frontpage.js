@@ -26,6 +26,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import ReactTooltip from "react-tooltip";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import ReactGA from "react-ga";
+import * as clipboard from "clipboard-polyfill/text";
 
 import {
   faTelegram,
@@ -207,7 +208,7 @@ function App(props) {
 
   const getcommunityurl = (community) => {
     const url = window.location.origin + "/community/" + community;
-    navigator.clipboard.writeText(url);
+    clipboard.writeText(url);
 
     const Toast = Swal.mixin({
       toast: true,
@@ -355,12 +356,18 @@ function App(props) {
             style={{ "background-color": "white" }}
           >
             <Toolbar>
-              <img
-                src="/logo.png"
-                width="66"
-                class="d-inline-block align-top"
-                style={{ "margin-bottom": 2, opacity: 0.7 }}
-              ></img>
+              <IconButton
+                component={Link}
+                to={"/"}
+                style={{ "background-color": "white" }}
+              >
+                <img
+                  src="/logo.png"
+                  width="66"
+                  class="d-inline-block align-top"
+                  style={{ "margin-bottom": 2, opacity: 0.7 }}
+                ></img>
+              </IconButton>
               <Typography
                 variant="h6"
                 style={{
@@ -377,9 +384,7 @@ function App(props) {
                 className={classes.title}
                 component={Link}
                 to={"/"}
-              >
-                <a>Consortium</a>
-              </Typography>
+              ></Typography>
 
               {logbutton()}
             </Toolbar>
