@@ -215,7 +215,7 @@ function App(props) {
       position: "middle",
 
       showConfirmButton: false,
-      timer: 1000,
+      timer: 1300,
       timerProgressBar: false,
       onOpen: (toast) => {
         toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -225,7 +225,7 @@ function App(props) {
 
     Toast.fire({
       icon: "success",
-      title: "Copied to clipboard",
+      title: "Community link copied to clipboard",
     });
   };
 
@@ -438,6 +438,7 @@ function App(props) {
               fontSize: "15px",
               "font-weight": "bold",
               "padding-top": "15px",
+              opacity: "0.9",
             }}
           >
             <a style={{ "margin-top": "20px" }}>Search</a>
@@ -465,11 +466,11 @@ function App(props) {
                         ></img>
                       }
                       action={
-                        <IconButton aria-label="settings">
-                          <ShareIcon
-                            onClick={() => getcommunityurl(u.community)}
-                            style={{ opacity: 0.8 }}
-                          />
+                        <IconButton
+                          aria-label="settings"
+                          onClick={() => getcommunityurl(u.community)}
+                        >
+                          <ShareIcon style={{ opacity: 0.8 }} />
                         </IconButton>
                       }
                       title={u.communityname}
@@ -574,7 +575,7 @@ function App(props) {
                   data-html="true"
                   data-for="pede"
                   data-tip={
-                    "*each halving divides the poll and vote rewards by 2<br/><br /> *halving occurs each time additional 100m GOVRN are issued<br /><br /> *in total there will be 11 halvings until the total supply of GOVRN tokens<br /> reaches 1.2bn, followed by a switch to stable inflation"
+                    "*each halving divides the poll and vote rewards by 2<br/><br /> *halving occurs each time additional 100m GOVRN are issued<br /><br /> *in total there will be 10 halvings until the total supply of GOVRN tokens<br /> reaches 1.1bn, followed by a switch to stable inflation"
                   }
                 >
                   <ReactTooltip

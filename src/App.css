@@ -187,11 +187,11 @@
   max-width: 400px;
   left: 30px;
   bottom: 75px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
   padding: 12px 16px;
   z-index: 1;
   font-size: 13px;
-  color: #192841;
+  color: rgba(0, 0, 0, 0.87);
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 15px;
 }

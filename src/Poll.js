@@ -252,7 +252,7 @@ function App(props) {
       position: "middle",
 
       showConfirmButton: false,
-      timer: 1000,
+      timer: 1300,
       timerProgressBar: false,
       onOpen: (toast) => {
         toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -262,7 +262,7 @@ function App(props) {
 
     Toast.fire({
       icon: "success",
-      title: "Copied to clipboard",
+      title: "Poll link copied to clipboard",
     });
   };
 
@@ -403,7 +403,7 @@ function App(props) {
       const nrofvote = nrofvotes.rows[0].nrofvotes;
       const rewardsleft = 3 - nrofvote;
       if (rewardsleft > 0) {
-        return nrofvote;
+        return rewardsleft;
       } else {
         return "0";
       }
@@ -1183,6 +1183,15 @@ function App(props) {
     }
   };
 
+  const getrewardthreshold = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].toppoll * 0.2;
+    }
+  };
+
   const getvote = () => {
     //READS YOUR TOKEN BALANCE FOR VOTING
     if (!votedata.rows[0] && scope == "viggtestcons") {
@@ -1345,6 +1354,61 @@ function App(props) {
                   GOVRN
                 </a>
               </div>
+              <hr />
+              <div class="line">
+                <a
+                  class="identfier"
+                  style={{
+                    "margin-top": "10px",
+                  }}
+                >
+                  Poll reward threshold:
+                </a>
+                <a
+                  style={{
+                    "margin-left": "23px",
+                  }}
+                >
+                  {stakeformatter(getrewardthreshold())} {tokensymbol()}
+                </a>
+
+                <a
+                  class="value"
+                  data-html="true"
+                  data-for="uus"
+                  data-tip={
+                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                  }
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    style={{
+                      height: "14px",
+                      width: "14px",
+                      color: "black",
+                      opacity: "0.7",
+                      "margin-left": "2px",
+                      "vertical-align": "top",
+                      "margin-top": "-4px",
+
+                      fontWeight: "bold",
+                    }}
+                  />
+                  <ReactTooltip
+                    id="uus"
+                    type="dark"
+                    effect="solid"
+                    backgroundColor="black"
+                    place="left"
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  />{" "}
+                </a>
+              </div>
             </div>
           )}
 
@@ -1442,6 +1506,61 @@ function App(props) {
                 <a class="value">
                   {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
+                </a>
+              </div>
+              <hr />
+              <div class="line">
+                <a
+                  class="identfier"
+                  style={{
+                    "margin-top": "10px",
+                  }}
+                >
+                  Poll reward threshold:
+                </a>
+                <a
+                  style={{
+                    "margin-left": "23px",
+                  }}
+                >
+                  {stakeformatter(getrewardthreshold())} {tokensymbol()}
+                </a>
+
+                <a
+                  class="value"
+                  data-html="true"
+                  data-for="uus"
+                  data-tip={
+                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward.<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                  }
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    style={{
+                      height: "14px",
+                      width: "14px",
+                      color: "black",
+                      opacity: "0.7",
+                      "margin-left": "2px",
+                      "vertical-align": "top",
+                      "margin-top": "-4px",
+
+                      fontWeight: "bold",
+                    }}
+                  />
+                  <ReactTooltip
+                    id="uus"
+                    type="dark"
+                    effect="solid"
+                    backgroundColor="black"
+                    place="left"
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  />{" "}
                 </a>
               </div>
             </div>
@@ -1601,7 +1720,7 @@ function App(props) {
                   type="dark"
                   effect="solid"
                   backgroundColor="black"
-                  place="bottom"
+                  place="left"
                 />
                 &nbsp;{comactivity}%
                 <FontAwesomeIcon
@@ -1633,7 +1752,7 @@ function App(props) {
                   type="dark"
                   effect="solid"
                   backgroundColor="black"
-                  place="bottom"
+                  place="left"
                 />{" "}
                 {commdata[0].totalvoters}
                 <FontAwesomeIcon
@@ -1697,7 +1816,8 @@ function App(props) {
 
               <Button
                 style={{ color: "inherit", "border-radius": "50px" }}
-                href={`${window.location}/Leaderboard`}
+                component={Link}
+                to={"/Leaderboard"}
               >
                 Leaderboard
               </Button>
@@ -1741,9 +1861,9 @@ function App(props) {
                 "margin-right": "auto",
                 opacity: "0.8",
               }}
-              //component={Link}
-              //to={`${window.location}/Leaderboard`}
-              href={`${window.location}/Leaderboard`}
+              href={
+                window.location.origin + "/community/" + scope + "/Leaderboard"
+              }
             >
               <img src="/wreathp.png" width="35"></img>
             </IconButton>
@@ -1833,7 +1953,7 @@ function App(props) {
                 data-html="true"
                 data-for="signalprogress"
                 data-tip={
-                  "*first 3 daily votes are rewarded <br/><br /> *based on Quadratic Voting principles<br /> a) voting power equalling to square root of the tokens voted with <br />  b) daily limit on voting power equalling to token holdings"
+                  "*first 3 daily votes are rewarded <br/><br /> *based on Quadratic Voting principles<br /> a) adjusted voting power equalling to square root of the tokens voted with <br />  b) daily limit on voting power equalling to token holdings"
                 }
               >
                 <ReactTooltip

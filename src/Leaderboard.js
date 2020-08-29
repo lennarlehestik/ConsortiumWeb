@@ -33,6 +33,11 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import * as clipboard from "clipboard-polyfill/text";
+import AccountBalanceRoundedIcon from "@material-ui/icons/AccountBalanceRounded";
+import OpenInBrowserRoundedIcon from "@material-ui/icons/OpenInBrowserRounded";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import ReactTooltip from "react-tooltip";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -109,22 +114,22 @@ function App(props) {
   const classes = useStyles();
   const [data, setData] = useState({ rows: [] });
   const [databalance, setDataBalance] = useState();
-  const [questionsubmission, setQuestionSubmission] = useState({
-    question: "",
-  });
-  const [questiondescription, setQuestionDescription] = useState({
-    description: "",
-  });
-  const [option1submission, setOption1Submission] = useState("");
-  const [option2submission, setOption2Submission] = useState("");
-  const [option3submission, setOption3Submission] = useState("");
-  const [option4submission, setOption4Submission] = useState("");
-  const [option5submission, setOption5Submission] = useState("");
-  const [voteamount, setVoteAmount] = useState(1);
-  const [sessionresult, setSessionResult] = useState("");
+
+  const [nrofvotes, setNumberofVotes] = useState({ rows: [] });
+  const [totalstaked, setTotalStaked] = useState({ rows: [] });
+  const [communitydata, setCommunityData] = useState({ rows: [] });
+  const [dailyvoted, setDailyVoted] = useState({ rows: [] });
+  const [votedata, setVoteData] = useState({ rows: [] });
+  const [votedata1, setVoteData1] = useState({ rows: [] });
+  const [votedata2, setVoteData2] = useState({ rows: [] });
+
+  const [mystake, setMyStake] = useState({ rows: [] });
+  const [dataind, setMyindStake] = useState({ rows: [] });
+
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
-
+  const [isOpenedmob, setIsOpenedmob] = useState(false);
+  const [stakingbalance, setStakingBalance] = useState({ rows: [] });
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleClose1 = () => setShow1(false);
@@ -136,6 +141,419 @@ function App(props) {
   };
   const location = useLocation();
   const scope = location.pathname.split("/")[2];
+
+  const getrewardthreshold = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].toppoll * 0.2;
+    }
+  };
+
+  const stakeformatter = (stakenumber) => {
+    if (stakenumber < 1000) {
+      return stakenumber;
+    }
+    if (stakenumber > 1000 && stakenumber < 1000000) {
+      return (stakenumber / 1000).toFixed(0) + "k";
+    }
+    if (stakenumber > 1000000) {
+      return (stakenumber / 1000000).toFixed(1) + "m";
+    }
+  };
+
+  const logbuttonmob = () => {
+    if (accountname) {
+      //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
+      return (
+        <div>
+          {isOpenedmob && (
+            <div
+              id="drop"
+              class="dropdown-contentmob"
+              style={{ "font-family": "roboto" }}
+            >
+              <div class="line">
+                <a class="identfier">
+                  <b>{displayaccountname()}</b>
+                </a>
+              </div>
+              <hr />
+              <div class="line" style={{ "font-weight": "600" }}>
+                <a class="identfier">Balance:</a>
+                <a class="value">{getmybalance()} GOVRN</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Voting power:</a>
+                <a class="value">
+                  {getbalance()} {tokensymbol()}
+                </a>
+              </div>
+              <div class="line">
+                <a class="identfier">Voting power reset:</a>
+                <a class="value">{countitdown()}</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Vote rewards left:</a>
+                <a class="value">{rewardsleft()}</a>
+              </div>
+              <div class="line">
+                <a class="identfier">Vote rewards reset:</a>
+                <a class="value">{countitdownvotes()}</a>
+              </div>
+              <hr />
+              <div class="line">
+                <a class="identfier">Voting reward:</a>
+                <a class="value">
+                  {voterewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
+                  GOVRN
+                </a>
+              </div>
+              <div class="line">
+                <a class="identfier">Poll reward:</a>
+                <a class="value">
+                  {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
+                  GOVRN
+                </a>
+              </div>
+              <hr />
+              <div class="line">
+                <a
+                  class="identfier"
+                  style={{
+                    "margin-top": "10px",
+                  }}
+                >
+                  Poll reward threshold:
+                </a>
+                <a
+                  style={{
+                    "margin-left": "23px",
+                  }}
+                >
+                  {stakeformatter(getrewardthreshold())} {tokensymbol()}
+                </a>
+
+                <a
+                  class="value"
+                  data-html="true"
+                  data-for="uus"
+                  data-tip={
+                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                  }
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    style={{
+                      height: "14px",
+                      width: "14px",
+                      color: "black",
+                      opacity: "0.7",
+                      "margin-left": "2px",
+                      "vertical-align": "top",
+                      "margin-top": "-4px",
+
+                      fontWeight: "bold",
+                    }}
+                  />
+                  <ReactTooltip
+                    id="uus"
+                    type="dark"
+                    effect="solid"
+                    backgroundColor="black"
+                    place="left"
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  />{" "}
+                </a>
+              </div>
+            </div>
+          )}
+          <Button
+            color="inherit"
+            onClick={() => logmeout()}
+            style={{ "border-radius": "50px", "margin-right": "auto" }}
+          >
+            Log out
+          </Button>
+        </div>
+        /*
+<div class="dropdown">
+  <button class="button">Menu item</button>
+  <div id="drop" class="dropdown-content">
+    <div class ="line">
+      <a class="identfier"><b>lennyaccount</b></a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Balance</a>
+      <a class="value">45 GOVRN</a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Voting power</a>
+      <a class="value">45 ATMOS</a>
+    </div>
+    <div class ="line">
+      <a class="identfier">Voting power reset</a>
+      <a class="value">5 hrs</a>
+    </div>
+  </div>
+</div>
+*/
+      );
+    } else {
+      //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
+      return (
+        <Button
+          color="inherit"
+          onClick={showModal}
+          style={{
+            borderRadius: "50px",
+            "margin-right": "auto",
+          }}
+        >
+          Log in
+        </Button>
+      );
+    }
+  };
+
+  const getstake = () => {
+    //DOES ALL THE FETCHING FOR THE STAKE MODAL
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "accounts",
+        scope: displayaccountname(),
+      }),
+    }).then((response) =>
+      response.json().then((data) => setStakingBalance(data))
+    );
+
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "indtotalstkh",
+        scope: "andrtestcons",
+        key_type: "name",
+        index_position: 1,
+        lower_bound: displayaccountname(),
+        upper_bound: displayaccountname(),
+      }),
+    }).then((response) => response.json().then((data) => setMyStake(data)));
+
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "personstaked",
+        scope: scope,
+        key_type: "name",
+        index_position: 1,
+        lower_bound: displayaccountname(),
+        upper_bound: displayaccountname(),
+      }),
+    }).then((response) =>
+      response.json().then((dataind) => setMyindStake(dataind))
+    );
+  };
+
+  const getvote = () => {
+    //READS YOUR TOKEN BALANCE FOR VOTING
+    if (!votedata.rows[0] && scope == "viggtestcons") {
+      //IF WE ARE ON VIGOR PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "andrtestcons",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+    if (!votedata.rows[0] && scope == "eosstestcons") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "eosio.token",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+
+      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "eosio",
+          table: "delband",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData1(data)));
+
+      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "eosio",
+          table: "rexbal",
+          scope: "eosio",
+          lower_bound: displayaccountname(),
+          upper_bound: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData2(data)));
+    }
+  };
+
+  const getnrofvotes = () => {
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "paljuvoted",
+        scope: "andrtestcons",
+        key_type: "name",
+        index_position: 1,
+        lower_bound: displayaccountname(),
+        upper_bound: displayaccountname(),
+      }),
+    }).then((response) =>
+      response.json().then((nrofvotes) => setNumberofVotes(nrofvotes))
+    );
+  };
+
+  useEffect(() => {
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "totalstk",
+        scope: "andrtestcons",
+        limit: 1,
+      }),
+    }).then((response) =>
+      response.json().then((totalstaked) => setTotalStaked(totalstaked))
+    );
+  }, totalstaked["rows"]);
+
+  useEffect(() => {
+    if (activeUser) {
+      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "eosio.token",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      })
+        .then((response) =>
+          response.json().then((databalance) => setDataBalance(databalance))
+        )
+        .then(getvote())
+        .then(getdailyvoted())
+        .then(getnrofvotes())
+        .then(getstake());
+    }
+  }, databalance);
+
+  const getdailyvoted = () => {
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "voterstatzi",
+        scope: scope,
+        key_type: "name",
+        index_position: 1,
+        lower_bound: displayaccountname(),
+        upper_bound: displayaccountname(),
+      }),
+    }).then((response) =>
+      response.json().then((dailyvoted) => setDailyVoted(dailyvoted))
+    );
+  };
+
+  useEffect(() => {
+    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "andrtestcons",
+        table: "commdata",
+        scope: "andrtestcons",
+        limit: 50,
+      }),
+    }).then((response) =>
+      response.json().then((communitydata) => setCommunityData(communitydata))
+    );
+    //.then(restoreSession())
+  }, communitydata["rows"]);
 
   useEffect(() => {
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
@@ -164,29 +582,115 @@ function App(props) {
     ); //CUT GOVRN OFF, MAKE IT A NR, AND THEN SORT
   }
 
-  useEffect(() => {
-    if (sessionresult) {
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          json: true,
-          code: "eosio.token",
-          table: "accounts",
-          scope: sessionresult.auth.actor,
-        }),
-      }).then((response) =>
-        response.json().then((databalance) => setDataBalance(databalance))
-      );
-    }
-  }, databalance); //DONT FETCH IF WE HAVE databalance
-
   const getbalance = () => {
-    if (databalance) {
-      return Math.floor(Number(databalance.rows[0].balance.split(" ")[0]));
+    if (votedata.rows[0]) {
+      var balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
+    }
+    let cpu = 0;
+    let net = 0;
+    if (votedata1.rows[0]) {
+      cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+      net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+    }
+    let rex = 0;
+    if (votedata2.rows[0]) {
+      rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+    }
+    let daily = 0;
+    if (dailyvoted.rows[0]) {
+      daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+    }
+    const bal = balance + cpu + net + rex - daily;
+    return bal;
+  };
+
+  const getmybalance = () => {
+    if (stakingbalance.rows[0]) {
+      return Math.floor(Number(stakingbalance.rows[0].balance.split(" ")[0]));
+    } else {
+      return 0;
+    }
+  };
+
+  const rewardsleft = () => {
+    if (nrofvotes.rows[0]) {
+      const nrofvote = nrofvotes.rows[0].nrofvotes;
+      const rewardsleft = 3 - nrofvote;
+      if (rewardsleft > 0) {
+        return rewardsleft;
+      } else {
+        return "0";
+      }
+    } else {
+      return "0";
+    }
+  };
+
+  function togglemob() {
+    setIsOpenedmob((wasOpened) => !wasOpened);
+  }
+
+  const pollrewards = (fullstake, communitystake) => {
+    return parseInt(
+      (Math.pow(communitystake / fullstake, 1 / 3) * 70000 + 10000) / 8
+    ); //LISA KUUP JUUR communitystake/fullstake sellele
+  };
+
+  const voterewards = (fullstake, communitystake) => {
+    return parseInt(
+      (Math.pow(communitystake / fullstake, 1 / 3) * 8500 + 2500) / 8
+    ); //LISA KUUP JUUR communitystake/fullstake sellele
+  };
+  const countitdownvotes = () => {
+    if (nrofvotes.rows[0]) {
+      const firstvotetime = new Date(nrofvotes.rows[0].timefirstvote + "Z");
+      const current = new Date();
+      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      if (difference > 1) {
+        return Math.floor(difference) + " h";
+      } else {
+        return Math.floor(difference * 60) + " min";
+      }
+    } else {
+      return "0h";
+    }
+  };
+  const gettotalstaked = () => {
+    if (totalstaked.rows[0]) {
+      return Math.floor(Number(totalstaked.rows[0].totalstaked.split(" ")[0]));
+    }
+  };
+
+  const stakedforcom = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].staked;
+    }
+  };
+
+  const countitdown = () => {
+    if (dailyvoted.rows[0]) {
+      const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
+      const current = new Date();
+      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      if (difference > 1) {
+        return Math.floor(difference) + " h";
+      } else {
+        return Math.floor(difference * 60) + " min";
+      }
+    } else {
+      return "0h";
+    }
+  };
+
+  const tokensymbol = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].tokensymbol;
     }
   };
 
@@ -280,44 +784,52 @@ function App(props) {
           color="primary"
           className={classes.appBar}
           color="transparent"
-          style={{ "background-color": "white" }}
+          style={{ "background-color": "white", height: "55px" }}
         >
           <Toolbar>
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              style={{
+                "margin-left": "auto",
+                "margin-right": "auto",
+                opacity: "0.8",
+              }}
               component={Link}
               to={"/"}
             >
-              <AccountBalanceIcon />
+              <AccountBalanceRoundedIcon style={{ fontSize: 27 }} />
             </IconButton>
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
-              omponent={Link}
+              style={{
+                "margin-left": "auto",
+                "margin-right": "auto",
+                opacity: "0.8",
+              }}
+              //component={Link}
+              //to={`${window.location}/Leaderboard`}
+              href={`${window.location}`}
             >
-              <FormatListNumberedIcon />
+              <img src="/wreathp.png" width="35"></img>
             </IconButton>
             <IconButton
               edge="end"
               color="inherit"
               aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
+              style={{
+                "margin-left": "auto",
+                "margin-right": "auto",
+                opacity: "0.8",
+              }}
+              onClick={togglemob}
             >
-              <PermIdentityIcon />
+              <OpenInBrowserRoundedIcon style={{ fontSize: 29 }} />
             </IconButton>
-            <IconButton
-              edge="end"
-              color="inherit"
-              aria-label="open drawer"
-              style={{ "margin-left": "auto", "margin-right": "auto" }}
-            >
-              <ExitToAppIcon />
-            </IconButton>
+            {logbuttonmob()}
           </Toolbar>
         </AppBar>
       </div>

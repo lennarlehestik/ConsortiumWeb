@@ -366,7 +366,7 @@ function App(props) {
     }).then((response) =>
       response.json().then((totalstaked) => setTotalStaked(totalstaked))
     );
-  }, communitydata["rows"]);
+  }, totalstaked["rows"]);
 
   useEffect(() => {
     fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
@@ -416,7 +416,6 @@ function App(props) {
           className={classes.root}
           style={{
             marginBottom: "7px",
-            "margin-top": "10px",
             "padding-bottom": "10px",
             borderRadius: "20px",
           }}
@@ -501,7 +500,7 @@ function App(props) {
                   type="dark"
                   effect="solid"
                   backgroundColor="black"
-                  place="bottom"
+                  place="left"
                 />
                 &nbsp;{comactivity}%
                 <FontAwesomeIcon
@@ -533,7 +532,7 @@ function App(props) {
                   type="dark"
                   effect="solid"
                   backgroundColor="black"
-                  place="bottom"
+                  place="left"
                 />{" "}
                 {commdata[0].totalvoters}
                 <FontAwesomeIcon
@@ -1456,7 +1455,7 @@ Swal.fire({
       position: "middle",
 
       showConfirmButton: false,
-      timer: 1000,
+      timer: 1300,
       timerProgressBar: false,
       onOpen: (toast) => {
         toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -1466,7 +1465,7 @@ Swal.fire({
 
     Toast.fire({
       icon: "success",
-      title: "Copied to clipboard",
+      title: "Poll link copied to clipboard",
     });
   };
 
@@ -1528,6 +1527,15 @@ Swal.fire({
     return bal;
   };
 
+  const getrewardthreshold = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].toppoll * 0.2;
+    }
+  };
+
   const logbutton = () => {
     if (accountname) {
       //IF WE HAVE A SESSIONRESULT, SHOW LOGIN BUTTON
@@ -1582,6 +1590,61 @@ Swal.fire({
                 <a class="value">
                   {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
+                </a>
+              </div>
+              <hr />
+              <div class="line">
+                <a
+                  class="identfier"
+                  style={{
+                    "margin-top": "10px",
+                  }}
+                >
+                  Poll reward threshold:
+                </a>
+                <a
+                  style={{
+                    "margin-left": "23px",
+                  }}
+                >
+                  {stakeformatter(getrewardthreshold())} {tokensymbol()}
+                </a>
+
+                <a
+                  class="value"
+                  data-html="true"
+                  data-for="uus"
+                  data-tip={
+                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                  }
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    style={{
+                      height: "14px",
+                      width: "14px",
+                      color: "black",
+                      opacity: "0.7",
+                      "margin-left": "2px",
+                      "vertical-align": "top",
+                      "margin-top": "-4px",
+
+                      fontWeight: "bold",
+                    }}
+                  />
+                  <ReactTooltip
+                    id="uus"
+                    type="dark"
+                    effect="solid"
+                    backgroundColor="black"
+                    place="left"
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  />{" "}
                 </a>
               </div>
             </div>
@@ -1694,6 +1757,61 @@ Swal.fire({
                 <a class="value">
                   {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
+                </a>
+              </div>
+              <hr />
+              <div class="line">
+                <a
+                  class="identfier"
+                  style={{
+                    "margin-top": "10px",
+                  }}
+                >
+                  Poll reward threshold:
+                </a>
+                <a
+                  style={{
+                    "margin-left": "23px",
+                  }}
+                >
+                  {stakeformatter(getrewardthreshold())} {tokensymbol()}
+                </a>
+
+                <a
+                  class="value"
+                  data-html="true"
+                  data-for="uus"
+                  data-tip={
+                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                  }
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    style={{
+                      height: "14px",
+                      width: "14px",
+                      color: "black",
+                      opacity: "0.7",
+                      "margin-left": "2px",
+                      "vertical-align": "top",
+                      "margin-top": "-4px",
+
+                      fontWeight: "bold",
+                    }}
+                  />
+                  <ReactTooltip
+                    id="uus"
+                    type="dark"
+                    effect="solid"
+                    backgroundColor="black"
+                    place="left"
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  />{" "}
                 </a>
               </div>
             </div>
@@ -2016,7 +2134,7 @@ Swal.fire({
                 data-html="true"
                 data-for="signalprogress"
                 data-tip={
-                  "*first 3 daily votes are rewarded <br/> (three per all communities, not per community) <br/><br /> *based on Quadratic Voting principles<br /> a) voting power equalling to square root of the tokens voted with <br />  b) daily limit on voting power equalling to token holdings"
+                  "*first 3 daily votes are rewarded <br/> (three per all communities, not per community) <br/><br /> *based on Quadratic Voting principles<br /> a) adjusted voting power equalling to square root of the tokens voted with <br />  b) daily limit on voting power equalling to token holdings"
                 }
               >
                 <ReactTooltip
@@ -2253,7 +2371,6 @@ Swal.fire({
                       aria-label="settings"
                       data-html="true"
                       data-for="pede3"
-                      data-tip={"Get poll url"}
                       onClick={() => getpollurl(u.pollkey, u.uniqueurl)}
                     >
                       <ShareIcon style={{ opacity: 0.8 }} />
