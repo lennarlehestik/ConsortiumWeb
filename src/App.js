@@ -418,6 +418,7 @@ function App(props) {
             marginBottom: "7px",
             "padding-bottom": "10px",
             borderRadius: "20px",
+            marginTop:"5px"
           }}
         >
           <CardMedia
