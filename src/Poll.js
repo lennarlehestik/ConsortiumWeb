@@ -833,7 +833,7 @@ function App(props) {
           action: "User voted in individual poll.",
         });
       } catch (err) {
-        alert(err);
+        actionpuccis(err);
       }
     } else {
       showModal();
@@ -1112,7 +1112,7 @@ function App(props) {
         sucessstake();
         //lita()
       } catch (err) {
-        alert(err);
+        actionpuccis(err);
       }
     } else {
       showModal();
@@ -1176,7 +1176,7 @@ function App(props) {
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
       } catch (err) {
-        alert(err);
+        actionpuccis(err);
       }
     } else {
       showModal();
@@ -1377,7 +1377,7 @@ function App(props) {
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -1531,7 +1531,7 @@ function App(props) {
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward.<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward.<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -1611,6 +1611,24 @@ function App(props) {
         </Button>
       );
     }
+  };
+
+  const actionpuccis = (err) => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 5000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "error",
+      title: err,
+    });
   };
 
   const showusername = () => {
@@ -2055,7 +2073,7 @@ function App(props) {
                 data-html="true"
                 data-for="signalprogress"
                 data-tip={
-                  "*The more GOVRN tokens staked the higher the rewards for voting and poll creation your community gets"
+                  "*the more GOVRN tokens staked the higher the <br/> Vote and Poll rewards are for your community"
                 }
               >
                 <ReactTooltip

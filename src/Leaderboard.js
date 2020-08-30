@@ -242,7 +242,7 @@ function App(props) {
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
                   }
                   style={{
                     fontWeight: "bold",

@@ -243,6 +243,24 @@ function App(props) {
     });
   };
 
+  const actionpuccis = (err) => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 5000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "error",
+      title: err,
+    });
+  };
+
   const tokensymbol = () => {
     if (communitydata.rows[0]) {
       var commdata = communitydata.rows.filter(function (e) {
@@ -302,50 +320,6 @@ function App(props) {
       );
       setData({ rows: datafiltered });
       console.log(datafiltered);
-    }
-  };
-
-  const onLike = async () => {
-    const {
-      ual: { login, displayError },
-    } = props;
-    // Via static contextType = UALContext, access to the activeUser object on this.context is now available
-    const {
-      ual: { activeUser },
-    } = props;
-    if (activeUser) {
-      try {
-        const transaction = {
-          actions: [
-            {
-              account: "eosio.token",
-              name: "transfer",
-              authorization: [
-                {
-                  actor: displayaccountname(), // use account that was logged in
-                  permission: "active",
-                },
-              ],
-              data: {
-                from: displayaccountname(), // use account that was logged in
-                to: "lumeotoken11",
-                quantity: "0.1000 EOS",
-                memo: "UAL works!",
-              },
-            },
-          ],
-        };
-        // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
-        await activeUser.signTransaction(transaction, {
-          broadcast: true,
-          expireSeconds: 300,
-        });
-        alert("GREAT SUCCESS!");
-      } catch (err) {
-        alert(err);
-      }
-    } else {
-      login();
     }
   };
 
@@ -418,7 +392,7 @@ function App(props) {
             marginBottom: "7px",
             "padding-bottom": "10px",
             borderRadius: "20px",
-            marginTop:"5px"
+            marginTop: "5px",
           }}
         >
           <CardMedia
@@ -1023,7 +997,7 @@ function App(props) {
         sucessstake();
         //lita()
       } catch (err) {
-        alert(err);
+        actionpuccis(err);
       }
     } else {
       showModal();
@@ -1087,7 +1061,7 @@ function App(props) {
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
       } catch (err) {
-        alert(err);
+        actionpuccis(err);
       }
     } else {
       showModal();
@@ -1278,7 +1252,9 @@ function App(props) {
           action: "User created a poll.",
         });
       } catch (err) {
-        alert(err);
+        //actionpuccis(err);
+
+        actionpuccis(err);
       }
     } else {
       showModal();
@@ -1380,7 +1356,7 @@ function App(props) {
           action: "User voted.",
         });
       } catch (err) {
-        alert(err);
+        actionpuccis(err);
       }
     } else {
       showModal();
@@ -1616,7 +1592,7 @@ Swal.fire({
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -1783,7 +1759,7 @@ Swal.fire({
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll has to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -2237,7 +2213,7 @@ Swal.fire({
                 data-html="true"
                 data-for="signalprogress"
                 data-tip={
-                  "*the more GOVRN tokens staked the higher the <br/> rewards for voting and poll creation your community gets"
+                  "*the more GOVRN tokens staked the higher the <br/> Vote and Poll rewards are for your community"
                 }
               >
                 <ReactTooltip
