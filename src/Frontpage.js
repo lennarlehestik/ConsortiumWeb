@@ -555,7 +555,11 @@ function App(props) {
             <div
               id="drop"
               class="dropdown-content2"
-              style={{ "font-family": "Roboto", "padding-top": "16x" }}
+              style={{
+                "font-family": "Roboto",
+                "padding-top": "16x",
+                fontSize: "14px",
+              }}
             >
               <div class="line" style={{ "padding-top": "7px" }}>
                 <a
