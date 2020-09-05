@@ -579,7 +579,7 @@ function App(props) {
                   data-html="true"
                   data-for="pede"
                   data-tip={
-                    "*each halving divides the poll and vote rewards by 2<br/><br /> *halving occurs each time additional 100m GOVRN are issued<br /><br /> *in total there will be 10 halvings until the total supply of GOVRN tokens<br /> reaches 1.1bn, followed by a switch to stable inflation"
+                    "*each halving divides the poll and vote rewards by 2<br/><br /> *halving occurs each time additional 25m GOVRN are issued<br /><br /> *in total there will be 8 halvings until the total supply of GOVRN tokens<br /> reaches 325m, followed by a switch to stable inflation"
                   }
                 >
                   <ReactTooltip

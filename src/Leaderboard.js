@@ -147,7 +147,7 @@ function App(props) {
       var commdata = communitydata.rows.filter(function (e) {
         return e.community == scope;
       });
-      return commdata[0].toppoll * 0.2;
+      return parseInt(commdata[0].toppoll * 0.2);
     }
   };
 
@@ -609,11 +609,52 @@ function App(props) {
         }
         const bal = balance + cpu + net + rex - daily;
         return bal;
-      } else {
-        return getmybalance();
       }
+      if (difference < 0) {
+        if (votedata.rows[0]) {
+          var balance = Math.floor(
+            Number(votedata.rows[0].balance.split(" ")[0])
+          );
+        }
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+
+        const bal = balance + cpu + net + rex;
+        return bal;
+      }
+    } else {
+      if (votedata.rows[0]) {
+        var balance = Math.floor(
+          Number(votedata.rows[0].balance.split(" ")[0])
+        );
+      }
+      let cpu = 0;
+      let net = 0;
+      if (votedata1.rows[0]) {
+        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+      }
+      let rex = 0;
+      if (votedata2.rows[0]) {
+        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+      }
+      let daily = 0;
+      if (dailyvoted.rows[0]) {
+        daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+      }
+      const bal = balance + cpu + net + rex - daily;
+      return bal;
     }
   };
+
   const getmybalance = () => {
     if (stakingbalance.rows[0]) {
       return Math.floor(Number(stakingbalance.rows[0].balance.split(" ")[0]));
@@ -639,7 +680,7 @@ function App(props) {
         }
       }
     } else {
-      return "0";
+      return "3";
     }
   };
 
