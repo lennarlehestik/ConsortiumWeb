@@ -277,7 +277,7 @@ function App(props) {
     ReactGA.initialize("UA-160289361-1");
     ReactGA.pageview(window.location);
 
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -296,7 +296,7 @@ function App(props) {
   }, communitydata["rows"]);
 
   useEffect(() => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -318,7 +318,7 @@ function App(props) {
 
   useEffect(() => {
     if (activeUser) {
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -342,7 +342,7 @@ function App(props) {
   }, databalance);
 
   const getdailyvoted = () => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -380,7 +380,7 @@ function App(props) {
   };
 
   const getnrofvotes = () => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -467,7 +467,7 @@ function App(props) {
 
   const getstake = () => {
     //DOES ALL THE FETCHING FOR THE STAKE MODAL
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -483,7 +483,7 @@ function App(props) {
       response.json().then((data) => setStakingBalance(data))
     );
 
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -501,7 +501,7 @@ function App(props) {
       }),
     }).then((response) => response.json().then((data) => setMyStake(data)));
 
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -705,7 +705,7 @@ function App(props) {
   };
 
   useEffect(() => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -725,7 +725,7 @@ function App(props) {
 
   useEffect(() => {
     const scope = location.pathname.split("/")[4];
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -748,7 +748,7 @@ function App(props) {
 
   useEffect(() => {
     if (sessionresult) {
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -769,7 +769,7 @@ function App(props) {
   data.rows.sort(sortBySum);
 
   useEffect(() => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -1243,7 +1243,7 @@ function App(props) {
     //READS YOUR TOKEN BALANCE FOR VOTING
     if (!votedata.rows[0] && scope == "viggcommcons") {
       //IF WE ARE ON VIGOR PAGE, DO THE FOLLOWING FETCH
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1259,7 +1259,7 @@ function App(props) {
     }
     if (!votedata.rows[0] && scope == "eosscommcons") {
       //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1273,7 +1273,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
 
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1287,7 +1287,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData1(data)));
 
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1329,10 +1329,10 @@ function App(props) {
       const current = new Date();
       const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
       if (difference > 0) {
+        let balance = 0;
+
         if (votedata.rows[0]) {
-          var balance = Math.floor(
-            Number(votedata.rows[0].balance.split(" ")[0])
-          );
+          balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
         let cpu = 0;
         let net = 0;
@@ -1352,10 +1352,10 @@ function App(props) {
         return bal;
       }
       if (difference < 0) {
+        let balance = 0;
+
         if (votedata.rows[0]) {
-          var balance = Math.floor(
-            Number(votedata.rows[0].balance.split(" ")[0])
-          );
+          balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
         let cpu = 0;
         let net = 0;
@@ -1372,10 +1372,9 @@ function App(props) {
         return bal;
       }
     } else {
+      let balance = 0;
       if (votedata.rows[0]) {
-        var balance = Math.floor(
-          Number(votedata.rows[0].balance.split(" ")[0])
-        );
+        balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
       }
       let cpu = 0;
       let net = 0;

@@ -198,7 +198,7 @@ function App(props) {
   }
 
   const tyra = () => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -336,7 +336,7 @@ function App(props) {
   };
 
   useEffect(() => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -355,7 +355,7 @@ function App(props) {
   }, totalcircu["rows"][0]);
 
   useEffect(() => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -374,7 +374,7 @@ function App(props) {
   }, totalstaked["rows"]);
 
   useEffect(() => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -571,7 +571,7 @@ function App(props) {
     ReactGA.pageview(window.location);
     console.log("pede");
 
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -593,7 +593,7 @@ function App(props) {
 
   useEffect(() => {
     if (activeUser) {
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -617,7 +617,7 @@ function App(props) {
   }, databalance);
 
   const getdailyvoted = () => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -656,7 +656,7 @@ function App(props) {
   };
 
   const getnrofvotes = () => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -766,7 +766,7 @@ function App(props) {
 
   const getstake = () => {
     //DOES ALL THE FETCHING FOR THE STAKE MODAL
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -782,7 +782,7 @@ function App(props) {
       response.json().then((data) => setStakingBalance(data))
     );
 
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -800,7 +800,7 @@ function App(props) {
       }),
     }).then((response) => response.json().then((data) => setMyStake(data)));
 
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -1158,7 +1158,7 @@ function App(props) {
     //if (!votedata.rows[0] && scope == "viggcommcons") {
     if (!votedata.rows[0] && scope == "viggcommcons") {
       //IF WE ARE ON VIGOR PAGE, DO THE FOLLOWING FETCH
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1174,7 +1174,7 @@ function App(props) {
     }
     if (!votedata.rows[0] && scope == "eosscommcons") {
       //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1188,7 +1188,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
 
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1202,7 +1202,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData1(data)));
 
-      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1554,9 +1554,7 @@ Swal.fire({
       const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
       if (difference > 0) {
         if (votedata.rows[0]) {
-          var balance = Math.floor(
-            Number(votedata.rows[0].balance.split(" ")[0])
-          );
+          balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
         let cpu = 0;
         let net = 0;
@@ -1600,9 +1598,7 @@ Swal.fire({
       }
     } else {
       if (votedata.rows[0]) {
-        var balance = Math.floor(
-          Number(votedata.rows[0].balance.split(" ")[0])
-        );
+        balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
       }
       let cpu = 0;
       let net = 0;

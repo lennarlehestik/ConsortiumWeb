@@ -216,7 +216,7 @@ function App(props) {
   };
   //"http://api.eosn.io/v1/chain/get_table_rowzzzzzzzzzz"
   useEffect(() => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -235,7 +235,7 @@ function App(props) {
   }, totalcircu["rows"][0]);
 
   useEffect(() => {
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -279,7 +279,7 @@ function App(props) {
     ReactGA.initialize("UA-160289361-1");
     ReactGA.pageview(window.location);
 
-    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
