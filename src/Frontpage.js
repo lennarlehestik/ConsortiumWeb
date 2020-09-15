@@ -152,25 +152,71 @@ function App(props) {
   const tonexthalving = (totalcirc) => {
     if (totalcirc < 100000000) {
       return 100000000 - totalcirc;
-    } else if (totalcirc >> 100000000 && totalcirc < 200000000) {
+    } else if (totalcirc >> 100000000 && totalcirc < 125000000) {
+      return 125000000 - totalcirc;
+    } else if (totalcirc >> 125000000 && totalcirc < 150000000) {
+      return 150000000 - totalcirc;
+    } else if (totalcirc >> 150000000 && totalcirc < 175000000) {
+      return 175000000 - totalcirc;
+    } else if (totalcirc >> 175000000 && totalcirc < 200000000) {
       return 200000000 - totalcirc;
-    } else if (totalcirc >> 200000000 && totalcirc < 300000000) {
+    } else if (totalcirc >> 200000000 && totalcirc < 225000000) {
+      return 250000000 - totalcirc;
+    } else if (totalcirc >> 225000000 && totalcirc < 250000000) {
+      return 275000000 - totalcirc;
+    } else if (totalcirc >> 250000000 && totalcirc < 275000000) {
       return 300000000 - totalcirc;
+    } else if (totalcirc >> 275000000 && totalcirc < 300000000) {
+      return 325000000 - totalcirc;
+    } else if (totalcirc >> 300000000 && totalcirc < 325000000) {
+      return 350000000 - totalcirc;
+    } else if (totalcirc >> 325000000 && totalcirc < 350000000) {
+      return 375000000 - totalcirc;
+    }
+  };
+
+  const halvingdivider = () => {
+    if (totalcircu.rows[0]) {
+      return parseInt(
+        Math.pow(
+          2,
+          parseInt(
+            Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0])) /
+              25000000
+          )
+        )
+      );
     }
   };
 
   const halvings = (totalcirc) => {
     if (totalcirc < 100000000) {
       return 0;
-    } else if (totalcirc >> 100000000 && totalcirc < 200000000) {
+    } else if (totalcirc >> 100000000 && totalcirc < 125000000) {
+      return 0;
+    } else if (totalcirc >> 125000000 && totalcirc < 150000000) {
       return 1;
-    } else if (totalcirc >> 200000000 && totalcirc < 300000000) {
+    } else if (totalcirc >> 150000000 && totalcirc < 175000000) {
       return 2;
+    } else if (totalcirc >> 175000000 && totalcirc < 200000000) {
+      return 3;
+    } else if (totalcirc >> 200000000 && totalcirc < 225000000) {
+      return 4;
+    } else if (totalcirc >> 225000000 && totalcirc < 250000000) {
+      return 5;
+    } else if (totalcirc >> 250000000 && totalcirc < 275000000) {
+      return 6;
+    } else if (totalcirc >> 275000000 && totalcirc < 300000000) {
+      return 7;
+    } else if (totalcirc >> 300000000 && totalcirc < 325000000) {
+      return 8;
+    } else if (totalcirc >> 325000000 && totalcirc < 350000000) {
+      return 9;
     }
   };
-
+  //"http://api.eosn.io/v1/chain/get_table_rowzzzzzzzzzz"
   useEffect(() => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -178,7 +224,7 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "stat",
         scope: "GOVRN",
         limit: 1,
@@ -189,7 +235,7 @@ function App(props) {
   }, totalcircu["rows"][0]);
 
   useEffect(() => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -197,9 +243,9 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "commdata",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         limit: 50,
       }),
     }).then((response) => response.json().then((data) => setData(data)));
@@ -233,7 +279,7 @@ function App(props) {
     ReactGA.initialize("UA-160289361-1");
     ReactGA.pageview(window.location);
 
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -241,9 +287,9 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "totalstk",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         limit: 1,
       }),
     }).then((response) =>
@@ -261,7 +307,7 @@ function App(props) {
       rpc: 'https://kylin-dsp-2.liquidapps.io'
   })
 
-  const identifier = 'andrtestcons'
+  const identifier = 'consortiumlv'
   let session;
   const restoreSession = () => {
     link.restoreSession(identifier).then((result) => {
@@ -330,13 +376,15 @@ function App(props) {
 
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 70000 + 10000) / 8
+      (Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
+        halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const voterewards = (fullstake, communitystake) => {
     return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 8500 + 2500) / 8
+      (Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
+        halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
@@ -353,7 +401,7 @@ function App(props) {
           <AppBar
             position="fixed"
             color="transparent"
-            style={{ "background-color": "white" }}
+            style={{ "background-color": "white", height: "67px" }}
           >
             <Toolbar>
               <IconButton
@@ -579,7 +627,7 @@ function App(props) {
                   data-html="true"
                   data-for="pede"
                   data-tip={
-                    "*each halving divides the poll and vote rewards by 2<br/><br /> *halving occurs each time additional 25m GOVRN are issued<br /><br /> *in total there will be 8 halvings until the total supply of GOVRN tokens<br /> reaches 325m, followed by a switch to stable inflation"
+                    "*each halving divides the poll and vote rewards by 2<br/><br /> *halving occurs each time additional 25m GOVRN are issued<br /><br /> *in total there will be 9 halvings until the total supply of GOVRN tokens<br /> reaches 350m, followed by a switch to stable inflation"
                   }
                 >
                   <ReactTooltip

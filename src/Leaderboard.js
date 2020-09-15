@@ -136,6 +136,9 @@ function App(props) {
   const handleShow1 = () => setShow1(true);
   const [votekey, setVoteKey] = useState();
   const [votepollkey, setVotePollKey] = useState();
+
+  const [totalcircu, setTotalCircu] = useState({ rows: [] });
+
   const AppBarOffset = () => {
     return <div className={classes.offset} />;
   };
@@ -324,9 +327,15 @@ function App(props) {
     }
   };
 
+  const gettotalcircu = () => {
+    if (totalcircu.rows[0]) {
+      return Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0]));
+    }
+  };
+
   const getstake = () => {
     //DOES ALL THE FETCHING FOR THE STAKE MODAL
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -334,7 +343,7 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "accounts",
         scope: displayaccountname(),
       }),
@@ -342,7 +351,7 @@ function App(props) {
       response.json().then((data) => setStakingBalance(data))
     );
 
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -350,9 +359,9 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "indtotalstkh",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         key_type: "name",
         index_position: 1,
         lower_bound: displayaccountname(),
@@ -360,7 +369,7 @@ function App(props) {
       }),
     }).then((response) => response.json().then((data) => setMyStake(data)));
 
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -368,7 +377,7 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "personstaked",
         scope: scope,
         key_type: "name",
@@ -383,9 +392,9 @@ function App(props) {
 
   const getvote = () => {
     //READS YOUR TOKEN BALANCE FOR VOTING
-    if (!votedata.rows[0] && scope == "viggtestcons") {
+    if (!votedata.rows[0] && scope == "viggcommcons") {
       //IF WE ARE ON VIGOR PAGE, DO THE FOLLOWING FETCH
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -393,15 +402,15 @@ function App(props) {
         },
         body: JSON.stringify({
           json: true,
-          code: "andrtestcons",
+          code: "consortiumlv",
           table: "accounts",
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
-    if (!votedata.rows[0] && scope == "eosstestcons") {
+    if (!votedata.rows[0] && scope == "eosscommcons") {
       //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -415,7 +424,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
 
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -429,7 +438,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData1(data)));
 
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -448,7 +457,7 @@ function App(props) {
   };
 
   const getnrofvotes = () => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -456,9 +465,9 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "paljuvoted",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         key_type: "name",
         index_position: 1,
         lower_bound: displayaccountname(),
@@ -470,7 +479,7 @@ function App(props) {
   };
 
   useEffect(() => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -478,9 +487,28 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
+        table: "stat",
+        scope: "GOVRN",
+        limit: 1,
+      }),
+    }).then((response) =>
+      response.json().then((totalcircu) => setTotalCircu(totalcircu))
+    );
+  }, totalcircu["rows"][0]);
+
+  useEffect(() => {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "consortiumlv",
         table: "totalstk",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         limit: 1,
       }),
     }).then((response) =>
@@ -490,7 +518,7 @@ function App(props) {
 
   useEffect(() => {
     if (activeUser) {
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -514,7 +542,7 @@ function App(props) {
   }, databalance);
 
   const getdailyvoted = () => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -522,7 +550,7 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "voterstatzi",
         scope: scope,
         key_type: "name",
@@ -536,7 +564,7 @@ function App(props) {
   };
 
   useEffect(() => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -544,9 +572,9 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "commdata",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         limit: 50,
       }),
     }).then((response) =>
@@ -556,7 +584,7 @@ function App(props) {
   }, communitydata["rows"]);
 
   useEffect(() => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -564,7 +592,7 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "parimad",
         scope: scope,
         limit: 5000,
@@ -688,15 +716,31 @@ function App(props) {
     setIsOpenedmob((wasOpened) => !wasOpened);
   }
 
+  const halvingdivider = () => {
+    if (totalcircu.rows[0]) {
+      return parseInt(
+        Math.pow(
+          2,
+          parseInt(
+            Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0])) /
+              20000000
+          )
+        )
+      );
+    }
+  };
+
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 70000 + 10000) / 8
+      (Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
+        halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const voterewards = (fullstake, communitystake) => {
     return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 8500 + 2500) / 8
+      (Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
+        halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
   const countitdownvotes = () => {

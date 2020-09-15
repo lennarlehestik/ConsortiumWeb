@@ -155,6 +155,8 @@ function App(props) {
 
   const [accountname, setAccountName] = useState("");
 
+  const [totalcircu, setTotalCircu] = useState({ rows: [] });
+
   const {
     ual: { logout },
   } = props;
@@ -196,7 +198,7 @@ function App(props) {
   }
 
   const tyra = () => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -204,9 +206,9 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "commdata",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         limit: 50,
       }),
     }).then((response) =>
@@ -223,6 +225,12 @@ function App(props) {
     setTimeout(() => {
       clearInterval(intervalid);
     }, 45000);
+  };
+
+  const gettotalcircu = () => {
+    if (totalcircu.rows[0]) {
+      return Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0]));
+    }
   };
 
   const sucessstake = () => {
@@ -328,7 +336,7 @@ function App(props) {
   };
 
   useEffect(() => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -336,9 +344,28 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
+        table: "stat",
+        scope: "GOVRN",
+        limit: 1,
+      }),
+    }).then((response) =>
+      response.json().then((totalcircu) => setTotalCircu(totalcircu))
+    );
+  }, totalcircu["rows"][0]);
+
+  useEffect(() => {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "consortiumlv",
         table: "totalstk",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         limit: 1,
       }),
     }).then((response) =>
@@ -347,7 +374,7 @@ function App(props) {
   }, totalstaked["rows"]);
 
   useEffect(() => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -355,9 +382,9 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "commdata",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         limit: 50,
       }),
     }).then((response) =>
@@ -544,7 +571,7 @@ function App(props) {
     ReactGA.pageview(window.location);
     console.log("pede");
 
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -552,7 +579,7 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "kysimused",
         scope: scope,
         limit: 50,
@@ -566,7 +593,7 @@ function App(props) {
 
   useEffect(() => {
     if (activeUser) {
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -590,7 +617,7 @@ function App(props) {
   }, databalance);
 
   const getdailyvoted = () => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -598,7 +625,7 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "voterstatzi",
         scope: scope,
         key_type: "name",
@@ -629,7 +656,7 @@ function App(props) {
   };
 
   const getnrofvotes = () => {
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -637,9 +664,9 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "paljuvoted",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         key_type: "name",
         index_position: 1,
         lower_bound: displayaccountname(),
@@ -688,15 +715,37 @@ function App(props) {
     }
   };
 
+  const pollcostarv = () => {
+    if (totalcircu.rows[0]) {
+      return 400000 / halvingdivider();
+    }
+  };
+
+  const halvingdivider = () => {
+    if (totalcircu.rows[0]) {
+      return parseInt(
+        Math.pow(
+          2,
+          parseInt(
+            Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0])) /
+              25000000
+          )
+        )
+      );
+    }
+  };
+
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 70000 + 10000) / 8
+      (Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
+        halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const voterewards = (fullstake, communitystake) => {
     return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 8500 + 2500) / 8
+      (Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
+        halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
@@ -717,7 +766,7 @@ function App(props) {
 
   const getstake = () => {
     //DOES ALL THE FETCHING FOR THE STAKE MODAL
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -725,7 +774,7 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "accounts",
         scope: displayaccountname(),
       }),
@@ -733,7 +782,7 @@ function App(props) {
       response.json().then((data) => setStakingBalance(data))
     );
 
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -741,9 +790,9 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "indtotalstkh",
-        scope: "andrtestcons",
+        scope: "consortiumlv",
         key_type: "name",
         index_position: 1,
         lower_bound: displayaccountname(),
@@ -751,7 +800,7 @@ function App(props) {
       }),
     }).then((response) => response.json().then((data) => setMyStake(data)));
 
-    fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+    fetch("http://api.eosn.io/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -759,7 +808,7 @@ function App(props) {
       },
       body: JSON.stringify({
         json: true,
-        code: "andrtestcons",
+        code: "consortiumlv",
         table: "personstaked",
         scope: scope,
         key_type: "name",
@@ -981,7 +1030,7 @@ function App(props) {
         const transaction = {
           actions: [
             {
-              account: "andrtestcons",
+              account: "consortiumlv",
               name: "stakeforcomm",
               authorization: [
                 {
@@ -1023,7 +1072,7 @@ function App(props) {
   const stakeaction = () => { // CALL THIS IF YOU WANT TO STAKE
     if (sessionresult){
     const action = {
-          account: 'andrtestcons',
+          account: 'consortiumlv',
           name: 'stakeforcomm',
           authorization: [sessionresult.auth],
           data: {
@@ -1052,7 +1101,7 @@ function App(props) {
         const transaction = {
           actions: [
             {
-              account: "andrtestcons",
+              account: "consortiumlv",
               name: "unstkfromcom",
               authorization: [
                 {
@@ -1088,7 +1137,7 @@ function App(props) {
     console.log(mystake)
     if (sessionresult){
       const action = {
-                account: 'andrtestcons',
+                account: 'consortiumlv',
                 name: 'unstkfromcom',
                 authorization: [sessionresult.auth],
                 data: {
@@ -1106,9 +1155,10 @@ function App(props) {
 
   const getvote = () => {
     //READS YOUR TOKEN BALANCE FOR VOTING
-    if (!votedata.rows[0] && scope == "viggtestcons") {
+    //if (!votedata.rows[0] && scope == "viggcommcons") {
+    if (!votedata.rows[0] && scope == "viggcommcons") {
       //IF WE ARE ON VIGOR PAGE, DO THE FOLLOWING FETCH
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1116,15 +1166,15 @@ function App(props) {
         },
         body: JSON.stringify({
           json: true,
-          code: "andrtestcons",
+          code: "vig111111111",
           table: "accounts",
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
-    if (!votedata.rows[0] && scope == "eosstestcons") {
+    if (!votedata.rows[0] && scope == "eosscommcons") {
       //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1138,7 +1188,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
 
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1152,7 +1202,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData1(data)));
 
-      fetch("https://api.kylin.alohaeos.com/v1/chain/get_table_rows", {
+      fetch("http://api.eosn.io/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1183,7 +1233,7 @@ function App(props) {
       rpc: 'https://kylin-dsp-2.liquidapps.io'
   })
 
-  const identifier = 'andrtestcons'
+  const identifier = 'consortiumlv'
   let session;
   const restoreSession = () => {
     link.restoreSession(identifier).then((result) => {
@@ -1233,7 +1283,7 @@ function App(props) {
         const transaction = {
           actions: [
             {
-              account: "andrtestcons",
+              account: "consortiumlv",
               name: "createpollz",
               authorization: [
                 {
@@ -1287,7 +1337,7 @@ function App(props) {
       const uniqueurl = Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 15)
       const uniquename = makeid()
       const action = {
-          account: 'andrtestcons',
+          account: 'consortiumlv',
           name: 'createpollz',
           authorization: [sessionresult.auth],
           data: {
@@ -1337,7 +1387,7 @@ function App(props) {
         const transaction = {
           actions: [
             {
-              account: "andrtestcons",
+              account: "consortiumlv",
               name: "votez",
               authorization: [
                 {
@@ -1385,7 +1435,7 @@ function App(props) {
     const amount = Number(voteamount)
     const uniquename = makeid()
     const action = {
-        account: 'andrtestcons',
+        account: 'consortiumlv',
         name: 'votez',
         authorization: [sessionresult.auth],
         data: {
@@ -1541,9 +1591,12 @@ Swal.fire({
         if (votedata2.rows[0]) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
         }
-
-        const bal = balance + cpu + net + rex;
-        return bal;
+        if (votedata.rows[0]) {
+          const bal = balance + cpu + net + rex;
+          return bal;
+        } else {
+          return 0;
+        }
       }
     } else {
       if (votedata.rows[0]) {
@@ -1565,8 +1618,12 @@ Swal.fire({
       if (dailyvoted.rows[0]) {
         daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
       }
-      const bal = balance + cpu + net + rex - daily;
-      return bal;
+      if (votedata.rows[0]) {
+        const bal = balance + cpu + net + rex;
+        return bal;
+      } else {
+        return 0;
+      }
     }
   };
 
@@ -1913,6 +1970,57 @@ Swal.fire({
     }
   };
 
+  const pollcost = (cost) => {
+    return (
+      <div>
+        <Typography
+          style={{
+            fontSize: "22px",
+            "font-weight": "bold",
+            "margin-left": "7px",
+            "margin-bottom": "5px",
+          }}
+          data-html="true"
+          data-for="signalprogress"
+          data-tip={
+            "*your poll will be active for 3 days <br/><br /> *if your poll reaches the Poll reward threshold,<br /> at the end of the 3rd day you can get rewarded<br/> in GOVRN tokens <br/><br /> *tokens used to create the poll get <br /> get burned"
+          }
+        >
+          <ReactTooltip
+            id="signalprogress"
+            type="dark"
+            effect="solid"
+            backgroundColor="black"
+            place="right"
+          />
+          Poll creation
+          <FontAwesomeIcon
+            icon={faInfoCircle}
+            style={{
+              height: "16px",
+              width: "16px",
+              color: "black",
+              "margin-bottom": "6px",
+
+              opacity: "0.7",
+              "margin-left": "2px",
+            }}
+          />
+        </Typography>
+        <a
+          style={{
+            "font-weight": "500",
+            opacity: "0.5",
+            "margin-left": "7px",
+          }}
+        >
+          {" "}
+          Creation cost: {cost} GOVRN
+        </a>
+      </div>
+    );
+  };
+
   const votingfield = (text, i) => {
     votinglist[i] = text;
   };
@@ -1941,7 +2049,7 @@ Swal.fire({
           <AppBar
             position="fixed"
             color="transparent"
-            style={{ "background-color": "white" }}
+            style={{ "background-color": "white", height: "67px" }}
           >
             <Toolbar>
               <IconButton
@@ -1977,7 +2085,7 @@ Swal.fire({
                 style={{ color: "inherit", "border-radius": "50px" }}
                 href={`${window.location}/Leaderboard`}
               >
-                Leaderboard
+                Governor board
               </Button>
 
               {logbutton()}
@@ -2046,40 +2154,7 @@ Swal.fire({
       <div class="app">
         <div>
           <Modal show={show} onHide={handleClose} centered>
-            <Modal.Header closeButton>
-              <Typography
-                style={{
-                  fontSize: "22px",
-                  "font-weight": "bold",
-                  "margin-left": "7px",
-                }}
-                data-html="true"
-                data-for="signalprogress"
-                data-tip={
-                  "*your poll will be active for 3 days <br/><br /> *if your community participates in the poll,<br /> at the end of the 3rd day you can get rewarded <br /> starting from 10k and up to 80k GOVRN tokens <br/><br /> *to create a poll your account must hold 5k <br />  GOVRN that will get burned"
-                }
-              >
-                <ReactTooltip
-                  id="signalprogress"
-                  type="dark"
-                  effect="solid"
-                  backgroundColor="black"
-                  place="right"
-                />
-                Poll creation
-                <FontAwesomeIcon
-                  icon={faInfoCircle}
-                  style={{
-                    height: "16px",
-                    width: "16px",
-                    color: "black",
-                    "margin-bottom": "6px",
-                    opacity: "0.7",
-                    "margin-left": "2px",
-                  }}
-                />
-              </Typography>
-            </Modal.Header>
+            <Modal.Header closeButton>{pollcost(pollcostarv())}</Modal.Header>
             <Modal.Body>
               <TextField
                 style={{ width: "97%", margin: "7px" }}
@@ -2158,10 +2233,7 @@ Swal.fire({
               >
                 {" "}
                 Polls are stored fully
-                <a href="https://bloks.io/account/consortium11#keys">
-                  {" "}
-                  on-chain
-                </a>
+                <a href="https://bloks.io/account/consortiumlv"> on-chain</a>
               </Typography>
             </center>
           </Modal>
@@ -2260,10 +2332,7 @@ Swal.fire({
               >
                 {" "}
                 Votes are stored fully
-                <a href="https://bloks.io/account/consortium11#keys">
-                  {" "}
-                  on-chain
-                </a>
+                <a href="https://bloks.io/account/consortiumlv"> on-chain</a>
               </Typography>
             </center>
           </Modal>
