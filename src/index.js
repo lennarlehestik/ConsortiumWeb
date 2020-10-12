@@ -16,6 +16,7 @@ import { Anchor } from "ual-anchor";
 import { TokenPocket } from "ual-token-pocket";
 import { Ledger } from "ual-ledger";
 import { Lynx } from "ual-lynx";
+import { JsonRpc } from "eosjs/dist/eosjs-jsonrpc";
 
 import "./fonts/Roboto-Regular.ttf";
 import "./fonts/Roboto-Bold.ttf";
@@ -30,12 +31,14 @@ const chain = {
     {
       protocol: "https",
       host: "dsp.eosphere.io",
+      //host: "dsp.airdropsdac.com", https://node2.blockstartdsp.com"dsp.eosphere.io",https://dsp.eosdetroit.io,https://node1.eosdsp.com
       port: "",
     },
   ],
 };
 
 /*
+https://dsp.airdropsdac.com
 const chain = {
   chainId: "5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191",
   rpcEndpoints: [
@@ -65,7 +68,9 @@ const chain = {
 // Authenticators
 const eosioAuth = new EOSIOAuth([chain], { appName, protocol: "eosio" });
 const scatter = new Scatter([chain], { appName });
-const anchor = new Anchor([chain], { appName });
+const anchor = new Anchor([chain], {
+  appName,
+});
 const lynx = new Lynx([chain]);
 const tokenPocket = new TokenPocket([chain]);
 const ledger = new Ledger([chain]);

@@ -323,7 +323,8 @@ function App(props) {
     });
     Toast.fire({
       icon: "info",
-      title: "Preparing oracle request to validate your token balance.",
+      title:
+        "Due to oracle request, vote confirmation may take up to 1 minute.",
     });
   };
 
@@ -341,7 +342,7 @@ function App(props) {
     });
     Toast.fire({
       icon: "info",
-      title: "Preparing oracle request to validate your token balance.",
+      title: "Due to oracle request, poll creation may take up 30 seconds.",
     });
   };
 
@@ -1724,19 +1725,18 @@ Swal.fire({
     if (dailyvoted.rows[0]) {
       const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
       const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
+      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
       if (difference > 0) {
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
-        /*
         let cpu = 0;
         let net = 0;
         if (votedata1.rows[0]) {
           cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
           net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
         }
-        
+        /*
         let rex = 0;
         if (votedata2.rows[0]) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
@@ -1746,9 +1746,7 @@ Swal.fire({
         if (dailyvoted.rows[0]) {
           daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
         }
-        //const bal = balance + cpu + net - daily;
-        const bal = balance - daily;
-
+        const bal = balance + cpu + net - daily;
         return bal;
       }
       if (difference < 0) {
@@ -1757,23 +1755,20 @@ Swal.fire({
             Number(votedata.rows[0].balance.split(" ")[0])
           );
         }
-        /*
         let cpu = 0;
         let net = 0;
         if (votedata1.rows[0]) {
           cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
           net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
         }
-       
+        /*
         let rex = 0;
         if (votedata2.rows[0]) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
         }
         */
         if (votedata.rows[0]) {
-          //const bal = balance + cpu + net;
-          const bal = balance;
-
+          const bal = balance + cpu + net;
           return bal;
         } else {
           return 0;
@@ -1783,14 +1778,13 @@ Swal.fire({
       if (votedata.rows[0]) {
         balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
       }
-      /*
       let cpu = 0;
       let net = 0;
       if (votedata1.rows[0]) {
         cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
         net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
       }
-      
+      /*
       let rex = 0;
       if (votedata2.rows[0]) {
         rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
@@ -1801,8 +1795,7 @@ Swal.fire({
         daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
       }
       if (votedata.rows[0]) {
-        //const bal = balance + cpu + net;
-        const bal = balance;
+        const bal = balance + cpu + net;
         return bal;
       } else {
         return 0;
@@ -1838,7 +1831,7 @@ Swal.fire({
               <hr />
               <div class="line" style={{ "font-weight": "600" }}>
                 <a class="identfier">Balance:</a>
-                <a class="value">{getmybalance()} GOVRN</a>
+                <a class="value">{256254} GOVRN</a>
               </div>
               <hr />
               <div class="line">
@@ -1863,17 +1856,11 @@ Swal.fire({
               <hr />
               <div class="line">
                 <a class="identfier">Voting reward:</a>
-                <a class="value">
-                  {voterewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
-                  GOVRN
-                </a>
+                <a class="value">{21776} GOVRN</a>
               </div>
               <div class="line">
                 <a class="identfier">Poll reward:</a>
-                <a class="value">
-                  {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
-                  GOVRN
-                </a>
+                <a class="value">{568611} GOVRN</a>
               </div>
               <hr />
               <div class="line">
@@ -1890,7 +1877,7 @@ Swal.fire({
                     "margin-left": "23px",
                   }}
                 >
-                  {stakeformatter(getrewardthreshold())} {tokensymbol()}
+                  {2334} {tokensymbol()}
                 </a>
 
                 <a
@@ -1898,7 +1885,7 @@ Swal.fire({
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * All time most popular poll of your community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * All time most popular Poll of your community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -2065,7 +2052,7 @@ Swal.fire({
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * All time most popular poll of your community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * All time most popular Poll of your community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -2166,7 +2153,7 @@ Swal.fire({
           data-html="true"
           data-for="signalprogress"
           data-tip={
-            "*your poll will be active for 3 days <br/><br /> *if your poll reaches the Poll reward threshold,<br /> at the end of the 3rd day you can get rewarded<br/> in GOVRN tokens <br/><br /> *tokens used to create the poll get <br /> get burned decreasing the Total Circulation"
+            "*your poll will be active for 3 days <br/><br /> *if your poll reaches the Poll reward threshold,<br /> at the end of the 3rd day you can get rewarded<br/> in GOVRN tokens <br/><br /> *tokens used to create the poll get <br /> get burned"
           }
         >
           <ReactTooltip
@@ -2219,19 +2206,7 @@ Swal.fire({
   const gettimediff = (creationdate) => {
     //PASS IN THE POLL CREATION TIMESTAMP FROM THE TABLE
     const curr = new Date().getTime(); //GET CURRENT TIME
-    //creationdate.add(3, "days");
-    //return moment(creationdate)
-    // .to(moment(curr + "Z"));
-
-    return "expires " + moment(creationdate).add(3, "days").fromNow(); // "in 4 years"
-
-    //return "expires " + moment(creationdate).toNow();
-
-    //return moment(curr).to(moment(creationdate + "Z"));
-
-    //return moment.duration(curr.diff(creationdate)).humanize();
-    //return moment.duration(curr.diff(creationdate));
-    //FIND THE DIFFERENCE BETWEEN THE TWO TIMESTAMPS, Z JUST MAKES IT RECOGNIZEABLE UTC
+    return moment(curr).to(moment(creationdate + "Z")); //FIND THE DIFFERENCE BETWEEN THE TWO TIMESTAMPS, Z JUST MAKES IT RECOGNIZEABLE UTC
   };
   //<Button color="inherit" onClick={() => onLike()}>Transsex</Button>
 

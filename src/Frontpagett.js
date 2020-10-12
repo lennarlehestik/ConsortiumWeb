@@ -553,9 +553,7 @@ function App(props) {
                           style={{ "font-weight": "700" }}
                         >
                           Total staked:{" "}
-                          <a style={{ float: "right" }}>
-                            {stakeformatter(parseFloat(u.staked))} GOVRN
-                          </a>
+                          <a style={{ float: "right" }}>{1.8 + "m"} GOVRN</a>
                         </Typography>
 
                         <Typography
@@ -564,10 +562,7 @@ function App(props) {
                           component="p"
                         >
                           Voting reward:
-                          <a style={{ float: "right" }}>
-                            {voterewards(gettotalstaked(), parseInt(u.staked))}{" "}
-                            GOVRN
-                          </a>
+                          <a style={{ float: "right" }}>{21776} GOVRN</a>
                         </Typography>
 
                         <Typography
@@ -576,10 +571,7 @@ function App(props) {
                           component="p"
                         >
                           Poll reward:
-                          <a style={{ float: "right" }}>
-                            {pollrewards(gettotalstaked(), parseInt(u.staked))}{" "}
-                            GOVRN
-                          </a>
+                          <a style={{ float: "right" }}>{568611} GOVRN</a>
                         </Typography>
                       </div>
                     </CardContent>

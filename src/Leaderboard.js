@@ -245,7 +245,7 @@ function App(props) {
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * All time most popular poll of your community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -335,7 +335,7 @@ function App(props) {
 
   const getstake = () => {
     //DOES ALL THE FETCHING FOR THE STAKE MODAL
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -351,7 +351,7 @@ function App(props) {
       response.json().then((data) => setStakingBalance(data))
     );
 
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -369,7 +369,7 @@ function App(props) {
       }),
     }).then((response) => response.json().then((data) => setMyStake(data)));
 
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -394,7 +394,7 @@ function App(props) {
     //READS YOUR TOKEN BALANCE FOR VOTING
     if (!votedata.rows[0] && scope == "viggcommcons") {
       //IF WE ARE ON VIGOR PAGE, DO THE FOLLOWING FETCH
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -410,7 +410,7 @@ function App(props) {
     }
     if (!votedata.rows[0] && scope == "eosscommcons") {
       //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -424,7 +424,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
 
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -438,7 +438,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData1(data)));
 
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -457,7 +457,7 @@ function App(props) {
   };
 
   const getnrofvotes = () => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -479,7 +479,7 @@ function App(props) {
   };
 
   useEffect(() => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -498,7 +498,7 @@ function App(props) {
   }, totalcircu["rows"][0]);
 
   useEffect(() => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -518,7 +518,7 @@ function App(props) {
 
   useEffect(() => {
     if (activeUser) {
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -542,7 +542,7 @@ function App(props) {
   }, databalance);
 
   const getdailyvoted = () => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -564,7 +564,7 @@ function App(props) {
   };
 
   useEffect(() => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -584,7 +584,7 @@ function App(props) {
   }, communitydata["rows"]);
 
   useEffect(() => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -845,19 +845,19 @@ function App(props) {
           <AppBar
             position="fixed"
             color="transparent"
-            style={{ "background-color": "white" }}
+            style={{ "background-color": "white", height: "64px" }}
           >
             <Toolbar>
-              <IconButton
-                component={Link}
-                to={"/"}
-                style={{ "background-color": "white" }}
-              >
+              <IconButton component={Link} to={"/"}>
                 <img
                   src="/logo.png"
                   width="66"
                   class="d-inline-block align-top"
-                  style={{ "margin-bottom": 2, opacity: 0.7 }}
+                  style={{
+                    "margin-bottom": 0,
+                    "margin-left": 2,
+                    opacity: 0.7,
+                  }}
                 ></img>
               </IconButton>
               <Typography

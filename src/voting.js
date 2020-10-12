@@ -35,7 +35,7 @@ export default function App() {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    fetch('"https://api.eosio.cr/v1/chain/get_table_rows"', {
+    fetch('"https://api.main.alohaeos.com:443/v1/chain/get_table_rows"', {
       method: "POST",
       headers: {
         Accept: "application/json",

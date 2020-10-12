@@ -190,6 +190,24 @@ function App(props) {
     });
   };
 
+  const loadingvote = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 65000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "info",
+      title: "Preparing oracle request to validate your token balance.",
+    });
+  };
+
   const loadingscatter = () => {
     const Toast = Swal.mixin({
       toast: true,
@@ -270,14 +288,26 @@ function App(props) {
   const gettimediff = (creationdate) => {
     //PASS IN THE POLL CREATION TIMESTAMP FROM THE TABLE
     const curr = new Date().getTime(); //GET CURRENT TIME
-    return moment(curr).to(moment(creationdate + "Z")); //FIND THE DIFFERENCE BETWEEN THE TWO TIMESTAMPS, Z JUST MAKES IT RECOGNIZEABLE UTC
+    //creationdate.add(3, "days");
+    //return moment(creationdate)
+    // .to(moment(curr + "Z"));
+
+    return "expires " + moment(creationdate).add(3, "days").fromNow(); // "in 4 years"
+
+    //return "expires " + moment(creationdate).toNow();
+
+    //return moment(curr).to(moment(creationdate + "Z"));
+
+    //return moment.duration(curr.diff(creationdate)).humanize();
+    //return moment.duration(curr.diff(creationdate));
+    //FIND THE DIFFERENCE BETWEEN THE TWO TIMESTAMPS, Z JUST MAKES IT RECOGNIZEABLE UTC
   };
 
   useEffect(() => {
     ReactGA.initialize("UA-160289361-1");
     ReactGA.pageview(window.location);
 
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -296,7 +326,7 @@ function App(props) {
   }, communitydata["rows"]);
 
   useEffect(() => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -318,7 +348,7 @@ function App(props) {
 
   useEffect(() => {
     if (activeUser) {
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -342,7 +372,7 @@ function App(props) {
   }, databalance);
 
   const getdailyvoted = () => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -366,7 +396,7 @@ function App(props) {
     if (nrofvotes.rows[0]) {
       const firstvotetime = new Date(nrofvotes.rows[0].timefirstvote + "Z");
       const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
       if (difference > 1) {
         return Math.floor(difference) + " h";
       } else if (difference < 1 && difference > 0) {
@@ -380,7 +410,7 @@ function App(props) {
   };
 
   const getnrofvotes = () => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -407,7 +437,7 @@ function App(props) {
       const rewardsleft = 3 - nrofvote;
       const firstvotetime = new Date(nrofvotes.rows[0].timefirstvote + "Z");
       const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
       if (difference < 0) {
         return "3";
       } else {
@@ -429,7 +459,7 @@ function App(props) {
           2,
           parseInt(
             Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0])) /
-              20000000
+              25000000
           )
         )
       );
@@ -467,7 +497,7 @@ function App(props) {
 
   const getstake = () => {
     //DOES ALL THE FETCHING FOR THE STAKE MODAL
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -483,7 +513,7 @@ function App(props) {
       response.json().then((data) => setStakingBalance(data))
     );
 
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -501,7 +531,7 @@ function App(props) {
       }),
     }).then((response) => response.json().then((data) => setMyStake(data)));
 
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -550,7 +580,7 @@ function App(props) {
     if (dailyvoted.rows[0]) {
       const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
       const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
       if (difference > 1) {
         return Math.floor(difference) + " h";
       } else if (difference < 1 && difference > 0) {
@@ -646,7 +676,7 @@ function App(props) {
                       style={{ float: "right" }}
                       data-html="true"
                       data-for="pede1"
-                      data-tip={"Number of voters"}
+                      data-tip={"Number of votes"}
                     >
                       <ReactTooltip
                         id="pede1"
@@ -705,7 +735,7 @@ function App(props) {
   };
 
   useEffect(() => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -725,7 +755,7 @@ function App(props) {
 
   useEffect(() => {
     const scope = location.pathname.split("/")[4];
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -748,7 +778,7 @@ function App(props) {
 
   useEffect(() => {
     if (sessionresult) {
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -769,7 +799,7 @@ function App(props) {
   data.rows.sort(sortBySum);
 
   useEffect(() => {
-    fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -835,7 +865,7 @@ function App(props) {
       ual: { activeUser },
     } = props;
     if (activeUser) {
-      loadingscatter();
+      loadingvote();
       try {
         const optionnumber = Number(option) + 1;
         const amount = Number(voteamount);
@@ -1243,7 +1273,7 @@ function App(props) {
     //READS YOUR TOKEN BALANCE FOR VOTING
     if (!votedata.rows[0] && scope == "viggcommcons") {
       //IF WE ARE ON VIGOR PAGE, DO THE FOLLOWING FETCH
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1251,7 +1281,7 @@ function App(props) {
         },
         body: JSON.stringify({
           json: true,
-          code: "consortiumlv",
+          code: "vig111111111",
           table: "accounts",
           scope: displayaccountname(),
         }),
@@ -1259,7 +1289,7 @@ function App(props) {
     }
     if (!votedata.rows[0] && scope == "eosscommcons") {
       //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1273,7 +1303,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
 
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1286,8 +1316,8 @@ function App(props) {
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData1(data)));
-
-      fetch("https://api.eosio.cr/v1/chain/get_table_rows", {
+      /*
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1302,6 +1332,7 @@ function App(props) {
           upper_bound: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData2(data)));
+      */
     }
   };
 
@@ -1327,6 +1358,98 @@ function App(props) {
     if (dailyvoted.rows[0]) {
       const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
       const current = new Date();
+      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
+      if (difference > 0) {
+        if (votedata.rows[0]) {
+          balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
+        }
+        /*
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+        
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+        */
+        let daily = 0;
+        if (dailyvoted.rows[0]) {
+          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+        }
+        //const bal = balance + cpu + net - daily;
+        const bal = balance - daily;
+
+        return bal;
+      }
+      if (difference < 0) {
+        if (votedata.rows[0]) {
+          var balance = Math.floor(
+            Number(votedata.rows[0].balance.split(" ")[0])
+          );
+        }
+        /*
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+       
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+        */
+        if (votedata.rows[0]) {
+          //const bal = balance + cpu + net;
+          const bal = balance;
+
+          return bal;
+        } else {
+          return 0;
+        }
+      }
+    } else {
+      if (votedata.rows[0]) {
+        balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
+      }
+      /*
+      let cpu = 0;
+      let net = 0;
+      if (votedata1.rows[0]) {
+        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+      }
+      
+      let rex = 0;
+      if (votedata2.rows[0]) {
+        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+      }
+      */
+      let daily = 0;
+      if (dailyvoted.rows[0]) {
+        daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+      }
+      if (votedata.rows[0]) {
+        //const bal = balance + cpu + net;
+        const bal = balance;
+        return bal;
+      } else {
+        return 0;
+      }
+    }
+  };
+
+  /*
+
+  const getbalance = () => {
+    if (dailyvoted.rows[0]) {
+      const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
+      const current = new Date();
       const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
       if (difference > 0) {
         let balance = 0;
@@ -1339,16 +1462,17 @@ function App(props) {
         if (votedata1.rows[0]) {
           cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
           net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
+        } /*
         let rex = 0;
         if (votedata2.rows[0]) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
         }
+        
         let daily = 0;
         if (dailyvoted.rows[0]) {
           daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
         }
-        const bal = balance + cpu + net + rex - daily;
+        const bal = balance + cpu + net - daily;
         return bal;
       }
       if (difference < 0) {
@@ -1362,13 +1486,14 @@ function App(props) {
         if (votedata1.rows[0]) {
           cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
           net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
+        } /*
         let rex = 0;
         if (votedata2.rows[0]) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
         }
+        
 
-        const bal = balance + cpu + net + rex;
+        const bal = balance + cpu + net;
         return bal;
       }
     } else {
@@ -1381,19 +1506,21 @@ function App(props) {
       if (votedata1.rows[0]) {
         cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
         net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-      }
+      } /*
       let rex = 0;
       if (votedata2.rows[0]) {
         rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
       }
+      
       let daily = 0;
       if (dailyvoted.rows[0]) {
         daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
       }
-      const bal = balance + cpu + net + rex - daily;
+      const bal = balance + cpu + net - daily;
       return bal;
     }
   };
+*/
 
   const logbutton = () => {
     if (accountname) {
@@ -1474,7 +1601,7 @@ function App(props) {
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * All time most popular poll of your community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -1628,7 +1755,7 @@ function App(props) {
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward.<br/> (Poll reward threshold = 0.2 * Most Popular Poll of your Community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward.<br/> (Poll reward threshold = 0.2 * All time most popular poll of your community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -1896,19 +2023,19 @@ function App(props) {
           <AppBar
             position="fixed"
             color="transparent"
-            style={{ "background-color": "white", height: "67px" }}
+            style={{ "background-color": "white", height: "64px" }}
           >
             <Toolbar>
-              <IconButton
-                component={Link}
-                to={"/"}
-                style={{ "background-color": "white" }}
-              >
+              <IconButton component={Link} to={"/"}>
                 <img
                   src="/logo.png"
                   width="66"
                   class="d-inline-block align-top"
-                  style={{ "margin-bottom": 2, opacity: 0.7 }}
+                  style={{
+                    "margin-bottom": 0,
+                    "margin-left": 2,
+                    opacity: 0.7,
+                  }}
                 ></img>
               </IconButton>
               <Typography
