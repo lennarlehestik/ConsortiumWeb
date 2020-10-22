@@ -888,6 +888,7 @@ function App(props) {
         const uniquename = makeid();
         const uniquenamests = makeid();
         const uniquenamevtb = makeid();
+        const uniquenameindvt = makeid();
 
         const transaction = {
           actions: [
@@ -909,6 +910,7 @@ function App(props) {
                 schedname: uniquename,
                 schednamests: uniquenamests,
                 schednamevtb: uniquenamevtb,
+                schedindvt: uniquenameindvt,
               },
             },
           ],
