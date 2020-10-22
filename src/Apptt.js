@@ -2736,7 +2736,7 @@ Swal.fire({
                       style={{ float: "right" }}
                       data-html="true"
                       data-for="pede1"
-                      data-tip={"Number of votes"}
+                      data-tip={"Number of voters"}
                     >
                       <ReactTooltip
                         id="pede1"

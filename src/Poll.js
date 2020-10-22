@@ -288,11 +288,27 @@ function App(props) {
   const gettimediff = (creationdate) => {
     //PASS IN THE POLL CREATION TIMESTAMP FROM THE TABLE
     const curr = new Date().getTime(); //GET CURRENT TIME
-    //creationdate.add(3, "days");
-    //return moment(creationdate)
-    // .to(moment(curr + "Z"));
+    //return moment(creationdate + "Z").to(moment(curr));
 
-    return "expires " + moment(creationdate).add(3, "days").fromNow(); // "in 4 years"
+    //if (curr + "Z" > moment(creationdate + "Z").add(72, "hours")) {
+
+    if (
+      moment().diff(moment(creationdate + "Z").add(168, "hours"), "minutes") > 0
+    ) {
+      return (
+        "expired " +
+        moment(creationdate + "Z")
+          .add(168, "hours")
+          .fromNow()
+      );
+    } else {
+      return (
+        "expires " +
+        moment(creationdate + "Z")
+          .add(168, "hours")
+          .fromNow()
+      );
+    }
 
     //return "expires " + moment(creationdate).toNow();
 
@@ -676,7 +692,7 @@ function App(props) {
                       style={{ float: "right" }}
                       data-html="true"
                       data-for="pede1"
-                      data-tip={"Number of votes"}
+                      data-tip={"Number of voters"}
                     >
                       <ReactTooltip
                         id="pede1"

@@ -614,72 +614,89 @@ function App(props) {
     if (dailyvoted.rows[0]) {
       const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
       const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
       if (difference > 0) {
-        let balance = 0;
-
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
+        /*
         let cpu = 0;
         let net = 0;
         if (votedata1.rows[0]) {
           cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
           net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
         }
+        
         let rex = 0;
         if (votedata2.rows[0]) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
         }
+        */
         let daily = 0;
         if (dailyvoted.rows[0]) {
           daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
         }
-        const bal = balance + cpu + net + rex - daily;
+        //const bal = balance + cpu + net - daily;
+        const bal = balance - daily;
+
         return bal;
       }
       if (difference < 0) {
-        let balance = 0;
-
         if (votedata.rows[0]) {
-          balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
+          var balance = Math.floor(
+            Number(votedata.rows[0].balance.split(" ")[0])
+          );
         }
+        /*
         let cpu = 0;
         let net = 0;
         if (votedata1.rows[0]) {
           cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
           net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
         }
+       
         let rex = 0;
         if (votedata2.rows[0]) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
         }
+        */
+        if (votedata.rows[0]) {
+          //const bal = balance + cpu + net;
+          const bal = balance;
 
-        const bal = balance + cpu + net + rex;
-        return bal;
+          return bal;
+        } else {
+          return 0;
+        }
       }
     } else {
-      let balance = 0;
-
       if (votedata.rows[0]) {
         balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
       }
+      /*
       let cpu = 0;
       let net = 0;
       if (votedata1.rows[0]) {
         cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
         net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
       }
+      
       let rex = 0;
       if (votedata2.rows[0]) {
         rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
       }
+      */
       let daily = 0;
       if (dailyvoted.rows[0]) {
         daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
       }
-      const bal = balance + cpu + net + rex - daily;
-      return bal;
+      if (votedata.rows[0]) {
+        //const bal = balance + cpu + net;
+        const bal = balance;
+        return bal;
+      } else {
+        return 0;
+      }
     }
   };
 
@@ -697,7 +714,7 @@ function App(props) {
       const rewardsleft = 3 - nrofvote;
       const firstvotetime = new Date(nrofvotes.rows[0].timefirstvote + "Z");
       const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
       if (difference < 0) {
         return "3";
       } else {
@@ -747,7 +764,7 @@ function App(props) {
     if (nrofvotes.rows[0]) {
       const firstvotetime = new Date(nrofvotes.rows[0].timefirstvote + "Z");
       const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
       if (difference > 1) {
         return Math.floor(difference) + " h";
       } else if (difference < 1 && difference > 0) {
@@ -779,7 +796,7 @@ function App(props) {
     if (dailyvoted.rows[0]) {
       const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
       const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
+      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
       if (difference > 1) {
         return Math.floor(difference) + " h";
       } else if (difference < 1 && difference > 0) {

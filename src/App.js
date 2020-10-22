@@ -110,6 +110,23 @@ function sortBySum(a, b) {
   return sumArray(b.totalvote) - sumArray(a.totalvote);
 }
 
+function makeint() {
+  var result = "";
+  /*
+  var characters = "1234567890";
+  var charactersLength = characters.length;
+  for (var i = 0; i < 7; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  */
+
+  result = Math.floor(Math.random() * 99999);
+  return result;
+  console.log(result);
+
+  document.getElementById("eos").textContent = result;
+}
+
 function makeid() {
   var result = "";
   var characters = "abcdefghijklmnopqrstuvwxyz1234";
@@ -1394,6 +1411,8 @@ authorization: [
           .substr(0, 15);
         const uniquename = makeid();
 
+        const pollkeyz = makeint();
+
         const transaction = {
           actions: [
             {
@@ -1414,6 +1433,7 @@ authorization: [
                 description: questiondescription,
                 uniqueurl: uniqueurl,
                 schedname: uniquename,
+                pollkey: pollkeyz,
               },
             },
           ],
@@ -1496,9 +1516,10 @@ authorization: [
       try {
         const optionnumber = Number(option) + 1;
         const amount = Number(voteamount);
-        const uniquename = makeid();
+        //const uniquename = makeid();
         const uniquenamests = makeid();
         const uniquenamevtb = makeid();
+        const uniquenameindvt = makeid();
 
         const transaction = {
           actions: [
@@ -1517,9 +1538,10 @@ authorization: [
                 option: optionnumber,
                 community: scope,
                 voter: displayaccountname(),
-                schedname: uniquename,
+                //schedname: uniquename,
                 schednamests: uniquenamests,
                 schednamevtb: uniquenamevtb,
+                schedindvt: uniquenameindvt,
               },
             },
           ],
@@ -2219,11 +2241,76 @@ Swal.fire({
   const gettimediff = (creationdate) => {
     //PASS IN THE POLL CREATION TIMESTAMP FROM THE TABLE
     const curr = new Date().getTime(); //GET CURRENT TIME
+    //return moment(creationdate + "Z").to(moment(curr));
+
+    //if (curr + "Z" > moment(creationdate + "Z").add(72, "hours")) {
+
+    if (
+      moment().diff(moment(creationdate + "Z").add(168, "hours"), "minutes") > 0
+    ) {
+      return (
+        "expired " +
+        moment(creationdate + "Z")
+          .add(168, "hours")
+          .fromNow()
+      );
+    } else {
+      return (
+        "expires " +
+        moment(creationdate + "Z")
+          .add(168, "hours")
+          .fromNow()
+      );
+    }
+
     //creationdate.add(3, "days");
     //return moment(creationdate)
     // .to(moment(curr + "Z"));
+    /*
+    const d1 = moment(curr).to(moment(creationdate + "Z"));
 
-    return "expires " + moment(creationdate).add(3, "days").fromNow(); // "in 4 years"
+    const d2 = moment.duration(3, "days");
+
+    const d3 = d2.subtract(d1);
+
+    return d3;
+
+
+
+return moment(curr).to(moment(creationdate + "Z"))
+
+
+const firstvotetime = creationdate + "Z";
+    const current = new Date();
+    const difference = (firstvotetime - current) / 1000 / 3600 + 72;
+    if (difference > 1) {
+      return Math.floor(difference) + " h";
+    } else if (difference < 1 && difference > 0) {
+      return Math.floor(difference * 60) + " min";
+    } else if (difference < 0) {
+      return "0h";
+    }
+
+    */
+
+    // return moment(curr).to(moment(creationdate + "Z"));
+
+    /*
+    const da = moment.duration(3, 'd');
+
+
+    const z = moment(creationdate);
+    const y = moment(creationdate).add(72, "hours");
+
+    const diffInDays = z.diff(y, "hours");
+
+    return "expires " + diffInDays;
+
+    */
+
+    //return "expires " + moment(creationdate).add(75, "hours").fromNow();
+
+    // "in 4 years"
 
     //return "expires " + moment(creationdate).toNow();
 
@@ -2761,7 +2848,7 @@ Swal.fire({
                       style={{ float: "right" }}
                       data-html="true"
                       data-for="pede1"
-                      data-tip={"Number of votes"}
+                      data-tip={"Number of voters"}
                     >
                       <ReactTooltip
                         id="pede1"
