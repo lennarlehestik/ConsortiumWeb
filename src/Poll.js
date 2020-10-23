@@ -358,7 +358,9 @@ function App(props) {
         lower_bound: 0,
         upper_bound: 10000,
       }),
-    }).then((response) => response.json().then((data) => setData(data)));
+    })
+      .then((response) => response.json().then((data) => setData(data)))
+      .then(stringmatches());
     //.then(restoreSession())
   }, data["rows"]);
 
@@ -612,121 +614,127 @@ function App(props) {
   const stringmatches = () => {
     if (data.rows[0]) {
       const urluniqueurl = location.pathname.split("/")[3];
-      if (data.rows[0]["uniqueurl"] == urluniqueurl) {
-        return data.rows.map((u, i) => {
-          return (
-            <div key={i}>
-              <Card
-                className={classes.root}
-                style={{
-                  "margin-top": "7px",
-                  padding: "10px",
-                  "padding-bottom": "20px",
-                  borderRadius: "20px",
-                  fontFamily: "roboto",
-                }}
-              >
-                <CardHeader
-                  style={{ "padding-bottom": "10px" }}
-                  avatar={
-                    <Avatar aria-label="recipe" className={classes.avatar}>
-                      {u.creator.charAt(0).toUpperCase()}
-                    </Avatar>
-                  }
-                  action={
-                    <IconButton
-                      aria-label="settings"
-                      data-html="true"
-                      data-for="pede3"
-                      data-tip={"Get poll url"}
-                      onClick={() => getpollurl(u.pollkey, u.uniqueurl)}
-                    >
-                      <ShareIcon style={{ opacity: 0.8 }} />
-                      <ReactTooltip
-                        id="pede3"
-                        type="dark"
-                        effect="solid"
-                        backgroundColor="black"
-                        place="bottom"
-                      />
-                    </IconButton>
-                  }
-                  title={u.creator}
-                  subheader={gettimediff(u.timecreated)}
-                />
+      const data1 = data.rows.filter(
+        ({ uniqueurl }) => uniqueurl === urluniqueurl
+      );
+      console.log(data1);
+      if (data1[0]) {
+        if (data1[0]["uniqueurl"] == urluniqueurl) {
+          return data1.map((u, i) => {
+            return (
+              <div key={i}>
+                <Card
+                  className={classes.root}
+                  style={{
+                    "margin-top": "7px",
+                    padding: "10px",
+                    "padding-bottom": "20px",
+                    borderRadius: "20px",
+                    fontFamily: "roboto",
+                  }}
+                >
+                  <CardHeader
+                    style={{ "padding-bottom": "10px" }}
+                    avatar={
+                      <Avatar aria-label="recipe" className={classes.avatar}>
+                        {u.creator.charAt(0).toUpperCase()}
+                      </Avatar>
+                    }
+                    action={
+                      <IconButton
+                        aria-label="settings"
+                        data-html="true"
+                        data-for="pede3"
+                        data-tip={"Get poll url"}
+                        onClick={() => getpollurl(u.pollkey, u.uniqueurl)}
+                      >
+                        <ShareIcon style={{ opacity: 0.8 }} />
+                        <ReactTooltip
+                          id="pede3"
+                          type="dark"
+                          effect="solid"
+                          backgroundColor="black"
+                          place="bottom"
+                        />
+                      </IconButton>
+                    }
+                    title={u.creator}
+                    subheader={gettimediff(u.timecreated)}
+                  />
 
-                <CardContent style={{ paddingTop: "8px" }}>
-                  <Typography
-                    style={{
-                      color: "rgba(0, 0, 0, 0.87)",
-                      "font-weight": "400",
-                    }}
-                    class="question"
-                    target="_blank"
-                    component={Link}
-                    to={`/poll/${u.pollkey}/${u.uniqueurl}/${scope}`}
-                  >
-                    {u.question}
-                  </Typography>
-                  <div
-                    style={{
-                      color: "rgba(0, 0, 0, 0.54)",
-                      "font-size": "15px",
-                      "margin-top": "8px",
-                      "margin-bottom": "19px",
-                    }}
-                  >
-                    {u.description}
-                  </div>
-                  <a
-                    style={{
-                      color: "rgba(0, 0, 0, 0.74)",
-                      "font-size": "16px",
-                    }}
-                  >
-                    {polloptions(u.totalvote, u.answers, u.pollkey)}
-                  </a>
-                  <div style={{ color: "#485A70" }} class="pollstats">
-                    {" "}
-                    <div
-                      style={{ float: "right" }}
-                      data-html="true"
-                      data-for="pede1"
-                      data-tip={"Number of voters"}
+                  <CardContent style={{ paddingTop: "8px" }}>
+                    <Typography
+                      style={{
+                        color: "rgba(0, 0, 0, 0.87)",
+                        "font-weight": "400",
+                      }}
+                      class="question"
+                      target="_blank"
+                      component={Link}
+                      to={`/poll/${u.pollkey}/${u.uniqueurl}/${scope}`}
                     >
-                      <ReactTooltip
-                        id="pede1"
-                        type="dark"
-                        effect="solid"
-                        backgroundColor="black"
-                        place="bottom"
-                      />
-                      &nbsp;&nbsp;&nbsp;
-                      <HowToRegOutlinedIcon /> {u.nrofvoters}
-                    </div>
+                      {u.question}
+                    </Typography>
                     <div
-                      style={{ float: "right" }}
-                      data-html="true"
-                      data-for="pede2"
-                      data-tip={"Total tokens voted with"}
+                      style={{
+                        color: "rgba(0, 0, 0, 0.54)",
+                        "font-size": "15px",
+                        "margin-top": "8px",
+                        "margin-bottom": "19px",
+                      }}
                     >
-                      <ReactTooltip
-                        id="pede2"
-                        type="dark"
-                        effect="solid"
-                        backgroundColor="black"
-                        place="bottom"
-                      />
-                      <img src={tokenurl()} height="24px" />
-                      &nbsp;
-                      {stakeformatter(u.sumofallopt)} {tokensymbol()}
+                      {u.description}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          );
-        });
+                    <a
+                      style={{
+                        color: "rgba(0, 0, 0, 0.74)",
+                        "font-size": "16px",
+                      }}
+                    >
+                      {polloptions(u.totalvote, u.answers, u.pollkey)}
+                    </a>
+                    <div style={{ color: "#485A70" }} class="pollstats">
+                      {" "}
+                      <div
+                        style={{ float: "right" }}
+                        data-html="true"
+                        data-for="pede1"
+                        data-tip={"Number of votes"}
+                      >
+                        <ReactTooltip
+                          id="pede1"
+                          type="dark"
+                          effect="solid"
+                          backgroundColor="black"
+                          place="bottom"
+                        />
+                        &nbsp;&nbsp;&nbsp;
+                        <HowToRegOutlinedIcon /> {u.nrofvoters}
+                      </div>
+                      <div
+                        style={{ float: "right" }}
+                        data-html="true"
+                        data-for="pede2"
+                        data-tip={"Total tokens voted with"}
+                      >
+                        <ReactTooltip
+                          id="pede2"
+                          type="dark"
+                          effect="solid"
+                          backgroundColor="black"
+                          place="bottom"
+                        />
+                        <img src={tokenurl()} height="24px" />
+                        &nbsp;
+                        {stakeformatter(u.sumofallopt)} {tokensymbol()}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            );
+          });
+        }
       } else {
         return (
           <Card
@@ -740,7 +748,13 @@ function App(props) {
             <CardContent>
               <center>
                 <a class="question">
-                  Poll has expired or you have the wrong url.
+                  <a
+                    href="https://pollhistory.consortium.vote/"
+                    target="_blank"
+                  >
+                    Poll has expired
+                  </a>{" "}
+                  or you have the wrong url.
                 </a>
               </center>
             </CardContent>
@@ -812,7 +826,7 @@ function App(props) {
     }
   }, databalance);
 
-  data.rows.sort(sortBySum);
+  //data.rows.sort(sortBySum);
 
   useEffect(() => {
     fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
@@ -1353,12 +1367,13 @@ function App(props) {
       */
     }
   };
-
+  /*
   if (data.rows[0]) {
     data.rows.sort((a, b) => (a.rewardsreceived < b.rewardsreceived ? 1 : -1));
   }
 
   data.rows.sort(sortBySum);
+  */
 
   const stakeformatter = (stakenumber) => {
     if (stakenumber < 1000) {
