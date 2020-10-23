@@ -356,7 +356,7 @@ function App(props) {
         limit: 50,
         table_key: "pollkey",
         lower_bound: 0,
-        upper_bound: 10000,
+        upper_bound: 100000,
       }),
     })
       .then((response) => response.json().then((data) => setData(data)))
