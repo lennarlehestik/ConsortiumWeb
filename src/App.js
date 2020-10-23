@@ -178,11 +178,6 @@ function App(props) {
 
   const [totalcircu, setTotalCircu] = useState({ rows: [] });
 
-  const sortingalgo = (arr) => {
-    arr.rows.sort((a, b) => (a.sumofallopt < b.sumofallopt ? 1 : -1));
-    setData(arr);
-  };
-
   const {
     ual: { logout },
   } = props;
@@ -222,6 +217,11 @@ function App(props) {
   function togglemob() {
     setIsOpenedmob((wasOpened) => !wasOpened);
   }
+
+  const sortingalgo = (arr) => {
+    arr.rows.sort((a, b) => (a.sumofallopt < b.sumofallopt ? 1 : -1));
+    setData(arr);
+  };
 
   const tyra = () => {
     fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
@@ -666,7 +666,7 @@ function App(props) {
         table_key: "pollkey",
         lower_bound: 0,
         upper_bound: 100000,
-      }),
+      })
     }).then((response) => response.json().then((data) => sortingalgo(data)));
 
     //.then(restoreSession())
@@ -1302,11 +1302,6 @@ function App(props) {
     }
   };
 
-  if (data.rows[0]) {
-    data.rows.sort((a, b) => (a.rewardsreceived < b.rewardsreceived ? 1 : -1));
-  }
-
-  data.rows.sort(sortBySum);
   /* ANCHOR CONNECTION
   const transport = new AnchorLinkBrowserTransport()
   // initialize the link, this time we are using the TELOS chain
@@ -1764,7 +1759,7 @@ Swal.fire({
           cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
           net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
         }
-        
+
         let rex = 0;
         if (votedata2.rows[0]) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
@@ -1792,7 +1787,7 @@ Swal.fire({
           cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
           net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
         }
-       
+
         let rex = 0;
         if (votedata2.rows[0]) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
@@ -1818,7 +1813,7 @@ Swal.fire({
         cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
         net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
       }
-      
+
       let rex = 0;
       if (votedata2.rows[0]) {
         rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
