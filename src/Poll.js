@@ -125,6 +125,7 @@ function App(props) {
   const [option4submission, setOption4Submission] = useState("");
   const [isOpened, setIsOpened] = useState(true);
   const [isOpenedmob, setIsOpenedmob] = useState(false);
+  const [votedin, setVotedin] = useState({ rows: [] });
 
   const [dailyvoted, setDailyVoted] = useState({ rows: [] });
   const [votedata, setVoteData] = useState({ rows: [] });
@@ -383,6 +384,7 @@ function App(props) {
           response.json().then((databalance) => setDataBalance(databalance))
         )
         .then(getvote())
+        .then(getvotedin())
         .then(getdailyvoted())
         .then(getnrofvotes())
         .then(getstake());
@@ -446,6 +448,25 @@ function App(props) {
       }),
     }).then((response) =>
       response.json().then((nrofvotes) => setNumberofVotes(nrofvotes))
+    );
+  };
+
+  const getvotedin = () => {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "consortiumlv",
+        table: "theusrpoll",
+        scope: displayaccountname(),
+        limit: 1000,
+      }),
+    }).then((response) =>
+      response.json().then((votedinn) => setVotedin(votedinn))
     );
   };
 
@@ -568,6 +589,11 @@ function App(props) {
     }).then((response) =>
       response.json().then((dataind) => setMyindStake(dataind))
     );
+  };
+
+  const checkifvoted = (pollid) => {
+    var exists = votedin.rows.some((item) => item.pollkey === pollid);
+    return votedin.rows.some((item) => item.pollkey.toString() == pollid);
   };
 
   const getmybalance = () => {
@@ -709,7 +735,12 @@ function App(props) {
                           place="bottom"
                         />
                         &nbsp;&nbsp;&nbsp;
-                        <HowToRegOutlinedIcon /> {u.nrofvoters}
+                        <HowToRegOutlinedIcon
+                          style={{
+                            color: checkifvoted(u.pollkey) ? "#388c3c" : "",
+                          }}
+                        />{" "}
+                        {u.nrofvoters}
                       </div>
                       <div
                         style={{ float: "right" }}

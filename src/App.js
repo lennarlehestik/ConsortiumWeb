@@ -665,30 +665,30 @@ function App(props) {
         table_key: "pollkey",
         lower_bound: 0,
         upper_bound: 100000,
-      })
+      }),
     }).then((response) => response.json().then((data) => sortingalgo(data)));
 
     //.then(restoreSession())
   }, data["rows"]);
 
   const getvotedin = () => {
-        fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            json: true,
-            code: "consortiumlv",
-            table: "theusrpoll",
-            scope: displayaccountname(),
-            limit: 1000,
-          }),
-        }).then((response) =>
-          response.json().then((votedinn) => setVotedin(votedinn))
-        );
-      }
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: "consortiumlv",
+        table: "theusrpoll",
+        scope: displayaccountname(),
+        limit: 1000,
+      }),
+    }).then((response) =>
+      response.json().then((votedinn) => setVotedin(votedinn))
+    );
+  };
 
   useEffect(() => {
     if (activeUser) {
@@ -715,11 +715,6 @@ function App(props) {
         .then(getstake());
     }
   }, databalance);
-
-
-
-
-
 
   const getdailyvoted = () => {
     fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
@@ -1414,9 +1409,9 @@ authorization: [
 
 */
   const checkifvoted = (pollid) => {
-    var exists = votedin.rows.some(item => item.pollkey === pollid)
-    return(votedin.rows.some(item => item.pollkey.toString() == pollid))
-  }
+    var exists = votedin.rows.some((item) => item.pollkey === pollid);
+    return votedin.rows.some((item) => item.pollkey.toString() == pollid);
+  };
 
   const createpoll = async () => {
     const {
@@ -2840,7 +2835,7 @@ const firstvotetime = creationdate + "Z";
                   subheader={gettimediff(u.timecreated)}
                 />
 
-                <CardContent style={{ paddingTop: "8px"}}>
+                <CardContent style={{ paddingTop: "8px" }}>
                   <Typography
                     style={{
                       color: "rgba(0, 0, 0, 0.87)",
@@ -2872,14 +2867,12 @@ const firstvotetime = creationdate + "Z";
                     {polloptions(u.totalvote, u.answers, u.pollkey)}
                   </a>
                   <div style={{ color: "#485A70" }} class="pollstats">
-                  <div
-                    style={{ float: "left" }}
-                    data-html="true"
-                    data-for="pede1"
-                    data-tip={"Number of voters"}
-                  >
-                  </div>
-                    {" "}
+                    <div
+                      style={{ float: "left" }}
+                      data-html="true"
+                      data-for="pede1"
+                      data-tip={"Number of voters"}
+                    ></div>{" "}
                     <div
                       style={{ float: "right" }}
                       data-html="true"
@@ -2894,7 +2887,12 @@ const firstvotetime = creationdate + "Z";
                         place="bottom"
                       />
                       &nbsp;&nbsp;&nbsp;
-                      <HowToRegOutlinedIcon style={{"color":checkifvoted(u.pollkey) ? "green" : ""}}/> {u.nrofvoters}
+                      <HowToRegOutlinedIcon
+                        style={{
+                          color: checkifvoted(u.pollkey) ? "#388c3c" : "",
+                        }}
+                      />{" "}
+                      {u.nrofvoters}
                     </div>
                     <div
                       style={{ float: "right" }}
