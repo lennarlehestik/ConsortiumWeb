@@ -402,7 +402,7 @@ function App(props) {
         },
         body: JSON.stringify({
           json: true,
-          code: "consortiumlv",
+          code: "vig111111111",
           table: "accounts",
           scope: displayaccountname(),
         }),
@@ -423,7 +423,7 @@ function App(props) {
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
-
+      /*
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
@@ -453,6 +453,7 @@ function App(props) {
           upper_bound: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData2(data)));
+      */
     }
   };
 

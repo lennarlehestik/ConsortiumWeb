@@ -972,8 +972,41 @@ function App(props) {
           category: "Chain acion",
           action: "User voted in individual poll.",
         });
-      } catch (err) {
-        actionpuccis(err);
+      } catch (error) {
+        //if (error.message.startsWith("TypeError: Cannot") == true) {
+        if (
+          error.message ==
+          "TypeError: Cannot read property 'message' of undefined"
+        ) {
+          actionpuccis(
+            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+          );
+          console.log(error.message);
+        } else if (
+          error.message.startsWith(
+            "the transaction was unable to complete by deadline"
+          ) == true
+        ) {
+          console.log(error.message);
+
+          actionpuccis(
+            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+          );
+        } else if (
+          error.message.startsWith("transaction declares authority" == true)
+        ) {
+          console.log(error.message);
+
+          actionpuccis("Please try restarting or reinstalling your wallet");
+        } else if (error.message == "Unable to sign the given transaction") {
+          actionpuccis(
+            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
+          );
+          console.log(error.message);
+        } else {
+          actionpuccis(error);
+          console.log(error.message);
+        }
       }
     } else {
       showModal();
@@ -1251,8 +1284,41 @@ function App(props) {
 
         sucessstake();
         //lita()
-      } catch (err) {
-        actionpuccis(err);
+      } catch (error) {
+        //if (error.message.startsWith("TypeError: Cannot") == true) {
+        if (
+          error.message ==
+          "TypeError: Cannot read property 'message' of undefined"
+        ) {
+          actionpuccis(
+            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+          );
+          console.log(error.message);
+        } else if (
+          error.message.startsWith(
+            "the transaction was unable to complete by deadline"
+          ) == true
+        ) {
+          console.log(error.message);
+
+          actionpuccis(
+            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+          );
+        } else if (
+          error.message.startsWith("transaction declares authority" == true)
+        ) {
+          console.log(error.message);
+
+          actionpuccis("Please try restarting or reinstalling your wallet");
+        } else if (error.message == "Unable to sign the given transaction") {
+          actionpuccis(
+            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
+          );
+          console.log(error.message);
+        } else {
+          actionpuccis(error);
+          console.log(error.message);
+        }
       }
     } else {
       showModal();
@@ -1315,8 +1381,41 @@ function App(props) {
         });
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
-      } catch (err) {
-        actionpuccis(err);
+      } catch (error) {
+        //if (error.message.startsWith("TypeError: Cannot") == true) {
+        if (
+          error.message ==
+          "TypeError: Cannot read property 'message' of undefined"
+        ) {
+          actionpuccis(
+            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+          );
+          console.log(error.message);
+        } else if (
+          error.message.startsWith(
+            "the transaction was unable to complete by deadline"
+          ) == true
+        ) {
+          console.log(error.message);
+
+          actionpuccis(
+            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+          );
+        } else if (
+          error.message.startsWith("transaction declares authority" == true)
+        ) {
+          console.log(error.message);
+
+          actionpuccis("Please try restarting or reinstalling your wallet");
+        } else if (error.message == "Unable to sign the given transaction") {
+          actionpuccis(
+            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
+          );
+          console.log(error.message);
+        } else {
+          actionpuccis(error);
+          console.log(error.message);
+        }
       }
     } else {
       showModal();
@@ -1365,7 +1464,7 @@ function App(props) {
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
-
+      /*
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
@@ -1379,7 +1478,7 @@ function App(props) {
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData1(data)));
-      /*
+     
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
