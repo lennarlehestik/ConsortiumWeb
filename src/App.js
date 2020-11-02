@@ -120,7 +120,7 @@ function makeint() {
   }
   */
 
-  result = Math.floor(Math.random() * 99999);
+  result = Math.floor(Math.random() * 999999);
   return result;
 
   document.getElementById("eos").textContent = result;
@@ -1353,7 +1353,43 @@ function App(props) {
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
-      /*
+    }
+
+    if (!votedata.rows[0] && scope == "krowcommcons") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "krowndactokn",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
+    if (!votedata.rows[0] && scope == "boidcommcons") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "boidcomtoken",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
+    /*
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
@@ -1384,7 +1420,6 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData2(data)));
       */
-    }
   };
 
   /* ANCHOR CONNECTION
