@@ -664,7 +664,7 @@ function App(props) {
         limit: 50,
         table_key: "pollkey",
         lower_bound: 0,
-        upper_bound: 100000,
+        upper_bound: 1000000,
       }),
     }).then((response) => response.json().then((data) => sortingalgo(data)));
 
@@ -1264,7 +1264,8 @@ function App(props) {
           "TypeError: Cannot read property 'message' of undefined"
         ) {
           actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            "If you have enough CPU, please try voting again, sometimes oracles get lost."
           );
           console.log(error.message);
         } else if (
@@ -1275,7 +1276,7 @@ function App(props) {
           console.log(error.message);
 
           actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            "If you have enough CPU, please try voting again, sometimes oracles get lost."
           );
         } else if (
           error.message.startsWith("transaction declares authority" == true)
@@ -1285,7 +1286,7 @@ function App(props) {
           actionpuccis("Please try restarting or reinstalling your wallet");
         } else if (error.message == "Unable to sign the given transaction") {
           actionpuccis(
-            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
+            "Please use Anchor to receive specific error. If you have enough CPU, try voting again, sometimes oracles get lost."
           );
           console.log(error.message);
         } else {
@@ -1566,18 +1567,11 @@ authorization: [
         };
         // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
         await activeUser.signTransaction(transaction, {
-          expireSeconds: 300,
-          blocksBehind: 3,
           broadcast: true,
+          expireSeconds: 300,
         });
-
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
-
-        ReactGA.event({
-          category: "Chain acion",
-          action: "User created a poll.",
-        });
       } catch (error) {
         //if (error.message.startsWith("TypeError: Cannot") == true) {
         if (
@@ -1585,7 +1579,8 @@ authorization: [
           "TypeError: Cannot read property 'message' of undefined"
         ) {
           actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
           );
           console.log(error.message);
         } else if (
@@ -1596,7 +1591,7 @@ authorization: [
           console.log(error.message);
 
           actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
           );
         } else if (
           error.message.startsWith("transaction declares authority" == true)
@@ -1606,7 +1601,7 @@ authorization: [
           actionpuccis("Please try restarting or reinstalling your wallet");
         } else if (error.message == "Unable to sign the given transaction") {
           actionpuccis(
-            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
+            "Please use Anchor to receive specific error. If you have enough CPU, try creating poll again, sometimes oracles get lost."
           );
           console.log(error.message);
         } else {
@@ -1711,12 +1706,7 @@ authorization: [
           expireSeconds: 300,
         });
         //alert("GREAT SUCCESS!")
-        window.location.reload(true);
-
-        ReactGA.event({
-          category: "Chain acion",
-          action: "User voted.",
-        });
+        window.location.reload(false);
       } catch (error) {
         //if (error.message.startsWith("TypeError: Cannot") == true) {
         if (
@@ -1724,7 +1714,8 @@ authorization: [
           "TypeError: Cannot read property 'message' of undefined"
         ) {
           actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            "If you have enough CPU, please try voting again, sometimes oracles get lost."
           );
           console.log(error.message);
         } else if (
@@ -1735,7 +1726,7 @@ authorization: [
           console.log(error.message);
 
           actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            "If you have enough CPU, please try voting again, sometimes oracles get lost."
           );
         } else if (
           error.message.startsWith("transaction declares authority" == true)
@@ -1745,7 +1736,7 @@ authorization: [
           actionpuccis("Please try restarting or reinstalling your wallet");
         } else if (error.message == "Unable to sign the given transaction") {
           actionpuccis(
-            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
+            "Please use Anchor to receive specific error. If you have enough CPU, try voting again, sometimes oracles get lost."
           );
           console.log(error.message);
         } else {
@@ -2410,7 +2401,7 @@ Swal.fire({
           data-html="true"
           data-for="signalprogress"
           data-tip={
-            "*your poll will be active for 3 days <br/><br /> *if your poll reaches the Poll reward threshold,<br /> at the end of the 3rd day you can get rewarded<br/> in GOVRN tokens <br/><br /> *tokens used to create the poll get <br /> get burned decreasing the Total Circulation"
+            "*your poll will be active for 7 days <br/><br /> *if your poll reaches the Poll reward threshold,<br /> at the end of the 7th day you can get rewarded<br/> in GOVRN tokens <br/><br /> *tokens used to create the poll get <br /> get burned decreasing the Total Circulation"
           }
         >
           <ReactTooltip
