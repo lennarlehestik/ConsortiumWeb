@@ -2122,7 +2122,7 @@ Swal.fire({
                 </a>
                 <a
                   style={{
-                    "margin-left": "23px",
+                    "margin-left": "15px",
                   }}
                 >
                   {stakeformatter(getrewardthreshold())} {tokensymbol()}
@@ -2149,7 +2149,6 @@ Swal.fire({
                       "margin-left": "2px",
                       "vertical-align": "top",
                       "margin-top": "-4px",
-
                       fontWeight: "bold",
                     }}
                   />
