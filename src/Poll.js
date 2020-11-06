@@ -357,7 +357,7 @@ function App(props) {
         limit: 50,
         table_key: "pollkey",
         lower_bound: 0,
-        upper_bound: 100000,
+        upper_bound: 1000000,
       }),
     })
       .then((response) => response.json().then((data) => setData(data)))
@@ -1427,7 +1427,7 @@ function App(props) {
       var commdata = communitydata.rows.filter(function (e) {
         return e.community == scope;
       });
-      return parseInt(commdata[0].toppoll * 0.2);
+      return parseInt(commdata[0].toppoll * 0.1);
     }
   };
 
@@ -1799,7 +1799,7 @@ function App(props) {
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * All time most popular poll of your community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.1 * All time most popular poll of your community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -1953,7 +1953,7 @@ function App(props) {
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward.<br/> (Poll reward threshold = 0.2 * All time most popular poll of your community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward.<br/> (Poll reward threshold = 0.1 * All time most popular poll of your community)"
                   }
                   style={{
                     fontWeight: "bold",

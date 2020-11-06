@@ -1808,7 +1808,7 @@ Swal.fire({
       var commdata = communitydata.rows.filter(function (e) {
         return e.community == scope;
       });
-      return parseInt(commdata[0].toppoll * 0.2);
+      return parseInt(commdata[0].toppoll * 0.1);
     }
   };
 
@@ -1885,7 +1885,7 @@ Swal.fire({
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * All time most popular Poll of your community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.1 * All time most popular Poll of your community)"
                   }
                   style={{
                     fontWeight: "bold",
@@ -2052,7 +2052,7 @@ Swal.fire({
                   data-html="true"
                   data-for="uus"
                   data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.2 * All time most popular Poll of your community)"
+                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.1 * All time most popular Poll of your community)"
                   }
                   style={{
                     fontWeight: "bold",
