@@ -30,7 +30,8 @@ const chain = {
   rpcEndpoints: [
     {
       protocol: "https",
-      host: "node1.eosdsp.com",
+      host: "dsp.eosdt.com",
+      //https://dsp.maltablock.org
       //host: "dsp.airdropsdac.com", https://node2.blockstartdsp.com"dsp.eosphere.io",https://dsp.eosdetroit.io,https://node1.eosdsp.com
       port: "",
     },
