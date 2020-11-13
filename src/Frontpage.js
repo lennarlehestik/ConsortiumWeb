@@ -539,7 +539,7 @@ function App(props) {
                         variant="body2"
                         color="textSecondary"
                         component="p"
-                        style={{ "margin-bottom": "10px" }}
+                        style={{ "margin-bottom": "10px", height: "50px" }}
                       >
                         {u.description.substring(0, 90)}
                         {u.description.length > 90 ? " ..." : ""}

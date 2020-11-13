@@ -2130,46 +2130,46 @@ Swal.fire({
                 </a>
                 <a
                   style={{
-                    "margin-left": "15px",
+                    "margin-left": "4px",
+                    float: "right",
                   }}
                 >
                   {stakeformatter(getrewardthreshold())} {tokensymbol()}
-                </a>
-
-                <a
-                  class="value"
-                  data-html="true"
-                  data-for="uus"
-                  data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.1 * All time most popular poll of your community)"
-                  }
-                  style={{
-                    fontWeight: "bold",
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faInfoCircle}
-                    style={{
-                      height: "14px",
-                      width: "14px",
-                      color: "black",
-                      opacity: "0.7",
-                      "margin-left": "2px",
-                      "vertical-align": "top",
-                      "margin-top": "-4px",
-                      fontWeight: "bold",
-                    }}
-                  />
-                  <ReactTooltip
-                    id="uus"
-                    type="dark"
-                    effect="solid"
-                    backgroundColor="black"
-                    place="left"
+                  <a
+                    class="value"
+                    data-html="true"
+                    data-for="uus"
+                    data-tip={
+                      "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.1 * All time most popular poll of your community)"
+                    }
                     style={{
                       fontWeight: "bold",
                     }}
-                  />{" "}
+                  >
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      style={{
+                        height: "14px",
+                        width: "14px",
+                        color: "black",
+                        opacity: "0.7",
+                        "margin-left": "2px",
+                        "vertical-align": "top",
+                        "margin-top": "-4px",
+                        fontWeight: "bold",
+                      }}
+                    />
+                    <ReactTooltip
+                      id="uus"
+                      type="dark"
+                      effect="solid"
+                      backgroundColor="black"
+                      place="left"
+                      style={{
+                        fontWeight: "bold",
+                      }}
+                    />{" "}
+                  </a>
                 </a>
               </div>
             </div>
@@ -2583,6 +2583,13 @@ const firstvotetime = creationdate + "Z";
                 component={Link}
                 to={"/"}
               ></Typography>
+              <Button
+                style={{ color: "inherit", "border-radius": "50px" }}
+                href={`https://pollhistory.consortium.vote/`}
+                target={"_blank"}
+              >
+                Expired polls
+              </Button>
               <Button
                 style={{ color: "inherit", "border-radius": "50px" }}
                 href={`${window.location}/Leaderboard`}
