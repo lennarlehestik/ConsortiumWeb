@@ -5,6 +5,7 @@ import App from "./App";
 import Poll from "./Poll";
 import Leaderboard from "./Leaderboard";
 import Frontpage from "./Frontpage";
+import History from "./history/History"
 import * as serviceWorker from "./serviceWorker";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 // UAL Required Imports
@@ -95,6 +96,7 @@ const routing = (
         appName={appName}
       >
         <Route path="/poll/:id/:scope" component={Poll} />
+        <Route path="/history/:scope" component={History} />
         <Route exact path="/community/:scope" component={App} />
         <Route
           exact

@@ -1,0 +1,66 @@
+
+.history-header {
+  background-color: #F4F4F4;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: white;
+}
+
+.item{
+  border-left: 2px solid #D2D2D2;
+  margin:5px;
+  padding-left:5px;
+}
+
+.card{
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+input{
+  border:solid 1px white;
+  border-radius:5px;
+  width:90px;
+  height:26px;
+  text-align:center;
+  background-color:#2C3339;
+  color:white;
+}
+
+select{
+  border:solid 1px white;
+  border-radius:5px;
+  width:140px;
+  height:30px;
+  background-color:#2C3339;
+  color:white;
+margin-top:5px;
+}
+.history-button{
+  border:solid 1px white;
+  border-radius:5px;
+  width:140px;
+  height:40px;
+  background-color: #6B7074;
+  color:white;
+margin-top:5px;
+}
+
+#progressbar {
+  background-color: #ECECED;
+  border-radius: 5px;
+  /* (height of inner div) / 2 + padding */
+}
+
+#progressbar>div {
+  background-color: #727A80;
+  height: 5px;
+  border-radius: 5px;
+}

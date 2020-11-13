@@ -1404,7 +1404,7 @@ function App(props) {
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData1(data)));
-      
+
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
@@ -2585,8 +2585,7 @@ const firstvotetime = creationdate + "Z";
               ></Typography>
               <Button
                 style={{ color: "inherit", "border-radius": "50px" }}
-                href={`https://pollhistory.consortium.vote/`}
-                target={"_blank"}
+                href={`${window.location.origin}/history/${scope}`}
               >
                 Expired polls
               </Button>
