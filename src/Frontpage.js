@@ -396,7 +396,7 @@ function App(props) {
   //#2A3747"
 
   return (
-    <div>
+    <div class ="frontpagefull">
       <div class="desktopmenu">
         <div className={classes.root}>
           <AppBar
