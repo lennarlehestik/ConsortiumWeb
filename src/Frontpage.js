@@ -137,10 +137,10 @@ function App(props) {
       return stakenumber;
     }
     if (stakenumber > 1000 && stakenumber < 1000000) {
-      return (stakenumber / 1000).toFixed(0) + " k";
+      return (stakenumber / 1000).toFixed(0) + "k";
     }
     if (stakenumber > 1000000) {
-      return (stakenumber / 1000000).toFixed(1) + " m";
+      return (stakenumber / 1000000).toFixed(1) + "m";
     }
   };
 
@@ -402,7 +402,11 @@ function App(props) {
           <AppBar
             position="fixed"
             color="transparent"
-            style={{ "background-color": "white", height: "64px" }}
+            style={{
+              "background-color": "white",
+              height: "64px",
+              "padding-bottom": "50px",
+            }}
           >
             <Toolbar>
               <IconButton component={Link} to={"/"}>
@@ -468,7 +472,10 @@ function App(props) {
                 label="Community name"
                 variant="outlined"
                 className="inputRounded"
-                style={{ backgroundColor: "white", borderRadius: "15px" }}
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: "15px",
+                }}
               />
             )}
           />

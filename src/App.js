@@ -1390,6 +1390,41 @@ function App(props) {
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
 
+    if (!votedata.rows[0] && scope == "conscommcons") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "consortiumlv",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+    if (!votedata.rows[0] && scope == "daddcommcons") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "dadgovernanc",
+          table: "stake2",
+          scope: "dadgovernanc",
+          lower_bound: displayaccountname(),
+          upper_bound: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
     /*
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",

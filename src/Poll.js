@@ -1464,6 +1464,7 @@ function App(props) {
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
+
       /*
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
@@ -1527,6 +1528,41 @@ function App(props) {
           code: "boidcomtoken",
           table: "accounts",
           scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
+    if (!votedata.rows[0] && scope == "conscommcons") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "consortiumlv",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+    if (!votedata.rows[0] && scope == "daddcommcons") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "dadgovernanc",
+          table: "stake2",
+          scope: "dadgovernanc",
+          lower_bound: displayaccountname(),
+          upper_bound: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
@@ -1729,7 +1765,7 @@ function App(props) {
             <div
               id="drop"
               class="dropdown-content"
-              style={{ "font-family": "Roboto" }}
+              style={{ "font-family": "roboto" }}
             >
               <div class="line">
                 <a class="identfier">
@@ -1737,7 +1773,7 @@ function App(props) {
                 </a>
               </div>
               <hr />
-              <div class="line" style={{ "font-weight": "bold" }}>
+              <div class="line" style={{ "font-weight": "600" }}>
                 <a class="identfier">Balance:</a>
                 <a class="value">{getmybalance()} GOVRN</a>
               </div>
@@ -1788,86 +1824,98 @@ function App(props) {
                 </a>
                 <a
                   style={{
-                    "margin-left": "23px",
+                    "margin-left": "4px",
+                    float: "right",
                   }}
                 >
                   {stakeformatter(getrewardthreshold())} {tokensymbol()}
-                </a>
-
-                <a
-                  class="value"
-                  data-html="true"
-                  data-for="uus"
-                  data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.1 * All time most popular poll of your community)"
-                  }
-                  style={{
-                    fontWeight: "bold",
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faInfoCircle}
-                    style={{
-                      height: "14px",
-                      width: "14px",
-                      color: "black",
-                      opacity: "0.7",
-                      "margin-left": "2px",
-                      "vertical-align": "top",
-                      "margin-top": "-4px",
-
-                      fontWeight: "bold",
-                    }}
-                  />
-                  <ReactTooltip
-                    id="uus"
-                    type="dark"
-                    effect="solid"
-                    backgroundColor="black"
-                    place="left"
+                  <a
+                    class="value"
+                    data-html="true"
+                    data-for="uus"
+                    data-tip={
+                      "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.1 * All time most popular poll of your community)"
+                    }
                     style={{
                       fontWeight: "bold",
                     }}
-                  />{" "}
+                  >
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      style={{
+                        height: "14px",
+                        width: "14px",
+                        color: "black",
+                        opacity: "0.7",
+                        "margin-left": "2px",
+                        "vertical-align": "top",
+                        "margin-top": "-4px",
+                        fontWeight: "bold",
+                      }}
+                    />
+                    <ReactTooltip
+                      id="uus"
+                      type="dark"
+                      effect="solid"
+                      backgroundColor="black"
+                      place="left"
+                      style={{
+                        fontWeight: "bold",
+                      }}
+                    />{" "}
+                  </a>
                 </a>
               </div>
             </div>
           )}
 
-          <Button color="inherit" onClick={() => logmeout()}>
+          <Button
+            color="inherit"
+            onClick={() => logmeout()}
+            style={{ "border-radius": "50px" }}
+          >
             Log out
           </Button>
-          <Button onClick={toggle} color="inherit" id="logoutname">
+          <Button
+            onClick={toggle}
+            color="inherit"
+            id="logoutname"
+            style={{ "border-radius": "50px" }}
+          >
             {displayaccountname()}
           </Button>
         </div>
         /*
 <div class="dropdown">
-  <button class="button">Menu item</button>
-  <div id="drop" class="dropdown-content">
-    <div class ="line">
-      <a class="identfier"><b>lennyaccount</b></a>
-    </div>
-    <div class ="line">
-      <a class="identfier">Balance</a>
-      <a class="value">45 GOVRN</a>
-    </div>
-    <div class ="line">
-      <a class="identfier">Voting power</a>
-      <a class="value">45 ATMOS</a>
-    </div>
-    <div class ="line">
-      <a class="identfier">Voting power reset</a>
-      <a class="value">5 hrs</a>
-    </div>
+<button class="button">Menu item</button>
+<div id="drop" class="dropdown-content">
+  <div class ="line">
+    <a class="identfier"><b>lennyaccount</b></a>
   </div>
+  <div class ="line">
+    <a class="identfier">Balance</a>
+    <a class="value">45 GOVRN</a>
+  </div>
+  <div class ="line">
+    <a class="identfier">Voting power</a>
+    <a class="value">45 ATMOS</a>
+  </div>
+  <div class ="line">
+    <a class="identfier">Voting power reset</a>
+    <a class="value">5 hrs</a>
+  </div>
+</div>
 </div>
 */
       );
     } else {
       //IF THERE IS NO SESSIONRESULT WE SHOW LOGIN BUTTON
       return (
-        <Button color="inherit" onClick={showModal}>
+        <Button
+          color="inherit"
+          onClick={showModal}
+          style={{ borderRadius: "15px" }}
+        >
           Log in
         </Button>
       );
@@ -2256,8 +2304,12 @@ function App(props) {
 
               <Button
                 style={{ color: "inherit", "border-radius": "50px" }}
-                component={Link}
-                to={"/Leaderboard"}
+                href={
+                  window.location.origin +
+                  "/community/" +
+                  scope +
+                  "/Leaderboard"
+                }
               >
                 Governor board
               </Button>
