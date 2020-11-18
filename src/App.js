@@ -48,6 +48,7 @@ import * as clipboard from "clipboard-polyfill/text";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { JsonRpc } from "eosjs/dist/eosjs-jsonrpc";
 import { Api } from "eosjs/dist/eosjs-api";
+import Chat from './Chat/Chat'
 //import { CosignAuthorityProvider } from "./CosignAuthorityProvider.js";
 
 //STYLES FOR EVERYTHING
@@ -3154,6 +3155,7 @@ const firstvotetime = creationdate + "Z";
             </div>
           );
         })}
+      <Chat scope={scope} user={displayaccountname()} style={{"z-index": "10"}}/>
       </div>
     </div>
   );
