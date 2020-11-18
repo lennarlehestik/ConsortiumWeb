@@ -396,7 +396,7 @@ function App(props) {
   //#2A3747"
 
   return (
-    <div class ="frontpagefull">
+    <div class="frontpagefull">
       <div class="desktopmenu">
         <div className={classes.root}>
           <AppBar
@@ -405,7 +405,6 @@ function App(props) {
             style={{
               "background-color": "white",
               height: "64px",
-              "padding-bottom": "50px",
             }}
           >
             <Toolbar>
