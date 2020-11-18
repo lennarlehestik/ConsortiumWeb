@@ -3155,7 +3155,7 @@ const firstvotetime = creationdate + "Z";
             </div>
           );
         })}
-      <Chat scope={scope} user={displayaccountname()} style={{"z-index": "10"}}/>
+      {displayaccountname() ? <Chat scope={scope} user={displayaccountname()} style={{"z-index": "10"}}/> : <div></div> }
       </div>
     </div>
   );
