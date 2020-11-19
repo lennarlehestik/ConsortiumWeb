@@ -42,6 +42,7 @@ function Chat(props) {
     }
     else if(!isOpened){
       setIsOpened(true)
+      setTimeout(() =>dummy.current.scrollIntoView({ behavior: 'smooth' }),500)
     }
   }
 
@@ -66,7 +67,6 @@ function Chat(props) {
     <div class="messages">
     <main>
       {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} sender={msg.sender}/>)}
-    <span ref={dummy}></span>
     </main>
     </div>
     <div class="inputform">
@@ -76,6 +76,7 @@ function Chat(props) {
 
       <button type="submit" disabled={!formValue} class="sendingbutton"><SendIcon /></button>
     </form>
+    <span ref={dummy}></span>
     </div>
     </div>
     </div>
