@@ -49,6 +49,8 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { JsonRpc } from "eosjs/dist/eosjs-jsonrpc";
 import { Api } from "eosjs/dist/eosjs-api";
 import Chat from "./Chat/Chat";
+import EditIcon from "@material-ui/icons/Edit";
+
 //import { CosignAuthorityProvider } from "./CosignAuthorityProvider.js";
 
 //STYLES FOR EVERYTHING
@@ -174,6 +176,14 @@ function App(props) {
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
+  const [show3, setShow3] = useState(false);
+
+  const [communitysubmission, setCommunitySubmission] = useState("");
+  const [descriptionsubmission, setDescriptionSubmission] = useState("");
+  const [symbolsubmission, setSymbolSubmission] = useState("");
+  const [backgroundsubmission, setBackgroundSubmission] = useState("");
+  const [supplysubmission, setSupplySubmission] = useState("");
+  const [logosubmission, setLogoSubmission] = useState("");
 
   const [accountname, setAccountName] = useState("");
 
@@ -305,12 +315,57 @@ function App(props) {
     }
   };
 
+  const description = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].description;
+    }
+  };
+
   const tokenurl = () => {
     if (communitydata.rows[0]) {
       var commdata = communitydata.rows.filter(function (e) {
         return e.community == scope;
       });
       return commdata[0].tokenurl;
+    }
+  };
+
+  const community = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].community;
+    }
+  };
+
+  const backurl = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].backgroundurl;
+    }
+  };
+
+  const communityname = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].communityname;
+    }
+  };
+
+  const circulation = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].totalcirculation;
     }
   };
 
@@ -391,6 +446,8 @@ function App(props) {
   const handleShow1 = () => setShow1(true);
   const handleClose2 = () => setShow2(false);
   const handleShow2 = () => setShow2(true);
+  const handleClose3 = () => setShow3(false);
+  const handleShow3 = () => setShow3(true);
 
   const [votekey, setVoteKey] = useState();
   const [votepollkey, setVotePollKey] = useState();
@@ -414,6 +471,10 @@ function App(props) {
       showModal();
     }
   };
+
+  useEffect(() => {
+    setDescriptionSubmission(description());
+  }, []);
 
   useEffect(() => {
     fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
@@ -516,7 +577,27 @@ function App(props) {
           >
             <Typography style={{ fontSize: "20px", "font-weight": "500" }}>
               {commdata[0].communityname}
+
+              <IconButton
+                onClick={handleShow3}
+                style={{
+                  opacity: 0.6,
+                  width: "33px",
+                  height: "33px",
+                  "margin-bottom": "4px",
+                }}
+              >
+                <EditIcon
+                  style={{
+                    opacity: 0.8,
+                    width: "20px",
+                    height: "20px",
+                    "margin-left": "0px",
+                  }}
+                />
+              </IconButton>
             </Typography>
+
             <Typography
               variant="body2"
               color="textSecondary"
@@ -864,7 +945,20 @@ function App(props) {
       return commdata[0].staked;
     }
   };
+  /*
+  const description = () => {
+    if (communitydata.rows[0]) {
+      var commdata = communitydata.rows.filter(function (e) {
+        return e.community == scope;
+      });
+      return commdata[0].description;
+    }
+  };
 
+  const [descriptionsubmission, setDescriptionSubmission] = useState(
+    description()
+  );
+*/
   const getstake = () => {
     //DOES ALL THE FETCHING FOR THE STAKE MODAL
     fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
@@ -1971,6 +2065,100 @@ Swal.fire({
     }
   };
 
+  const modcommunity = async () => {
+    const {
+      ual: { login, displayError, showModal },
+    } = props;
+    // Via static contextType = UALContext, access to the activeUser object on this.context is now available
+    const {
+      ual: { activeUser },
+    } = props;
+
+    const uniquename = makeid();
+
+    if (activeUser) {
+      loadingpoll();
+      try {
+        const transaction = {
+          actions: [
+            {
+              //account: "consortiumtt",
+              //name: "addcommuus",
+              account: "consortiumtt",
+              name: "modcommuus",
+              authorization: [
+                {
+                  actor: displayaccountname(), // use account that was logged in
+                  permission: "active",
+                },
+              ],
+              data: {
+                communityname: communitysubmission,
+                //community: community(),
+                community: "haribeddjr1m",
+                description: descriptionsubmission,
+                backgroundurl: backgroundsubmission,
+                tokenurl: logosubmission,
+                tokensym: symbolsubmission,
+                creator: displayaccountname(),
+                totalcirculation: supplysubmission,
+              },
+            },
+          ],
+        };
+        // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
+        await activeUser.signTransaction(transaction, {
+          broadcast: true,
+          expireSeconds: 300,
+        });
+        //alert("GREAT SUCCESS!")
+        window.location.reload(false);
+        ReactGA.event({
+          category: "Chain acion",
+          action: "User added comm.",
+        });
+      } catch (error) {
+        //if (error.message.startsWith("TypeError: Cannot") == true) {
+        if (
+          error.message ==
+          "TypeError: Cannot read property 'message' of undefined"
+        ) {
+          actionpuccis(
+            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
+          );
+          console.log(error.message);
+        } else if (
+          error.message.startsWith(
+            "the transaction was unable to complete by deadline"
+          ) == true
+        ) {
+          console.log(error.message);
+
+          actionpuccis(
+            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
+          );
+        } else if (
+          error.message.startsWith("transaction declares authority" == true)
+        ) {
+          console.log(error.message);
+
+          actionpuccis("Please try restarting or reinstalling your wallet");
+        } else if (error.message == "Unable to sign the given transaction") {
+          actionpuccis(
+            "Please use Anchor to receive specific error. If you have enough CPU, try creating poll again, sometimes oracles get lost."
+          );
+          console.log(error.message);
+        } else {
+          actionpuccis(error);
+          console.log(error.message);
+        }
+      }
+    } else {
+      showModal();
+    }
+  };
+
   /* LOOP FOR POLL OPTIONS IN CARDS */
   const polloptions = (votes, answers, pollkey) => {
     return Object.keys(votes).map((key) => (
@@ -2482,6 +2670,47 @@ Swal.fire({
     );
   };
 
+  const modinfo = () => {
+    return (
+      <div>
+        <Typography
+          style={{
+            fontSize: "22px",
+            "font-weight": "bold",
+            "margin-left": "7px",
+            "margin-bottom": "5px",
+          }}
+          data-html="true"
+          data-for="signalprogress"
+          data-tip={
+            "* Only account that added the community and consortiumlv can modify the info"
+          }
+        >
+          <ReactTooltip
+            id="signalprogress"
+            type="dark"
+            effect="solid"
+            backgroundColor="black"
+            place="bottom"
+          />
+          Community info modification
+          <FontAwesomeIcon
+            icon={faInfoCircle}
+            style={{
+              height: "16px",
+              width: "16px",
+              color: "black",
+              "margin-bottom": "6px",
+
+              opacity: "0.7",
+              "margin-left": "2px",
+            }}
+          />
+        </Typography>
+      </div>
+    );
+  };
+
   const votingfield = (text, i) => {
     votinglist[i] = text;
   };
@@ -2777,6 +3006,216 @@ const firstvotetime = creationdate + "Z";
               >
                 {" "}
                 Polls are stored fully
+                <a href="https://bloks.io/account/consortiumlv"> on-chain</a>
+              </Typography>
+            </center>
+          </Modal>
+
+          <Modal show={show3} onHide={handleClose3} centered>
+            <Modal.Header closeButton>{modinfo()}</Modal.Header>
+            <Modal.Body>
+              <a
+                style={{
+                  "font-weight": "500",
+                }}
+                data-html="true"
+                data-for="jobu"
+                data-tip={"Please insert name of the community"}
+              >
+                <TextField
+                  style={{ width: "97%", margin: "7px" }}
+                  label={"Community name"}
+                  onBlur={(text) => setCommunitySubmission(text.target.value)}
+                  defaultValue={communityname()}
+                  id="outlined-basic"
+                  variant="outlined"
+                  autoComplete="off"
+                />
+                <ReactTooltip
+                  id="jobu"
+                  type="dark"
+                  effect="solid"
+                  backgroundColor="black"
+                  place="top"
+                />
+              </a>
+
+              <a
+                style={{
+                  "font-weight": "500",
+                }}
+                data-html="true"
+                data-for="jobu4"
+                data-tip={
+                  "Please insert community description that will partly appear on the frontpage and the community page"
+                }
+              >
+                <TextField
+                  style={{ width: "97%", margin: "7px" }}
+                  label={"Community description"}
+                  onBlur={(text) => setDescriptionSubmission(text.target.value)}
+                  defaultValue={description()}
+                  id="outlined-basic"
+                  variant="outlined"
+                  autoComplete="off"
+                />
+                <ReactTooltip
+                  id="jobu4"
+                  type="dark"
+                  effect="solid"
+                  backgroundColor="black"
+                  place="top"
+                />
+              </a>
+
+              <a
+                style={{
+                  "font-weight": "500",
+                }}
+                data-html="true"
+                data-for="jobu3"
+                data-tip={
+                  "Please insert the symbol of the token that will be used for voting"
+                }
+              >
+                <TextField
+                  style={{ width: "97%", margin: "7px" }}
+                  label={"Token symbol"}
+                  onBlur={(text) => setSymbolSubmission(text.target.value)}
+                  id="outlined-basic"
+                  defaultValue={tokensymbol()}
+                  variant="outlined"
+                  autoComplete="off"
+                />
+                <ReactTooltip
+                  id="jobu3"
+                  type="dark"
+                  effect="solid"
+                  backgroundColor="black"
+                  place="top"
+                />
+              </a>
+
+              <a
+                style={{
+                  "font-weight": "500",
+                }}
+                data-html="true"
+                data-for="jobu2"
+                data-tip={
+                  "Please provide URL for the community image. The correct resolution is 1500x450. We ourselves use pinata.cloud to upload the images to IPFS."
+                }
+              >
+                <TextField
+                  style={{ width: "97%", margin: "7px" }}
+                  label={"Community background image"}
+                  onBlur={(text) => setBackgroundSubmission(text.target.value)}
+                  defaultValue={backurl()}
+                  id="outlined-basic"
+                  variant="outlined"
+                  autoComplete="off"
+                />
+              </a>
+              <ReactTooltip
+                id="jobu2"
+                type="dark"
+                effect="solid"
+                backgroundColor="black"
+                place="top"
+              />
+
+              <a
+                style={{
+                  "font-weight": "500",
+                }}
+                data-html="true"
+                data-for="jobu22"
+                data-tip={
+                  "Please provide URL for the token logo. You can download the image from Newdex or Defibox and use pinata.cloud to upload the image to IPFS."
+                }
+              >
+                <TextField
+                  style={{ width: "97%", margin: "7px" }}
+                  label={"Token logo"}
+                  onBlur={(text) => setLogoSubmission(text.target.value)}
+                  defaultValue={tokenurl()}
+                  id="outlined-basic"
+                  variant="outlined"
+                  autoComplete="off"
+                />
+                <ReactTooltip
+                  id="jobu22"
+                  type="dark"
+                  effect="solid"
+                  backgroundColor="black"
+                  place="top"
+                />
+              </a>
+
+              <a
+                style={{
+                  "font-weight": "500",
+                }}
+                data-html="true"
+                data-for="jobu1"
+                data-tip={
+                  "Please insert the total circulating supply of the token that will be used for voting."
+                }
+              >
+                <TextField
+                  style={{ width: "97%", margin: "7px" }}
+                  label={"Total circulating supply"}
+                  onBlur={(text) => setSupplySubmission(text.target.value)}
+                  defaultValue={circulation()}
+                  id="outlined-basic"
+                  variant="outlined"
+                  autoComplete="off"
+                />
+                <ReactTooltip
+                  id="jobu1"
+                  type="dark"
+                  effect="solid"
+                  backgroundColor="black"
+                  place="top"
+                />
+              </a>
+              <br />
+
+              <center>
+                <BootstrapButton
+                  variant="dark"
+                  style={{
+                    "font-weight": "bold",
+                    borderRadius: "15px",
+                    height: "38px",
+                    fontSize: "15px",
+                    width: "97%",
+                    "margin-top": "10px",
+                  }}
+                  onClick={() => modcommunity()}
+                >
+                  Modify
+                </BootstrapButton>
+              </center>
+            </Modal.Body>
+            <hr
+              style={{
+                width: "90%",
+                "margin-top": "9px",
+                "margin-bottom": "10px",
+              }}
+            />
+            <center>
+              {" "}
+              <Typography
+                style={{
+                  fontSize: "12px",
+                  "margin-bottom": "16px",
+                  "font-weight": "bold",
+                }}
+              >
+                {" "}
+                Community data is stored fully
                 <a href="https://bloks.io/account/consortiumlv"> on-chain</a>
               </Typography>
             </center>

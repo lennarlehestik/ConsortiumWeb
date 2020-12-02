@@ -28,6 +28,7 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import ReactGA from "react-ga";
 import * as clipboard from "clipboard-polyfill/text";
 import { Modal } from "react-bootstrap";
+import Input, { InputLabel, InputAdornment } from "@material-ui/core/Input";
 
 import {
   faTelegram,
@@ -107,8 +108,12 @@ function App(props) {
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
-  const [questionsubmission, setQuestionSubmission] = useState("");
-  const [questiondescription, setQuestionDescription] = useState("");
+  const [communitysubmission, setCommunitySubmission] = useState("");
+  const [descriptionsubmission, setDescriptionSubmission] = useState("");
+  const [symbolsubmission, setSymbolSubmission] = useState("");
+  const [backgroundsubmission, setBackgroundSubmission] = useState("");
+  const [supplysubmission, setSupplySubmission] = useState("");
+  const [logosubmission, setLogoSubmission] = useState("");
 
   const AppBarOffset = () => {
     return <div className={classes.offset} />;
@@ -158,6 +163,12 @@ function App(props) {
 
   const handleClose = () => {
     setShow(false);
+    setCommunitySubmission("");
+    setDescriptionSubmission("");
+    setSymbolSubmission("");
+    setBackgroundSubmission("");
+    setSupplySubmission("");
+    setLogoSubmission("");
   };
 
   const handleShow = () => setShow(true);
@@ -191,6 +202,19 @@ function App(props) {
       return 375000000 - totalcirc;
     }
   };
+
+  function makeid() {
+    var result = "";
+    var characters = "abcdefghijklmnopqrstuvwxyz1234";
+    var charactersLength = characters.length;
+    for (var i = 0; i < 12; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+
+    document.getElementById("eos").textContent = result;
+  }
 
   const halvingdivider = () => {
     if (totalcircu.rows[0]) {
@@ -317,7 +341,7 @@ function App(props) {
   const actionpuccis = (err) => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "middle",
       showConfirmButton: false,
       timer: 5000,
       timerProgressBar: true,
@@ -335,7 +359,7 @@ function App(props) {
   const loadingpoll = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "middle",
       showConfirmButton: false,
       timer: 35000,
       timerProgressBar: true,
@@ -359,6 +383,8 @@ function App(props) {
       ual: { activeUser },
     } = props;
 
+    const uniquename = makeid();
+
     if (activeUser) {
       loadingpoll();
       try {
@@ -367,8 +393,8 @@ function App(props) {
             {
               //account: "consortiumtt",
               //name: "addcommuus",
-              account: "consortiumlv",
-              name: "createpollz",
+              account: "consortiumtt",
+              name: "addcommuus",
               authorization: [
                 {
                   actor: displayaccountname(), // use account that was logged in
@@ -376,15 +402,17 @@ function App(props) {
                 },
               ],
               data: {
-                question: "questionsubmission",
-                answers: ["votinglist"],
-                totalvote: [2],
-                community: "pedepedepede",
+                communityname: communitysubmission,
+                community: uniquename,
+                description: descriptionsubmission,
+                backgroundurl: backgroundsubmission,
+                tokenurl: logosubmission,
+                tokensymbol: symbolsubmission,
+                fetch1: ["empty"],
+                fetch2: ["empty"],
+                fetch3: ["empty"],
                 creator: displayaccountname(),
-                description: "questiondescription",
-                uniqueurl: "uniqueurl",
-                schedname: "pedepedepede",
-                pollkey: 2,
+                totalcirculation: supplysubmission,
               },
             },
           ],
@@ -398,7 +426,7 @@ function App(props) {
         window.location.reload(false);
         ReactGA.event({
           category: "Chain acion",
-          action: "User created a poll.",
+          action: "User added comm.",
         });
       } catch (error) {
         //if (error.message.startsWith("TypeError: Cannot") == true) {
@@ -518,17 +546,17 @@ function App(props) {
             "margin-bottom": "5px",
           }}
           data-html="true"
-          data-for="signalprogress"
+          data-for="comad"
           data-tip={
-            "* After you add the community it will immediately appear on the frontpage of Consortium. <br/><br /> * Oracles will still have to be configured on the backend to enable voting and poll creation. <br/><br /> * Community of any social organization can be added, but please note that in the current Phase 2 we are only able to <br /> enable voting for communities that are storing their tokens on the EOS mainnet <br/><br /> * The more GOVRN is staked for the community the higher the priority for configuration. <br /> For instance, if Ethereum communities will have the most GOVRN staked, that will serve as a signal<br /> to Consortium DAC that this chain should be supported next."
+            "* After you add the community it will immediately appear on the frontpage of Consortium. <br/><br /> * Oracles will still have to be configured on the backend to enable voting and poll creation. <br/><br /> * Community of any social organization can be added, but please note that in the current Phase 2 <br /> we are only able to enable voting for communities that are storing their tokens on the EOS mainnet. <br/><br /> * The more GOVRN is staked for the community the higher the priority for configuration. <br /> For instance, if Ethereum communities will have the most GOVRN staked, that will serve <br /> as a signal for Consortium DAC that this chain should be supported next. <br/><br /> *Any social organization can acquire GOVRN and stake it for their community to signal <br/> willingness to have mutual project with Consortium DAC."
           }
         >
           <ReactTooltip
-            id="signalprogress"
+            id="comad"
             type="dark"
             effect="solid"
             backgroundColor="black"
-            place="right"
+            place="bottom"
           />
           Community addition
           <FontAwesomeIcon
@@ -554,6 +582,42 @@ function App(props) {
           {" "}
           Addition cost: {cost} GOVRN
         </a>
+        <br />
+
+        <a
+          style={{
+            "font-weight": "500",
+            opacity: "0.5",
+            "margin-left": "7px",
+          }}
+        >
+          Affiliate reward: 2%
+        </a>
+        <ReactTooltip
+          id="afrew"
+          type="dark"
+          effect="solid"
+          backgroundColor="black"
+          place="bottom"
+        />
+        <FontAwesomeIcon
+          icon={faInfoCircle}
+          style={{
+            height: "16px",
+            width: "16px",
+            color: "black",
+            "margin-bottom": "6px",
+
+            opacity: "0.6",
+            "margin-left": "2px",
+            "font-weight": "600",
+          }}
+          data-html="true"
+          data-for="afrew"
+          data-tip={
+            "Affiliate reward is transferred automatically to the account that added the community <br/><br /> Reward amount (GOVRN) = All the Vote and Poll rewards community generates * Affiliate reward (%)"
+          }
+        />
       </div>
     );
   };
@@ -660,68 +724,168 @@ function App(props) {
         <Modal show={show} onHide={handleClose} centered>
           <Modal.Header closeButton>{pollcost(pollcostarv())}</Modal.Header>
           <Modal.Body>
-            <TextField
-              style={{ width: "97%", margin: "7px" }}
-              label={"Community name"}
-              onBlur={(text) => setQuestionSubmission(text.target.value)}
-              id="outlined-basic"
-              variant="outlined"
-            />
-            <TextField
-              style={{ width: "97%", margin: "7px", colour: "black" }}
-              label={"Community identifier"}
-              onBlur={(text) => setQuestionDescription(text.target.value)}
-              id="outlined-basic"
-              variant="outlined"
-            />
-            <TextField
-              style={{ width: "97%", margin: "7px", colour: "black" }}
-              label={"Community description"}
-              onBlur={(text) => setQuestionDescription(text.target.value)}
-              id="outlined-basic"
-              variant="outlined"
-            />
-            <TextField
-              style={{ width: "97%", margin: "7px", colour: "black" }}
-              label={"Token symbol"}
-              onBlur={(text) => setQuestionDescription(text.target.value)}
-              id="outlined-basic"
-              variant="outlined"
-            />
-            <TextField
-              style={{ width: "97%", margin: "7px", colour: "black" }}
-              label={"Token contract"}
-              onBlur={(text) => setQuestionDescription(text.target.value)}
-              id="outlined-basic"
-              variant="outlined"
-            />
-            <TextField
-              style={{ width: "97%", margin: "7px", colour: "black" }}
-              label={"Total circulating supply"}
-              onBlur={(text) => setQuestionDescription(text.target.value)}
-              id="outlined-basic"
-              variant="outlined"
+            <a
+              style={{
+                "font-weight": "500",
+              }}
+              data-html="true"
+              data-for="jobu"
+              data-tip={"Please insert name of the community"}
+            >
+              <TextField
+                style={{ width: "97%", margin: "7px" }}
+                label={"Community name"}
+                onBlur={(text) => setCommunitySubmission(text.target.value)}
+                id="outlined-basic"
+                variant="outlined"
+                autoComplete="off"
+              />
+              <ReactTooltip
+                id="jobu"
+                type="dark"
+                effect="solid"
+                backgroundColor="black"
+                place="top"
+              />
+            </a>
+
+            <a
+              style={{
+                "font-weight": "500",
+              }}
+              data-html="true"
+              data-for="jobu4"
+              data-tip={
+                "Please insert community description that will partly appear on the frontpage and the community page"
+              }
+            >
+              <TextField
+                style={{ width: "97%", margin: "7px" }}
+                label={"Community description"}
+                onBlur={(text) => setDescriptionSubmission(text.target.value)}
+                id="outlined-basic"
+                variant="outlined"
+                autoComplete="off"
+              />
+              <ReactTooltip
+                id="jobu4"
+                type="dark"
+                effect="solid"
+                backgroundColor="black"
+                place="top"
+              />
+            </a>
+
+            <a
+              style={{
+                "font-weight": "500",
+              }}
+              data-html="true"
+              data-for="jobu3"
+              data-tip={
+                "Please insert the symbol of the token that will be used for voting"
+              }
+            >
+              <TextField
+                style={{ width: "97%", margin: "7px" }}
+                label={"Token symbol"}
+                onBlur={(text) => setSymbolSubmission(text.target.value)}
+                id="outlined-basic"
+                variant="outlined"
+                autoComplete="off"
+              />
+              <ReactTooltip
+                id="jobu3"
+                type="dark"
+                effect="solid"
+                backgroundColor="black"
+                place="top"
+              />
+            </a>
+
+            <a
+              style={{
+                "font-weight": "500",
+              }}
+              data-html="true"
+              data-for="jobu2"
+              data-tip={
+                "Please provide URL for the community image. The correct resolution is 1500x450. We ourselves use pinata.cloud to upload the images to IPFS."
+              }
+            >
+              <TextField
+                style={{ width: "97%", margin: "7px" }}
+                label={"Community background image"}
+                onBlur={(text) => setBackgroundSubmission(text.target.value)}
+                id="outlined-basic"
+                variant="outlined"
+                autoComplete="off"
+              />
+            </a>
+            <ReactTooltip
+              id="jobu2"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="top"
             />
 
+            <a
+              style={{
+                "font-weight": "500",
+              }}
+              data-html="true"
+              data-for="jobu22"
+              data-tip={
+                "Please provide URL for the token logo. You can download the image from Newdex or Defibox and use pinata.cloud to upload the image to IPFS."
+              }
+            >
+              <TextField
+                style={{ width: "97%", margin: "7px" }}
+                label={"Token logo"}
+                onBlur={(text) => setLogoSubmission(text.target.value)}
+                id="outlined-basic"
+                variant="outlined"
+                autoComplete="off"
+              />
+              <ReactTooltip
+                id="jobu22"
+                type="dark"
+                effect="solid"
+                backgroundColor="black"
+                place="top"
+              />
+            </a>
+
+            <a
+              style={{
+                "font-weight": "500",
+              }}
+              data-html="true"
+              data-for="jobu1"
+              data-tip={
+                "Please insert the total circulating supply of the token that will be used for voting."
+              }
+            >
+              <TextField
+                style={{ width: "97%", margin: "7px" }}
+                label={"Total circulating supply"}
+                onBlur={(text) => setSupplySubmission(text.target.value)}
+                id="outlined-basic"
+                variant="outlined"
+                autoComplete="off"
+              />
+              <ReactTooltip
+                id="jobu1"
+                type="dark"
+                effect="solid"
+                backgroundColor="black"
+                place="top"
+              />
+            </a>
             <br />
 
             <center>
-              <BootstrapButton
-                variant="outline-dark"
-                style={{
-                  "font-weight": "bold",
-                  borderRadius: "15px",
-                  height: "38px",
-                  fontSize: "15px",
-                  width: "97%",
-                  "margin-top": "10px",
-                }}
-                //onClick={() => addvotingfield()}
-              >
-                Add option
-              </BootstrapButton>
-              <br />
-
               <BootstrapButton
                 variant="dark"
                 style={{
@@ -734,7 +898,7 @@ function App(props) {
                 }}
                 onClick={() => addcommunity()}
               >
-                Create poll
+                Add community
               </BootstrapButton>
             </center>
           </Modal.Body>
@@ -755,7 +919,7 @@ function App(props) {
               }}
             >
               {" "}
-              Polls are stored fully
+              Community data is stored fully
               <a href="https://bloks.io/account/consortiumlv"> on-chain</a>
             </Typography>
           </center>
