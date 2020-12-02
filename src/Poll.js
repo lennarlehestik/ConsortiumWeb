@@ -44,6 +44,7 @@ import ReactGA from "react-ga";
 import * as clipboard from "clipboard-polyfill/text";
 import AccountBalanceRoundedIcon from "@material-ui/icons/AccountBalanceRounded";
 import OpenInBrowserRoundedIcon from "@material-ui/icons/OpenInBrowserRounded";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -171,6 +172,24 @@ function App(props) {
     setVotingList(["", ""]);
     setQuestionSubmission("");
     setQuestionDescription("");
+  };
+
+  const loadingsdelpol = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 10000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "info",
+      title: "Opening wallet to delete the poll",
+    });
   };
 
   const sucessstake = () => {
@@ -667,22 +686,45 @@ function App(props) {
                       </Avatar>
                     }
                     action={
-                      <IconButton
-                        aria-label="settings"
-                        data-html="true"
-                        data-for="pede3"
-                        data-tip={"Get poll url"}
-                        onClick={() => getpollurl(u.pollkey, u.uniqueurl)}
-                      >
-                        <ShareIcon style={{ opacity: 0.8 }} />
-                        <ReactTooltip
-                          id="pede3"
-                          type="dark"
-                          effect="solid"
-                          backgroundColor="black"
-                          place="bottom"
-                        />
-                      </IconButton>
+                      <div>
+                        <IconButton
+                          aria-label="settings"
+                          data-html="true"
+                          data-for="pede3"
+                          onClick={() => getpollurl(u.pollkey, u.uniqueurl)}
+                        >
+                          <ShareIcon style={{ opacity: 0.8 }} />
+                          <ReactTooltip
+                            id="pede3"
+                            type="dark"
+                            effect="solid"
+                            backgroundColor="black"
+                            place="bottom"
+                          />
+                        </IconButton>
+
+                        <IconButton
+                          aria-label="settings"
+                          data-html="true"
+                          data-for="pede3"
+                          onClick={() => finishpoll(u.pollkey)}
+                        >
+                          <HighlightOffIcon
+                            style={{
+                              opacity: 0.8,
+                              width: "25px",
+                              height: "25px",
+                            }}
+                          />
+                          <ReactTooltip
+                            id="pede3"
+                            type="dark"
+                            effect="solid"
+                            backgroundColor="black"
+                            place="bottom"
+                          />
+                        </IconButton>
+                      </div>
                     }
                     title={u.creator}
                     subheader={gettimediff(u.timecreated)}
@@ -916,6 +958,91 @@ function App(props) {
   };
 
   /* ASK TO SIGN AND BROADCAST TO CHAIN */
+
+  const finishpoll = async (pollkey) => {
+    const {
+      ual: { login, displayError, showModal },
+    } = props;
+    // Via static contextType = UALContext, access to the activeUser object on this.context is now available
+    const {
+      ual: { activeUser },
+    } = props;
+    if (activeUser) {
+      loadingsdelpol();
+      try {
+        const transaction = {
+          actions: [
+            {
+              account: "consortiumlv",
+              name: "deletepoll",
+              authorization: [
+                {
+                  actor: displayaccountname(), // use account that was logged in
+                  permission: "active",
+                },
+              ],
+              data: {
+                pollkey: pollkey,
+                creator: displayaccountname(),
+                community: scope,
+              },
+            },
+          ],
+        };
+        // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
+        await activeUser.signTransaction(transaction, {
+          expireSeconds: 300,
+          blocksBehind: 3,
+          broadcast: true,
+        });
+
+        //alert("GREAT SUCCESS!")
+        window.location.reload(false);
+
+        ReactGA.event({
+          category: "Chain acion",
+          action: "User deleted a poll.",
+        });
+      } catch (error) {
+        //if (error.message.startsWith("TypeError: Cannot") == true) {
+        if (
+          error.message ==
+          "TypeError: Cannot read property 'message' of undefined"
+        ) {
+          actionpuccis(
+            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+          );
+          console.log(error.message);
+        } else if (
+          error.message.startsWith(
+            "the transaction was unable to complete by deadline"
+          ) == true
+        ) {
+          console.log(error.message);
+
+          actionpuccis(
+            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
+          );
+        } else if (
+          error.message.startsWith("transaction declares authority" == true)
+        ) {
+          console.log(error.message);
+
+          actionpuccis("Please try restarting or reinstalling your wallet");
+        } else if (error.message == "Unable to sign the given transaction") {
+          actionpuccis(
+            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
+          );
+          console.log(error.message);
+        } else {
+          actionpuccis(error);
+          console.log(error.message);
+        }
+      }
+    } else {
+      showModal();
+    }
+  };
 
   const vote = async (option, pollkey) => {
     const {

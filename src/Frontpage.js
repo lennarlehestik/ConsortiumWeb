@@ -27,6 +27,7 @@ import ReactTooltip from "react-tooltip";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import ReactGA from "react-ga";
 import * as clipboard from "clipboard-polyfill/text";
+import { Modal } from "react-bootstrap";
 
 import {
   faTelegram,
@@ -103,6 +104,11 @@ function App(props) {
   const [totalstaked, setTotalStaked] = useState({ rows: [] });
   const [isOpened, setIsOpened] = useState(true);
   const [totalcircu, setTotalCircu] = useState({ rows: [] });
+  const [show, setShow] = useState(false);
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
+  const [questionsubmission, setQuestionSubmission] = useState("");
+  const [questiondescription, setQuestionDescription] = useState("");
 
   const AppBarOffset = () => {
     return <div className={classes.offset} />;
@@ -149,6 +155,16 @@ function App(props) {
       return Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0]));
     }
   };
+
+  const handleClose = () => {
+    setShow(false);
+  };
+
+  const handleShow = () => setShow(true);
+  const handleClose1 = () => setShow1(false);
+  const handleShow1 = () => setShow1(true);
+  const handleClose2 = () => setShow2(false);
+  const handleShow2 = () => setShow2(true);
 
   const tonexthalving = (totalcirc) => {
     if (totalcirc < 100000000) {
@@ -298,6 +314,134 @@ function App(props) {
     );
   }, totalstaked["rows"][0]);
 
+  const actionpuccis = (err) => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 5000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "error",
+      title: err,
+    });
+  };
+
+  const loadingpoll = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 35000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "info",
+      title: "Opening wallet to confirm addition of a community.",
+    });
+  };
+
+  const addcommunity = async () => {
+    const {
+      ual: { login, displayError, showModal },
+    } = props;
+    // Via static contextType = UALContext, access to the activeUser object on this.context is now available
+    const {
+      ual: { activeUser },
+    } = props;
+
+    if (activeUser) {
+      loadingpoll();
+      try {
+        const transaction = {
+          actions: [
+            {
+              //account: "consortiumtt",
+              //name: "addcommuus",
+              account: "consortiumlv",
+              name: "createpollz",
+              authorization: [
+                {
+                  actor: displayaccountname(), // use account that was logged in
+                  permission: "active",
+                },
+              ],
+              data: {
+                question: "questionsubmission",
+                answers: ["votinglist"],
+                totalvote: [2],
+                community: "pedepedepede",
+                creator: displayaccountname(),
+                description: "questiondescription",
+                uniqueurl: "uniqueurl",
+                schedname: "pedepedepede",
+                pollkey: 2,
+              },
+            },
+          ],
+        };
+        // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
+        await activeUser.signTransaction(transaction, {
+          broadcast: true,
+          expireSeconds: 300,
+        });
+        //alert("GREAT SUCCESS!")
+        window.location.reload(false);
+        ReactGA.event({
+          category: "Chain acion",
+          action: "User created a poll.",
+        });
+      } catch (error) {
+        //if (error.message.startsWith("TypeError: Cannot") == true) {
+        if (
+          error.message ==
+          "TypeError: Cannot read property 'message' of undefined"
+        ) {
+          actionpuccis(
+            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
+            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
+          );
+          console.log(error.message);
+        } else if (
+          error.message.startsWith(
+            "the transaction was unable to complete by deadline"
+          ) == true
+        ) {
+          console.log(error.message);
+
+          actionpuccis(
+            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
+          );
+        } else if (
+          error.message.startsWith("transaction declares authority" == true)
+        ) {
+          console.log(error.message);
+
+          actionpuccis("Please try restarting or reinstalling your wallet");
+        } else if (error.message == "Unable to sign the given transaction") {
+          actionpuccis(
+            "Please use Anchor to receive specific error. If you have enough CPU, try creating poll again, sometimes oracles get lost."
+          );
+          console.log(error.message);
+        } else {
+          actionpuccis(error);
+          console.log(error.message);
+        }
+      }
+    } else {
+      showModal();
+    }
+  };
+
   /* ANCHOR CONNECTION */
 
   /*
@@ -363,6 +507,57 @@ function App(props) {
     }
   };
 
+  const pollcost = (cost) => {
+    return (
+      <div>
+        <Typography
+          style={{
+            fontSize: "22px",
+            "font-weight": "bold",
+            "margin-left": "7px",
+            "margin-bottom": "5px",
+          }}
+          data-html="true"
+          data-for="signalprogress"
+          data-tip={
+            "* After you add the community it will immediately appear on the frontpage of Consortium. <br/><br /> * Oracles will still have to be configured on the backend to enable voting and poll creation. <br/><br /> * Community of any social organization can be added, but please note that in the current Phase 2 we are only able to <br /> enable voting for communities that are storing their tokens on the EOS mainnet <br/><br /> * The more GOVRN is staked for the community the higher the priority for configuration. <br /> For instance, if Ethereum communities will have the most GOVRN staked, that will serve as a signal<br /> to Consortium DAC that this chain should be supported next."
+          }
+        >
+          <ReactTooltip
+            id="signalprogress"
+            type="dark"
+            effect="solid"
+            backgroundColor="black"
+            place="right"
+          />
+          Community addition
+          <FontAwesomeIcon
+            icon={faInfoCircle}
+            style={{
+              height: "16px",
+              width: "16px",
+              color: "black",
+              "margin-bottom": "6px",
+
+              opacity: "0.7",
+              "margin-left": "2px",
+            }}
+          />
+        </Typography>
+        <a
+          style={{
+            "font-weight": "500",
+            opacity: "0.5",
+            "margin-left": "7px",
+          }}
+        >
+          {" "}
+          Addition cost: {cost} GOVRN
+        </a>
+      </div>
+    );
+  };
+
   const showusername = () => {
     if (activeUser) {
       return displayaccountname();
@@ -394,6 +589,12 @@ function App(props) {
 
   //var res = str1.concat(str2);
   //#2A3747"
+
+  const pollcostarv = () => {
+    if (totalcircu.rows[0]) {
+      return 1600000 / halvingdivider();
+    }
+  };
 
   return (
     <div class="frontpagefull">
@@ -438,6 +639,14 @@ function App(props) {
                 to={"/"}
               ></Typography>
 
+              <Button
+                style={{ color: "inherit", "border-radius": "50px" }}
+                //onClick={() => addcommunity()}  <Modal.Header closeButton>{pollcost(pollcostarv())}</Modal.Header>
+                onClick={handleShow}
+              >
+                Add community
+              </Button>
+
               {logbutton()}
             </Toolbar>
           </AppBar>
@@ -447,6 +656,111 @@ function App(props) {
 
       <div class="frontapp">
         <div></div>
+
+        <Modal show={show} onHide={handleClose} centered>
+          <Modal.Header closeButton>{pollcost(pollcostarv())}</Modal.Header>
+          <Modal.Body>
+            <TextField
+              style={{ width: "97%", margin: "7px" }}
+              label={"Community name"}
+              onBlur={(text) => setQuestionSubmission(text.target.value)}
+              id="outlined-basic"
+              variant="outlined"
+            />
+            <TextField
+              style={{ width: "97%", margin: "7px", colour: "black" }}
+              label={"Community identifier"}
+              onBlur={(text) => setQuestionDescription(text.target.value)}
+              id="outlined-basic"
+              variant="outlined"
+            />
+            <TextField
+              style={{ width: "97%", margin: "7px", colour: "black" }}
+              label={"Community description"}
+              onBlur={(text) => setQuestionDescription(text.target.value)}
+              id="outlined-basic"
+              variant="outlined"
+            />
+            <TextField
+              style={{ width: "97%", margin: "7px", colour: "black" }}
+              label={"Token symbol"}
+              onBlur={(text) => setQuestionDescription(text.target.value)}
+              id="outlined-basic"
+              variant="outlined"
+            />
+            <TextField
+              style={{ width: "97%", margin: "7px", colour: "black" }}
+              label={"Token contract"}
+              onBlur={(text) => setQuestionDescription(text.target.value)}
+              id="outlined-basic"
+              variant="outlined"
+            />
+            <TextField
+              style={{ width: "97%", margin: "7px", colour: "black" }}
+              label={"Total circulating supply"}
+              onBlur={(text) => setQuestionDescription(text.target.value)}
+              id="outlined-basic"
+              variant="outlined"
+            />
+
+            <br />
+
+            <center>
+              <BootstrapButton
+                variant="outline-dark"
+                style={{
+                  "font-weight": "bold",
+                  borderRadius: "15px",
+                  height: "38px",
+                  fontSize: "15px",
+                  width: "97%",
+                  "margin-top": "10px",
+                }}
+                //onClick={() => addvotingfield()}
+              >
+                Add option
+              </BootstrapButton>
+              <br />
+
+              <BootstrapButton
+                variant="dark"
+                style={{
+                  "font-weight": "bold",
+                  borderRadius: "15px",
+                  height: "38px",
+                  fontSize: "15px",
+                  width: "97%",
+                  "margin-top": "10px",
+                }}
+                onClick={() => addcommunity()}
+              >
+                Create poll
+              </BootstrapButton>
+            </center>
+          </Modal.Body>
+          <hr
+            style={{
+              width: "90%",
+              "margin-top": "9px",
+              "margin-bottom": "10px",
+            }}
+          />
+          <center>
+            {" "}
+            <Typography
+              style={{
+                fontSize: "12px",
+                "margin-bottom": "16px",
+                "font-weight": "bold",
+              }}
+            >
+              {" "}
+              Polls are stored fully
+              <a href="https://bloks.io/account/consortiumlv"> on-chain</a>
+            </Typography>
+          </center>
+        </Modal>
+
         <div
           className={classes.root}
           style={{
@@ -710,6 +1024,19 @@ function App(props) {
                   alt="alcor"
                 ></img>
               </a>
+              <a href="https://defibox.io/pool-market-details/231">
+                <img
+                  src="boxblack.png"
+                  style={{
+                    height: "42px",
+                    "margin-top": "7px",
+                    "margin-left": "30px",
+                    opacity: "0.7",
+                  }}
+                  alt="box"
+                ></img>
+              </a>
+
               <br></br>
             </div>
 

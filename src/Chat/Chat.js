@@ -38,16 +38,14 @@ function Chat(props) {
       setIsOpened(false);
     } else if (!isOpened) {
       setIsOpened(true);
+    } else if (!isOpened) {
+      setIsOpened(true);
+      setTimeout(
+        () => dummy.current.scrollIntoView({ behavior: "smooth" }),
+        500
+      );
     }
-<<<<<<< HEAD
   };
-=======
-    else if(!isOpened){
-      setIsOpened(true)
-      setTimeout(() =>dummy.current.scrollIntoView({ behavior: 'smooth' }),500)
-    }
-  }
->>>>>>> 0af664b33351b87f789acafafe500aa70f1987c4
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -61,7 +59,6 @@ function Chat(props) {
   };
   const dummy = useRef();
   useEffect(() => {
-<<<<<<< HEAD
     dummy.current.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -77,7 +74,6 @@ function Chat(props) {
               messages.map((msg) => (
                 <ChatMessage key={msg.id} message={msg} sender={msg.sender} />
               ))}
-            <span ref={dummy}></span>
           </main>
         </div>
         <div class="inputform">
@@ -93,31 +89,9 @@ function Chat(props) {
               <SendIcon />
             </button>
           </form>
+          <span ref={dummy}></span>
         </div>
       </div>
-=======
-    dummy.current.scrollIntoView({ behavior: 'smooth' });
-  }, [messages])
-
-  return (<div>
-    <ChatIcon class="openchat" onClick={() => openclose()}>Chat</ChatIcon>
-    <div class="chatbox" style={{display: isOpened ? 'initial' : 'none' }}>
-    <div class="messages">
-    <main>
-      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} sender={msg.sender}/>)}
-    </main>
-    </div>
-    <div class="inputform">
-    <form onSubmit={sendMessage} style={{"width":"100%"}}>
-
-      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Say something..." class="inputfield"/>
-
-      <button type="submit" disabled={!formValue} class="sendingbutton"><SendIcon /></button>
-    </form>
-    <span ref={dummy}></span>
-    </div>
-    </div>
->>>>>>> 0af664b33351b87f789acafafe500aa70f1987c4
     </div>
   );
 }

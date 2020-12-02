@@ -48,7 +48,7 @@ import * as clipboard from "clipboard-polyfill/text";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { JsonRpc } from "eosjs/dist/eosjs-jsonrpc";
 import { Api } from "eosjs/dist/eosjs-api";
-import Chat from './Chat/Chat'
+import Chat from "./Chat/Chat";
 //import { CosignAuthorityProvider } from "./CosignAuthorityProvider.js";
 
 //STYLES FOR EVERYTHING
@@ -2708,7 +2708,7 @@ const firstvotetime = creationdate + "Z";
                 variant="outlined"
               />
               <TextField
-                style={{ width: "97%", margin: "7px" }}
+                style={{ width: "97%", margin: "7px", colour: "black" }}
                 label={"Poll description"}
                 onBlur={(text) => setQuestionDescription(text.target.value)}
                 id="outlined-basic"
@@ -3155,7 +3155,15 @@ const firstvotetime = creationdate + "Z";
             </div>
           );
         })}
-      {displayaccountname() ? <Chat scope={scope} user={displayaccountname()} style={{"z-index": "10"}}/> : <div></div> }
+        {displayaccountname() ? (
+          <Chat
+            scope={scope}
+            user={displayaccountname()}
+            style={{ "z-index": "10" }}
+          />
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );
