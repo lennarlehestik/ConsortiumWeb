@@ -730,7 +730,6 @@ function App(props) {
   useEffect(() => {
     ReactGA.initialize("UA-160289361-1");
     ReactGA.pageview(window.location);
-    console.log("pede");
 
     fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
       method: "POST",

@@ -274,6 +274,13 @@ function App(props) {
       response.json().then((totalcircu) => setTotalCircu(totalcircu))
     );
   }, totalcircu["rows"][0]);
+  function sumArray(arr) {
+    return arr.reduce((sum, n) => sum + n);
+  }
+  const commsortingalgo = (arr) => {
+    arr.rows.sort((a, b) => parseInt((a.staked.slice(0, -6)) < parseInt(b.staked.slice(0, -6)) ? 1 : -1));
+    setData(arr)
+  };
 
   useEffect(() => {
     fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
@@ -289,7 +296,7 @@ function App(props) {
         scope: "consortiumlv",
         limit: 50,
       }),
-    }).then((response) => response.json().then((data) => setData(data)));
+    }).then((response) => response.json().then((datar) => commsortingalgo(datar)));
     //.then(restoreSession())
   }, data["rows"][0]);
 
