@@ -284,7 +284,7 @@ function App(props) {
     });
     Toast.fire({
       icon: "success",
-      title: "Successfully increased voting and polling rewards",
+      title: "EOSETF successfully created!",
     });
   };
 
@@ -474,7 +474,27 @@ function App(props) {
 
   useEffect(() => {
     setDescriptionSubmission(description());
-  }, []);
+  }, communitydata.rows[0]);
+
+  useEffect(() => {
+    setCommunitySubmission(communityname());
+  }, communitydata.rows[0]);
+
+  useEffect(() => {
+    setSymbolSubmission(tokensymbol());
+  }, communitydata.rows[0]);
+
+  useEffect(() => {
+    setBackgroundSubmission(backurl());
+  }, communitydata.rows[0]);
+
+  useEffect(() => {
+    setSupplySubmission(circulation());
+  }, communitydata.rows[0]);
+
+  useEffect(() => {
+    setLogoSubmission(tokenurl());
+  }, communitydata.rows[0]);
 
   useEffect(() => {
     fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
@@ -909,7 +929,7 @@ function App(props) {
           2,
           parseInt(
             Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0])) /
-              25000000
+            25000000
           )
         )
       );
@@ -919,14 +939,14 @@ function App(props) {
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
       (Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
-        halvingdivider()
+      halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const voterewards = (fullstake, communitystake) => {
     return parseInt(
       (Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
-        halvingdivider()
+      halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
@@ -1519,6 +1539,42 @@ function App(props) {
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
 
+    if (!votedata.rows[0] && scope == "yd2x1lcglqlx") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "eosdactokens",
+          table: "stakes",
+          scope: "metadac",
+          lower_bound: displayaccountname(),
+          upper_bound: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
+    if (!votedata.rows[0] && scope == "umyon4jynaoc") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "emanateoneos",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
     /*
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
@@ -1852,7 +1908,7 @@ authorization: [
         ) {
           actionpuccis(
             //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
-            "If you have enough CPU, please try voting again, sometimes oracles get lost."
+            "If you have enough CPU/RAM, please try voting again, sometimes oracles get lost."
           );
           console.log(error.message);
         } else if (
@@ -1863,7 +1919,7 @@ authorization: [
           console.log(error.message);
 
           actionpuccis(
-            "If you have enough CPU, please try voting again, sometimes oracles get lost."
+            "If you have enough CPU/RAM, please try voting again, sometimes oracles get lost."
           );
         } else if (
           error.message.startsWith("transaction declares authority" == true)
@@ -1873,7 +1929,7 @@ authorization: [
           actionpuccis("Please try restarting or reinstalling your wallet");
         } else if (error.message == "Unable to sign the given transaction") {
           actionpuccis(
-            "Please use Anchor to receive specific error. If you have enough CPU, try voting again, sometimes oracles get lost."
+            "Please use Anchor to receive specific error. If you have enough CPU/RAM, try voting again, sometimes oracles get lost."
           );
           console.log(error.message);
         } else {
@@ -2083,7 +2139,7 @@ Swal.fire({
             {
               //account: "consortiumtt",
               //name: "addcommuus",
-              account: "consortiumtt",
+              account: "consortiumlv",
               name: "modcommuus",
               authorization: [
                 {
@@ -2093,8 +2149,8 @@ Swal.fire({
               ],
               data: {
                 communityname: communitysubmission,
-                //community: community(),
-                community: "haribeddjr1m",
+                community: community(),
+                //community: "haribeddjr1m",
                 description: descriptionsubmission,
                 backgroundurl: backgroundsubmission,
                 tokenurl: logosubmission,
@@ -2187,69 +2243,74 @@ Swal.fire({
   };
 
   const getbalance = () => {
-    if (dailyvoted.rows[0]) {
-      const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
-      const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
-      if (difference > 0) {
+    if (tokensymbol() != "DACDAC") {
+      if (dailyvoted.rows[0]) {
+        const firstvotetime = new Date(
+          dailyvoted.rows[0].first_vote_time + "Z"
+        );
+        const current = new Date();
+        const difference = (firstvotetime - current) / 1000 / 3600 + 24;
+        if (difference > 0) {
+          if (votedata.rows[0]) {
+            balance = Math.floor(
+              Number(votedata.rows[0].balance.split(" ")[0])
+            );
+          }
+          /*
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+        */
+          let daily = 0;
+          if (dailyvoted.rows[0]) {
+            daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+          }
+          //const bal = balance + cpu + net - daily;
+          const bal = balance - daily;
+
+          return bal;
+        }
+        if (difference < 0) {
+          if (votedata.rows[0]) {
+            var balance = Math.floor(
+              Number(votedata.rows[0].balance.split(" ")[0])
+            );
+          }
+          /*
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+        */
+          if (votedata.rows[0]) {
+            //const bal = balance + cpu + net;
+            const bal = balance;
+
+            return bal;
+          } else {
+            return 0;
+          }
+        }
+      } else {
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
         /*
-        let cpu = 0;
-        let net = 0;
-        if (votedata1.rows[0]) {
-          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
-
-        let rex = 0;
-        if (votedata2.rows[0]) {
-          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-        }
-        */
-        let daily = 0;
-        if (dailyvoted.rows[0]) {
-          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
-        }
-        //const bal = balance + cpu + net - daily;
-        const bal = balance - daily;
-
-        return bal;
-      }
-      if (difference < 0) {
-        if (votedata.rows[0]) {
-          var balance = Math.floor(
-            Number(votedata.rows[0].balance.split(" ")[0])
-          );
-        }
-        /*
-        let cpu = 0;
-        let net = 0;
-        if (votedata1.rows[0]) {
-          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
-
-        let rex = 0;
-        if (votedata2.rows[0]) {
-          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-        }
-        */
-        if (votedata.rows[0]) {
-          //const bal = balance + cpu + net;
-          const bal = balance;
-
-          return bal;
-        } else {
-          return 0;
-        }
-      }
-    } else {
-      if (votedata.rows[0]) {
-        balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
-      }
-      /*
       let cpu = 0;
       let net = 0;
       if (votedata1.rows[0]) {
@@ -2262,16 +2323,107 @@ Swal.fire({
         rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
       }
       */
-      let daily = 0;
-      if (dailyvoted.rows[0]) {
-        daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+        let daily = 0;
+        if (dailyvoted.rows[0]) {
+          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+        }
+        if (votedata.rows[0]) {
+          //const bal = balance + cpu + net;
+          const bal = balance;
+          return bal;
+        } else {
+          return 0;
+        }
       }
-      if (votedata.rows[0]) {
-        //const bal = balance + cpu + net;
-        const bal = balance;
-        return bal;
+    } else {
+      if (dailyvoted.rows[0]) {
+        const firstvotetime = new Date(
+          dailyvoted.rows[0].first_vote_time + "Z"
+        );
+        const current = new Date();
+        const difference = (firstvotetime - current) / 1000 / 3600 + 24;
+        if (difference > 0) {
+          if (votedata.rows[0]) {
+            balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
+          }
+          /*
+      let cpu = 0;
+      let net = 0;
+      if (votedata1.rows[0]) {
+        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+      }
+
+      let rex = 0;
+      if (votedata2.rows[0]) {
+        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+      }
+      */
+          let daily = 0;
+          if (dailyvoted.rows[0]) {
+            daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+          }
+          //const bal = balance + cpu + net - daily;
+          const bal = balance - daily;
+
+          return bal;
+        }
+        if (difference < 0) {
+          if (votedata.rows[0]) {
+            var balance = Math.floor(
+              Number(votedata.rows[0].stake.split(" ")[0])
+            );
+          }
+          /*
+      let cpu = 0;
+      let net = 0;
+      if (votedata1.rows[0]) {
+        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+      }
+
+      let rex = 0;
+      if (votedata2.rows[0]) {
+        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+      }
+      */
+          if (votedata.rows[0]) {
+            //const bal = balance + cpu + net;
+            const bal = balance;
+
+            return bal;
+          } else {
+            return 0;
+          }
+        }
       } else {
-        return 0;
+        if (votedata.rows[0]) {
+          balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
+        }
+        /*
+    let cpu = 0;
+    let net = 0;
+    if (votedata1.rows[0]) {
+      cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+      net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+    }
+
+    let rex = 0;
+    if (votedata2.rows[0]) {
+      rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+    }
+    */
+        let daily = 0;
+        if (dailyvoted.rows[0]) {
+          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+        }
+        if (votedata.rows[0]) {
+          //const bal = balance + cpu + net;
+          const bal = balance;
+          return bal;
+        } else {
+          return 0;
+        }
       }
     }
   };
@@ -2631,7 +2783,7 @@ Swal.fire({
           data-html="true"
           data-for="signalprogress"
           data-tip={
-            "*your poll will be active for 7 days <br/><br /> *if your poll reaches the Poll reward threshold,<br /> at the end of the 7th day you can get rewarded<br/> in GOVRN tokens <br/><br /> *tokens used to create the poll get <br /> get burned decreasing the Total Circulation"
+            "*your poll will be active for 7 days <br/><br /> *if your poll reaches the Poll reward threshold,<br /> at the end of the 7th day you can get rewarded<br/> in GOVRN tokens <br/><br /> *tokens used to create the poll <br /> get burned decreasing the Total Circulation"
           }
         >
           <ReactTooltip
@@ -3600,8 +3752,8 @@ const firstvotetime = creationdate + "Z";
             style={{ "z-index": "10" }}
           />
         ) : (
-          <div></div>
-        )}
+            <div></div>
+          )}
       </div>
     </div>
   );

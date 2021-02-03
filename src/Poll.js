@@ -1693,6 +1693,42 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
+
+    if (!votedata.rows[0] && scope == "yd2x1lcglqlx") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "eosdactokens",
+          table: "stakes",
+          scope: "metadac",
+          lower_bound: displayaccountname(),
+          upper_bound: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
+    if (!votedata.rows[0] && scope == "umyon4jynaoc") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "emanateoneos",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
   };
 
   /*
@@ -1716,91 +1752,187 @@ function App(props) {
   };
 
   const getbalance = () => {
-    if (dailyvoted.rows[0]) {
-      const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
-      const current = new Date();
-      const difference = (firstvotetime - current) / 1000 / 3600 + 24;
-      if (difference > 0) {
+    if (tokensymbol() != "DACDAC") {
+      if (dailyvoted.rows[0]) {
+        const firstvotetime = new Date(
+          dailyvoted.rows[0].first_vote_time + "Z"
+        );
+        const current = new Date();
+        const difference = (firstvotetime - current) / 1000 / 3600 + 24;
+        if (difference > 0) {
+          if (votedata.rows[0]) {
+            balance = Math.floor(
+              Number(votedata.rows[0].balance.split(" ")[0])
+            );
+          }
+          /*
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+        */
+          let daily = 0;
+          if (dailyvoted.rows[0]) {
+            daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+          }
+          //const bal = balance + cpu + net - daily;
+          const bal = balance - daily;
+
+          return bal;
+        }
+        if (difference < 0) {
+          if (votedata.rows[0]) {
+            var balance = Math.floor(
+              Number(votedata.rows[0].balance.split(" ")[0])
+            );
+          }
+          /*
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+        */
+          if (votedata.rows[0]) {
+            //const bal = balance + cpu + net;
+            const bal = balance;
+
+            return bal;
+          } else {
+            return 0;
+          }
+        }
+      } else {
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
         /*
-        let cpu = 0;
-        let net = 0;
-        if (votedata1.rows[0]) {
-          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
-        
-        let rex = 0;
-        if (votedata2.rows[0]) {
-          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-        }
-        */
-        let daily = 0;
-        if (dailyvoted.rows[0]) {
-          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
-        }
-        //const bal = balance + cpu + net - daily;
-        const bal = balance - daily;
-
-        return bal;
-      }
-      if (difference < 0) {
-        if (votedata.rows[0]) {
-          var balance = Math.floor(
-            Number(votedata.rows[0].balance.split(" ")[0])
-          );
-        }
-        /*
-        let cpu = 0;
-        let net = 0;
-        if (votedata1.rows[0]) {
-          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
-       
-        let rex = 0;
-        if (votedata2.rows[0]) {
-          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-        }
-        */
-        if (votedata.rows[0]) {
-          //const bal = balance + cpu + net;
-          const bal = balance;
-
-          return bal;
-        } else {
-          return 0;
-        }
-      }
-    } else {
-      if (votedata.rows[0]) {
-        balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
-      }
-      /*
       let cpu = 0;
       let net = 0;
       if (votedata1.rows[0]) {
         cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
         net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
       }
-      
+
       let rex = 0;
       if (votedata2.rows[0]) {
         rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
       }
       */
-      let daily = 0;
-      if (dailyvoted.rows[0]) {
-        daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+        let daily = 0;
+        if (dailyvoted.rows[0]) {
+          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+        }
+        if (votedata.rows[0]) {
+          //const bal = balance + cpu + net;
+          const bal = balance;
+          return bal;
+        } else {
+          return 0;
+        }
       }
-      if (votedata.rows[0]) {
-        //const bal = balance + cpu + net;
-        const bal = balance;
-        return bal;
+    } else {
+      if (dailyvoted.rows[0]) {
+        const firstvotetime = new Date(
+          dailyvoted.rows[0].first_vote_time + "Z"
+        );
+        const current = new Date();
+        const difference = (firstvotetime - current) / 1000 / 3600 + 24;
+        if (difference > 0) {
+          if (votedata.rows[0]) {
+            balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
+          }
+          /*
+      let cpu = 0;
+      let net = 0;
+      if (votedata1.rows[0]) {
+        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+      }
+
+      let rex = 0;
+      if (votedata2.rows[0]) {
+        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+      }
+      */
+          let daily = 0;
+          if (dailyvoted.rows[0]) {
+            daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+          }
+          //const bal = balance + cpu + net - daily;
+          const bal = balance - daily;
+
+          return bal;
+        }
+        if (difference < 0) {
+          if (votedata.rows[0]) {
+            var balance = Math.floor(
+              Number(votedata.rows[0].stake.split(" ")[0])
+            );
+          }
+          /*
+      let cpu = 0;
+      let net = 0;
+      if (votedata1.rows[0]) {
+        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+      }
+
+      let rex = 0;
+      if (votedata2.rows[0]) {
+        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+      }
+      */
+          if (votedata.rows[0]) {
+            //const bal = balance + cpu + net;
+            const bal = balance;
+
+            return bal;
+          } else {
+            return 0;
+          }
+        }
       } else {
-        return 0;
+        if (votedata.rows[0]) {
+          balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
+        }
+        /*
+    let cpu = 0;
+    let net = 0;
+    if (votedata1.rows[0]) {
+      cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+      net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+    }
+
+    let rex = 0;
+    if (votedata2.rows[0]) {
+      rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+    }
+    */
+        let daily = 0;
+        if (dailyvoted.rows[0]) {
+          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+        }
+        if (votedata.rows[0]) {
+          //const bal = balance + cpu + net;
+          const bal = balance;
+          return bal;
+        } else {
+          return 0;
+        }
       }
     }
   };

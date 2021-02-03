@@ -278,8 +278,10 @@ function App(props) {
     return arr.reduce((sum, n) => sum + n);
   }
   const commsortingalgo = (arr) => {
-    arr.rows.sort((a, b) => parseInt((a.staked.slice(0, -6)) < parseInt(b.staked.slice(0, -6)) ? 1 : -1));
-    setData(arr)
+    arr.rows.sort((a, b) =>
+      parseInt(a.staked.slice(0, -6) < parseInt(b.staked.slice(0, -6)) ? 1 : -1)
+    );
+    setData(arr);
   };
 
   useEffect(() => {
@@ -296,7 +298,9 @@ function App(props) {
         scope: "consortiumlv",
         limit: 50,
       }),
-    }).then((response) => response.json().then((datar) => commsortingalgo(datar)));
+    }).then((response) =>
+      response.json().then((datar) => commsortingalgo(datar))
+    );
     //.then(restoreSession())
   }, data["rows"][0]);
 
@@ -400,7 +404,7 @@ function App(props) {
             {
               //account: "consortiumtt",
               //name: "addcommuus",
-              account: "consortiumtt",
+              account: "consortiumlv",
               name: "addcommuus",
               authorization: [
                 {
@@ -663,7 +667,7 @@ function App(props) {
 
   const pollcostarv = () => {
     if (totalcircu.rows[0]) {
-      return 1600000 / halvingdivider();
+      return 800000 / halvingdivider();
     }
   };
 
@@ -871,7 +875,7 @@ function App(props) {
               data-html="true"
               data-for="jobu1"
               data-tip={
-                "Please insert the total circulating supply of the token that will be used for voting."
+                "Please insert the total circulating supply of the token that will be used for voting"
               }
             >
               <TextField

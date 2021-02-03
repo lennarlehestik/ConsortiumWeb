@@ -5,7 +5,6 @@ import App from "./App";
 import Poll from "./Poll";
 import Leaderboard from "./Leaderboard";
 import Frontpage from "./Frontpage";
-import History from "./history/History"
 import * as serviceWorker from "./serviceWorker";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 // UAL Required Imports
@@ -17,6 +16,8 @@ import { Anchor } from "ual-anchor";
 import { TokenPocket } from "ual-token-pocket";
 import { Ledger } from "ual-ledger";
 import { Lynx } from "ual-lynx";
+import { Wombat } from "ual-wombat";
+
 import { JsonRpc } from "eosjs/dist/eosjs-jsonrpc";
 
 import "./fonts/Roboto-Regular.ttf";
@@ -31,9 +32,8 @@ const chain = {
   rpcEndpoints: [
     {
       protocol: "https",
-      host: "dsp.eosphere.io",
-      //https://dsp.maltablock.org
-      //host: "dsp.airdropsdac.com", https://node2.blockstartdsp.com"dsp.eosphere.io",https://dsp.eosdetroit.io,https://node1.eosdsp.com
+      host: "node1.eosdsp.com",
+      //host: "dsp.airdropsdac.com", https://node2.blockstartdsp.com"dsp.eosphere.io",https://dsp.eosdetroit.io,https://node1.eosdsp.com   see eosusa viimane
       port: "",
     },
   ],
@@ -76,6 +76,7 @@ const anchor = new Anchor([chain], {
 const lynx = new Lynx([chain]);
 const tokenPocket = new TokenPocket([chain]);
 const ledger = new Ledger([chain]);
+const wombat = new Wombat([chain], { appName });
 
 const supportedChains = [chain];
 const supportedAuthenticators = [
@@ -85,6 +86,7 @@ const supportedAuthenticators = [
   lynx,
   tokenPocket,
   ledger,
+  wombat,
 ];
 
 const routing = (
@@ -96,7 +98,6 @@ const routing = (
         appName={appName}
       >
         <Route path="/poll/:id/:scope" component={Poll} />
-        <Route path="/history/:scope" component={History} />
         <Route exact path="/community/:scope" component={App} />
         <Route
           exact
