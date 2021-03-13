@@ -223,7 +223,7 @@ function App(props) {
           2,
           parseInt(
             Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0])) /
-              25000000
+            25000000
           )
         )
       );
@@ -440,41 +440,10 @@ function App(props) {
           action: "User added comm.",
         });
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
-            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. If you have enough CPU, try creating poll again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
@@ -647,17 +616,21 @@ function App(props) {
 
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
-        halvingdivider()
+      //(Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
+      (Math.pow(communitystake / fullstake, 1 / 3) * 102812 + 14687) /
+      //(Math.pow(communitystake / fullstake, 1 / 3) * 1 + 1) /
+      halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const voterewards = (fullstake, communitystake) => {
-    return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
-        halvingdivider()
-    ); //LISA KUUP JUUR communitystake/fullstake sellele
+    return parseFloat(
+      //(Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
+      (Math.pow(communitystake / fullstake, 1 / 3) * 472 + 67) /
+      halvingdivider()
+    ).toFixed(4); //LISA KUUP JUUR communitystake/fullstake sellele
   };
+
 
   //var str1 = ".png ";
   //var str2 = {u.communityname.substring(0, 90)};    return(<a>{totalstaked.rows[0].totalstaked}</a>)
@@ -1123,7 +1096,7 @@ function App(props) {
                   data-html="true"
                   data-for="pede"
                   data-tip={
-                    "*each halving divides the poll and vote rewards by 2<br/><br /> *halving occurs each time additional 25m GOVRN are issued<br /><br /> *in total there will be 9 halvings until the total supply of GOVRN tokens<br /> reaches 350m, followed by a switch to stable inflation"
+                    "*each halving divides the poll and vote rewards by 2<br/><br /> *halving occurs each time additional 25m GOVRN are issued<br /><br /> *in total there will be 9 halvings until the total supply of GOVRN tokens reaches 350m."
                   }
                 >
                   <ReactTooltip

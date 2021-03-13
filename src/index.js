@@ -32,7 +32,7 @@ const chain = {
   rpcEndpoints: [
     {
       protocol: "https",
-      host: "node1.eosdsp.com",
+      host: "eos.greymass.com",
       //host: "dsp.airdropsdac.com", https://node2.blockstartdsp.com"dsp.eosphere.io",https://dsp.eosdetroit.io,https://node1.eosdsp.com   see eosusa viimane
       port: "",
     },

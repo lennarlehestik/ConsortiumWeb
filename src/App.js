@@ -275,7 +275,7 @@ function App(props) {
       toast: true,
       position: "bottom-end",
       showConfirmButton: false,
-      timer: 6000,
+      timer: 7000,
       timerProgressBar: true,
       onOpen: (toast) => {
         toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -284,9 +284,31 @@ function App(props) {
     });
     Toast.fire({
       icon: "success",
-      title: "EOSETF successfully created!",
+      title: "Successfully staked!",
     });
   };
+
+
+
+  const sucesssvote = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 7000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Successfully voted!",
+    });
+  };
+
+
 
   const actionpuccis = (err) => {
     const Toast = Swal.mixin({
@@ -401,7 +423,7 @@ function App(props) {
     });
     Toast.fire({
       icon: "info",
-      title: "Preparing oracle request to validate your token balance.",
+      title: "Opening wallet...",
     });
   };
 
@@ -419,7 +441,7 @@ function App(props) {
     });
     Toast.fire({
       icon: "info",
-      title: "Preparing oracle request to validate your token balance.",
+      title: "Opening wallet...",
     });
   };
 
@@ -918,7 +940,8 @@ function App(props) {
 
   const pollcostarv = () => {
     if (totalcircu.rows[0]) {
-      return 400000 / halvingdivider();
+      //return 400000 / halvingdivider();
+      return 20000 / halvingdivider();
     }
   };
 
@@ -938,16 +961,19 @@ function App(props) {
 
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
+      //(Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
+      (Math.pow(communitystake / fullstake, 1 / 3) * 411250 + 58750) /
+      //(Math.pow(communitystake / fullstake, 1 / 3) * 1 + 1) /
       halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const voterewards = (fullstake, communitystake) => {
-    return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
+    return parseFloat(
+      //(Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
+      (Math.pow(communitystake / fullstake, 1 / 3) * 472 + 67) /
       halvingdivider()
-    ); //LISA KUUP JUUR communitystake/fullstake sellele
+    ).toFixed(4); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const gettotalstaked = () => {
@@ -1265,7 +1291,7 @@ function App(props) {
           broadcast: true,
           expireSeconds: 300,
         });
-        window.location.reload(false);
+        //window.location.reload(false);
 
         ReactGA.event({
           category: "Chain acion",
@@ -1275,40 +1301,10 @@ function App(props) {
         sucessstake();
         //lita()
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
@@ -1372,41 +1368,10 @@ function App(props) {
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
-            "If you have enough CPU, please try voting again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "If you have enough CPU, please try voting again, sometimes oracles get lost."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. If you have enough CPU, try voting again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
@@ -1468,6 +1433,39 @@ function App(props) {
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
+
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "eosio",
+          table: "delband",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData1(data)));
+
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "eosio",
+          table: "rexbal",
+          scope: "eosio",
+          lower_bound: displayaccountname(),
+          upper_bound: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData2(data)));
+
+
+
     }
 
     if (!votedata.rows[0] && scope == "krowcommcons") {
@@ -1575,7 +1573,8 @@ function App(props) {
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
 
-    /*
+    if (!votedata.rows[0] && scope == "c1zhia3anpum") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
@@ -1584,28 +1583,36 @@ function App(props) {
         },
         body: JSON.stringify({
           json: true,
-          code: "eosio",
-          table: "delband",
+          code: "thebeantoken",
+          table: "accounts",
           scope: displayaccountname(),
         }),
-      }).then((response) => response.json().then((data) => setVoteData1(data)));
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
 
-      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          json: true,
-          code: "eosio",
-          table: "rexbal",
-          scope: "eosio",
-          lower_bound: displayaccountname(),
-          upper_bound: displayaccountname(),
-        }),
-      }).then((response) => response.json().then((data) => setVoteData2(data)));
-      */
+    /*
+        if (!votedata.rows[0] && scope == "zlmdhu2blclw") {
+          //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+          fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              json: true,
+              code: "cet.f",
+              table: "accounts",
+              scope: displayaccountname(),
+              lower_bound: "CETF",
+              upper_bound: "CETF",
+            }),
+          }).then((response) => response.json().then((data) => setVoteData(data)));
+        }
+    
+    
+    */
+
   };
 
   /* ANCHOR CONNECTION
@@ -1762,41 +1769,10 @@ authorization: [
           action: "User created a poll.",
         });
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
-            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. If you have enough CPU, try creating poll again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
@@ -1895,47 +1871,19 @@ authorization: [
           expireSeconds: 300,
         });
         //alert("GREAT SUCCESS!")
-        window.location.reload(false);
+        //window.location.reload(false);
+
+        sucesssvote()
+
         ReactGA.event({
           category: "Chain acion",
           action: "User voted.",
         });
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
-            "If you have enough CPU/RAM, please try voting again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "If you have enough CPU/RAM, please try voting again, sometimes oracles get lost."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. If you have enough CPU/RAM, try voting again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
@@ -2042,40 +1990,10 @@ Swal.fire({
           action: "User deleted a poll.",
         });
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
@@ -2173,47 +2091,15 @@ Swal.fire({
           action: "User added comm.",
         });
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            //"Mainnet is busy, please try again or borrow more CPU to avoid this error."
-            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "If you have enough CPU, please try creating poll again, sometimes oracles get lost."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. If you have enough CPU, try creating poll again, sometimes oracles get lost."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
     }
   };
-
   /* LOOP FOR POLL OPTIONS IN CARDS */
   const polloptions = (votes, answers, pollkey) => {
     return Object.keys(votes).map((key) => (
@@ -2256,25 +2142,26 @@ Swal.fire({
               Number(votedata.rows[0].balance.split(" ")[0])
             );
           }
-          /*
-        let cpu = 0;
-        let net = 0;
-        if (votedata1.rows[0]) {
-          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
 
-        let rex = 0;
-        if (votedata2.rows[0]) {
-          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-        }
-        */
+          let cpu = 0;
+          let net = 0;
+          if (votedata1.rows[0]) {
+            cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+            net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+          }
+
+          let rex = 0;
+          if (votedata2.rows[0]) {
+            rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+          }
+
           let daily = 0;
           if (dailyvoted.rows[0]) {
             daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
           }
-          //const bal = balance + cpu + net - daily;
-          const bal = balance - daily;
+
+          const bal = balance + cpu + net + rex - daily;
+          //const bal = balance - daily;
 
           return bal;
         }
@@ -2284,22 +2171,22 @@ Swal.fire({
               Number(votedata.rows[0].balance.split(" ")[0])
             );
           }
-          /*
-        let cpu = 0;
-        let net = 0;
-        if (votedata1.rows[0]) {
-          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
 
-        let rex = 0;
-        if (votedata2.rows[0]) {
-          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-        }
-        */
+          let cpu = 0;
+          let net = 0;
+          if (votedata1.rows[0]) {
+            cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+            net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+          }
+
+          let rex = 0;
+          if (votedata2.rows[0]) {
+            rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+          }
+
           if (votedata.rows[0]) {
-            //const bal = balance + cpu + net;
-            const bal = balance;
+            const bal = balance + cpu + net + rex;
+            //const bal = balance;
 
             return bal;
           } else {
@@ -2310,32 +2197,33 @@ Swal.fire({
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
-        /*
-      let cpu = 0;
-      let net = 0;
-      if (votedata1.rows[0]) {
-        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-      }
 
-      let rex = 0;
-      if (votedata2.rows[0]) {
-        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-      }
-      */
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+
         let daily = 0;
         if (dailyvoted.rows[0]) {
           daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
         }
         if (votedata.rows[0]) {
-          //const bal = balance + cpu + net;
-          const bal = balance;
+          const bal = balance + cpu + net + rex;
+          //const bal = balance;
           return bal;
         } else {
           return 0;
         }
       }
     } else {
+
       if (dailyvoted.rows[0]) {
         const firstvotetime = new Date(
           dailyvoted.rows[0].first_vote_time + "Z"
@@ -2346,27 +2234,7 @@ Swal.fire({
           if (votedata.rows[0]) {
             balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
           }
-          /*
-      let cpu = 0;
-      let net = 0;
-      if (votedata1.rows[0]) {
-        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-      }
 
-      let rex = 0;
-      if (votedata2.rows[0]) {
-        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-      }
-      */
-          let daily = 0;
-          if (dailyvoted.rows[0]) {
-            daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
-          }
-          //const bal = balance + cpu + net - daily;
-          const bal = balance - daily;
-
-          return bal;
         }
         if (difference < 0) {
           if (votedata.rows[0]) {
@@ -2374,25 +2242,7 @@ Swal.fire({
               Number(votedata.rows[0].stake.split(" ")[0])
             );
           }
-          /*
-      let cpu = 0;
-      let net = 0;
-      if (votedata1.rows[0]) {
-        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-      }
-
-      let rex = 0;
-      if (votedata2.rows[0]) {
-        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-      }
-      */
-          if (votedata.rows[0]) {
-            //const bal = balance + cpu + net;
-            const bal = balance;
-
-            return bal;
-          } else {
+          else {
             return 0;
           }
         }
@@ -2400,31 +2250,11 @@ Swal.fire({
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
         }
-        /*
-    let cpu = 0;
-    let net = 0;
-    if (votedata1.rows[0]) {
-      cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-      net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-    }
-
-    let rex = 0;
-    if (votedata2.rows[0]) {
-      rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-    }
-    */
-        let daily = 0;
-        if (dailyvoted.rows[0]) {
-          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
-        }
-        if (votedata.rows[0]) {
-          //const bal = balance + cpu + net;
-          const bal = balance;
-          return bal;
-        } else {
+        else {
           return 0;
         }
       }
+
     }
   };
 

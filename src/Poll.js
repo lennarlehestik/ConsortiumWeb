@@ -517,25 +517,27 @@ function App(props) {
           2,
           parseInt(
             Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0])) /
-              25000000
+            25000000
           )
         )
       );
     }
   };
-
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
-        halvingdivider()
+      //(Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
+      (Math.pow(communitystake / fullstake, 1 / 3) * 102812 + 14687) /
+      //(Math.pow(communitystake / fullstake, 1 / 3) * 1 + 1) /
+      halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const voterewards = (fullstake, communitystake) => {
-    return parseInt(
-      (Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
-        halvingdivider()
-    ); //LISA KUUP JUUR communitystake/fullstake sellele
+    return parseFloat(
+      //(Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
+      (Math.pow(communitystake / fullstake, 1 / 3) * 472 + 67) /
+      halvingdivider()
+    ).toFixed(4); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const gettotalstaked = () => {
@@ -1004,40 +1006,10 @@ function App(props) {
           action: "User deleted a poll.",
         });
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
@@ -1100,40 +1072,10 @@ function App(props) {
           action: "User voted in individual poll.",
         });
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
@@ -1412,46 +1354,15 @@ function App(props) {
         sucessstake();
         //lita()
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
     }
   };
-
   /*
   const stakeaction = () => { // CALL THIS IF YOU WANT TO STAKE
     if (sessionresult){
@@ -1509,40 +1420,10 @@ function App(props) {
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
       } catch (error) {
-        //if (error.message.startsWith("TypeError: Cannot") == true) {
-        if (
-          error.message ==
-          "TypeError: Cannot read property 'message' of undefined"
-        ) {
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-          console.log(error.message);
-        } else if (
-          error.message.startsWith(
-            "the transaction was unable to complete by deadline"
-          ) == true
-        ) {
-          console.log(error.message);
 
-          actionpuccis(
-            "Mainnet is busy, please try again or borrow more CPU to avoid this error."
-          );
-        } else if (
-          error.message.startsWith("transaction declares authority" == true)
-        ) {
-          console.log(error.message);
+        actionpuccis(error);
+        console.log(error.message);
 
-          actionpuccis("Please try restarting or reinstalling your wallet");
-        } else if (error.message == "Unable to sign the given transaction") {
-          actionpuccis(
-            "Please use Anchor to receive specific error. Most likely your account needs more CPU."
-          );
-          console.log(error.message);
-        } else {
-          actionpuccis(error);
-          console.log(error.message);
-        }
       }
     } else {
       showModal();
@@ -1592,7 +1473,7 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
 
-      /*
+
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
@@ -1606,7 +1487,7 @@ function App(props) {
           scope: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData1(data)));
-     
+
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
         method: "POST",
         headers: {
@@ -1622,7 +1503,7 @@ function App(props) {
           upper_bound: displayaccountname(),
         }),
       }).then((response) => response.json().then((data) => setVoteData2(data)));
-      */
+
     }
 
     if (!votedata.rows[0] && scope == "krowcommcons") {
@@ -1729,6 +1610,46 @@ function App(props) {
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
+
+    if (!votedata.rows[0] && scope == "c1zhia3anpum") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "thebeantoken",
+          table: "accounts",
+          scope: displayaccountname(),
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
+
+    /*
+    if (!votedata.rows[0] && scope == "zlmdhu2blclw") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "cet.f",
+          table: "accounts",
+          scope: displayaccountname(),
+          lower_bound: "CETF",
+          upper_bound: "CETF",
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
+*/
   };
 
   /*
@@ -1765,25 +1686,26 @@ function App(props) {
               Number(votedata.rows[0].balance.split(" ")[0])
             );
           }
-          /*
-        let cpu = 0;
-        let net = 0;
-        if (votedata1.rows[0]) {
-          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
 
-        let rex = 0;
-        if (votedata2.rows[0]) {
-          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-        }
-        */
+          let cpu = 0;
+          let net = 0;
+          if (votedata1.rows[0]) {
+            cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+            net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+          }
+
+          let rex = 0;
+          if (votedata2.rows[0]) {
+            rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+          }
+
           let daily = 0;
           if (dailyvoted.rows[0]) {
             daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
           }
-          //const bal = balance + cpu + net - daily;
-          const bal = balance - daily;
+
+          const bal = balance + cpu + net + rex - daily;
+          //const bal = balance - daily;
 
           return bal;
         }
@@ -1793,22 +1715,22 @@ function App(props) {
               Number(votedata.rows[0].balance.split(" ")[0])
             );
           }
-          /*
-        let cpu = 0;
-        let net = 0;
-        if (votedata1.rows[0]) {
-          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-        }
 
-        let rex = 0;
-        if (votedata2.rows[0]) {
-          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-        }
-        */
+          let cpu = 0;
+          let net = 0;
+          if (votedata1.rows[0]) {
+            cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+            net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+          }
+
+          let rex = 0;
+          if (votedata2.rows[0]) {
+            rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+          }
+
           if (votedata.rows[0]) {
-            //const bal = balance + cpu + net;
-            const bal = balance;
+            const bal = balance + cpu + net + rex;
+            //const bal = balance;
 
             return bal;
           } else {
@@ -1819,32 +1741,33 @@ function App(props) {
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
-        /*
-      let cpu = 0;
-      let net = 0;
-      if (votedata1.rows[0]) {
-        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-      }
 
-      let rex = 0;
-      if (votedata2.rows[0]) {
-        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-      }
-      */
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+
         let daily = 0;
         if (dailyvoted.rows[0]) {
           daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
         }
         if (votedata.rows[0]) {
-          //const bal = balance + cpu + net;
-          const bal = balance;
+          const bal = balance + cpu + net + rex;
+          //const bal = balance;
           return bal;
         } else {
           return 0;
         }
       }
     } else {
+
       if (dailyvoted.rows[0]) {
         const firstvotetime = new Date(
           dailyvoted.rows[0].first_vote_time + "Z"
@@ -1855,27 +1778,7 @@ function App(props) {
           if (votedata.rows[0]) {
             balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
           }
-          /*
-      let cpu = 0;
-      let net = 0;
-      if (votedata1.rows[0]) {
-        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-      }
 
-      let rex = 0;
-      if (votedata2.rows[0]) {
-        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-      }
-      */
-          let daily = 0;
-          if (dailyvoted.rows[0]) {
-            daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
-          }
-          //const bal = balance + cpu + net - daily;
-          const bal = balance - daily;
-
-          return bal;
         }
         if (difference < 0) {
           if (votedata.rows[0]) {
@@ -1883,25 +1786,7 @@ function App(props) {
               Number(votedata.rows[0].stake.split(" ")[0])
             );
           }
-          /*
-      let cpu = 0;
-      let net = 0;
-      if (votedata1.rows[0]) {
-        cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-        net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-      }
-
-      let rex = 0;
-      if (votedata2.rows[0]) {
-        rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-      }
-      */
-          if (votedata.rows[0]) {
-            //const bal = balance + cpu + net;
-            const bal = balance;
-
-            return bal;
-          } else {
+          else {
             return 0;
           }
         }
@@ -1909,34 +1794,13 @@ function App(props) {
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
         }
-        /*
-    let cpu = 0;
-    let net = 0;
-    if (votedata1.rows[0]) {
-      cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
-      net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
-    }
-
-    let rex = 0;
-    if (votedata2.rows[0]) {
-      rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
-    }
-    */
-        let daily = 0;
-        if (dailyvoted.rows[0]) {
-          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
-        }
-        if (votedata.rows[0]) {
-          //const bal = balance + cpu + net;
-          const bal = balance;
-          return bal;
-        } else {
+        else {
           return 0;
         }
       }
+
     }
   };
-
   /*
 
   const getbalance = () => {
