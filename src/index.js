@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import Poll from "./Poll";
 import Leaderboard from "./Leaderboard";
+import History from "./history/History";
 import Frontpage from "./Frontpage";
 import * as serviceWorker from "./serviceWorker";
 import { Route, BrowserRouter as Router } from "react-router-dom";
@@ -99,6 +100,7 @@ const routing = (
       >
         <Route path="/poll/:id/:scope" component={Poll} />
         <Route exact path="/community/:scope" component={App} />
+        <Route exact path="/history/:scope" component={History} />
         <Route
           exact
           path="/community/:scope/Leaderboard"
