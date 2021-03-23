@@ -626,7 +626,7 @@ function App(props) {
                   opacity: 0.6,
                   width: "33px",
                   height: "33px",
-                  "margin-bottom": "4px",
+                  "margin-bottom": "10px",
                 }}
               >
                 <EditIcon
@@ -634,7 +634,8 @@ function App(props) {
                     opacity: 0.8,
                     width: "20px",
                     height: "20px",
-                    "margin-left": "0px",
+                    "margin-left": "10px",
+                    //"margin-bottom": "30px",
                   }}
                 />
               </IconButton>
@@ -959,10 +960,11 @@ function App(props) {
     }
   };
 
+
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
       //(Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
-      (Math.pow(communitystake / fullstake, 1 / 3) * 411250 + 58750) /
+      (Math.pow(communitystake / fullstake, 1 / 3) * 102812 + 14687) /
       //(Math.pow(communitystake / fullstake, 1 / 3) * 1 + 1) /
       halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
@@ -975,6 +977,7 @@ function App(props) {
       halvingdivider()
     ).toFixed(4); //LISA KUUP JUUR communitystake/fullstake sellele
   };
+
 
   const gettotalstaked = () => {
     if (totalstaked.rows[0]) {
@@ -1590,28 +1593,28 @@ function App(props) {
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
 
-    /*
-        if (!votedata.rows[0] && scope == "zlmdhu2blclw") {
-          //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
-          fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              json: true,
-              code: "cet.f",
-              table: "accounts",
-              scope: displayaccountname(),
-              lower_bound: "CETF",
-              upper_bound: "CETF",
-            }),
-          }).then((response) => response.json().then((data) => setVoteData(data)));
-        }
-    
-    
-    */
+
+    if (!votedata.rows[0] && scope == "zlmdhu2blclw") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "cet.f",
+          table: "accounts",
+          scope: displayaccountname(),
+          lower_bound: "CETF",
+          upper_bound: "CETF",
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
+
+
 
   };
 
@@ -1751,7 +1754,6 @@ authorization: [
                 creator: displayaccountname(),
                 description: questiondescription,
                 uniqueurl: uniqueurl,
-                schedname: uniquename,
                 pollkey: pollkeyz,
               },
             },
@@ -1856,10 +1858,7 @@ authorization: [
                 option: optionnumber,
                 community: scope,
                 voter: displayaccountname(),
-                //schedname: uniquename,
-                schednamests: uniquenamests,
-                schednamevtb: uniquenamevtb,
-                schedindvt: uniquenameindvt,
+
               },
             },
           ],
@@ -2232,9 +2231,32 @@ Swal.fire({
         const difference = (firstvotetime - current) / 1000 / 3600 + 24;
         if (difference > 0) {
           if (votedata.rows[0]) {
-            balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
+            balance = Math.floor(
+              Number(votedata.rows[0].stake.split(" ")[0])
+            );
           }
 
+          let cpu = 0;
+          let net = 0;
+          if (votedata1.rows[0]) {
+            cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+            net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+          }
+
+          let rex = 0;
+          if (votedata2.rows[0]) {
+            rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+          }
+
+          let daily = 0;
+          if (dailyvoted.rows[0]) {
+            daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+          }
+
+          const bal = balance + cpu + net + rex - daily;
+          //const bal = balance - daily;
+
+          return bal;
         }
         if (difference < 0) {
           if (votedata.rows[0]) {
@@ -2242,7 +2264,25 @@ Swal.fire({
               Number(votedata.rows[0].stake.split(" ")[0])
             );
           }
-          else {
+
+          let cpu = 0;
+          let net = 0;
+          if (votedata1.rows[0]) {
+            cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+            net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+          }
+
+          let rex = 0;
+          if (votedata2.rows[0]) {
+            rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+          }
+
+          if (votedata.rows[0]) {
+            const bal = balance + cpu + net + rex;
+            //const bal = balance;
+
+            return bal;
+          } else {
             return 0;
           }
         }
@@ -2250,11 +2290,65 @@ Swal.fire({
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
         }
-        else {
+
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+
+        let daily = 0;
+        if (dailyvoted.rows[0]) {
+          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+        }
+        if (votedata.rows[0]) {
+          const bal = balance + cpu + net + rex;
+          //const bal = balance;
+          return bal;
+        } else {
           return 0;
         }
       }
 
+
+      /*
+            if (dailyvoted.rows[0]) {
+              const firstvotetime = new Date(
+                dailyvoted.rows[0].first_vote_time + "Z"
+              );
+              const current = new Date();
+              const difference = (firstvotetime - current) / 1000 / 3600 + 24;
+              if (difference > 0) {
+                if (votedata.rows[0]) {
+                  balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
+                }
+      
+              }
+              if (difference < 0) {
+                if (votedata.rows[0]) {
+                  var balance = Math.floor(
+                    Number(votedata.rows[0].stake.split(" ")[0])
+                  );
+                }
+                else {
+                  return 0;
+                }
+              }
+            } else {
+              if (votedata.rows[0]) {
+                balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
+              }
+              else {
+                return 0;
+              }
+            }
+      */
     }
   };
 
@@ -2277,48 +2371,49 @@ Swal.fire({
               id="drop"
               class="dropdown-content"
               style={{ "font-family": "roboto" }}
+
             >
               <div class="line">
-                <a class="identfier">
+                <a class="identfier" style={{ "color": "black" }}>
                   <b>{displayaccountname()}</b>
                 </a>
               </div>
               <hr />
               <div class="line" style={{ "font-weight": "600" }}>
-                <a class="identfier">Balance:</a>
-                <a class="value">{getmybalance()} GOVRN</a>
+                <a class="identfier" style={{ "color": "black" }} >Balance:</a>
+                <a class="value" style={{ "color": "black" }}>{getmybalance()} GOVRN</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Voting power:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}  >Voting power:</a>
+                <a class="value" style={{ "color": "black" }} >
                   {getbalance()} {tokensymbol()}
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Voting power reset:</a>
-                <a class="value">{countitdown()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Voting power reset:</a>
+                <a class="value" style={{ "color": "black" }}>{countitdown()}</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Vote rewards left:</a>
-                <a class="value">{rewardsleft()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>
+                <a class="value" style={{ "color": "black" }}>{rewardsleft()}</a>
               </div>
               <div class="line">
-                <a class="identfier">Vote rewards reset:</a>
-                <a class="value">{countitdownvotes()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Vote rewards reset:</a>
+                <a class="value" style={{ "color": "black" }}>{countitdownvotes()}</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Voting reward:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Voting reward:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {voterewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Poll reward:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Poll reward:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
                 </a>
@@ -2331,8 +2426,8 @@ Swal.fire({
                     "margin-top": "10px",
                   }}
                 >
-                  Poll reward threshold:
                 </a>
+                Poll reward threshold:
                 <a
                   style={{
                     "margin-left": "4px",
@@ -2445,46 +2540,46 @@ Swal.fire({
               style={{ "font-family": "roboto" }}
             >
               <div class="line">
-                <a class="identfier">
+                <a class="identfier" style={{ "color": "black" }}>
                   <b>{displayaccountname()}</b>
                 </a>
               </div>
               <hr />
               <div class="line" style={{ "font-weight": "600" }}>
-                <a class="identfier">Balance:</a>
-                <a class="value">{getmybalance()} GOVRN</a>
+                <a class="identfier" style={{ "color": "black" }}>Balance:</a>
+                <a class="value" style={{ "color": "black" }}>{getmybalance()} GOVRN</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Voting power:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Voting power:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {getbalance()} {tokensymbol()}
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Voting power reset:</a>
-                <a class="value">{countitdown()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Voting power reset:</a>
+                <a class="value" style={{ "color": "black" }}>{countitdown()}</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Vote rewards left:</a>
-                <a class="value">{rewardsleft()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>
+                <a class="value" style={{ "color": "black" }}>{rewardsleft()}</a>
               </div>
               <div class="line">
-                <a class="identfier">Vote rewards reset:</a>
-                <a class="value">{countitdownvotes()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Vote rewards reset:</a>
+                <a class="value" style={{ "color": "black" }}>{countitdownvotes()}</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Voting reward:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Voting reward:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {voterewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Poll reward:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Poll reward:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
                 </a>
@@ -2613,7 +2708,7 @@ Swal.fire({
           data-html="true"
           data-for="signalprogress"
           data-tip={
-            "*your poll will be active for 7 days <br/><br /> *if your poll reaches the Poll reward threshold,<br /> at the end of the 7th day you can get rewarded<br/> in GOVRN tokens <br/><br /> *tokens used to create the poll <br /> get burned decreasing the Total Circulation"
+            "*Deleting the poll 7 days after creation <br /> can grant you Poll reward, if the Poll reward threshold is met <br /> *tokens used to create the poll <br /> get burned decreasing the Total Circulation"
           }
         >
           <ReactTooltip
@@ -2711,24 +2806,32 @@ Swal.fire({
 
     //if (curr + "Z" > moment(creationdate + "Z").add(72, "hours")) {
 
-    if (
-      moment().diff(moment(creationdate + "Z").add(168, "hours"), "minutes") > 0
-    ) {
-      return (
-        "expired " +
-        moment(creationdate + "Z")
-          .add(168, "hours")
-          .fromNow()
-      );
-    } else {
-      return (
-        "expires " +
-        moment(creationdate + "Z")
-          .add(168, "hours")
-          .fromNow()
-      );
-    }
 
+    return (
+      "created " +
+      moment(creationdate + "Z")
+        .fromNow()
+    )
+
+    /*
+        if (
+          moment().diff(moment(creationdate + "Z").add(168, "hours"), "minutes") > 0
+        ) {
+          return (
+            "created " +
+            moment(creationdate + "Z")
+              .add(168, "hours")
+              .fromNow()
+          );
+        } else {
+          return (
+            "created " +
+            moment(creationdate + "Z")
+              .add(168, "hours")
+              .fromNow()
+          );
+        }
+    */
     //creationdate.add(3, "days");
     //return moment(creationdate)
     // .to(moment(curr + "Z"));
@@ -2839,7 +2942,7 @@ const firstvotetime = creationdate + "Z";
                 style={{ color: "inherit", "border-radius": "50px" }}
                 href={`${window.location}/Leaderboard`}
               >
-                Governor board
+                Most Active
               </Button>
 
               {logbutton()}
@@ -3547,7 +3650,8 @@ const firstvotetime = creationdate + "Z";
                       &nbsp;&nbsp;&nbsp;
                       <HowToRegOutlinedIcon
                         style={{
-                          color: checkifvoted(u.pollkey) ? "#388c3c" : "",
+                          //color: checkifvoted(u.pollkey) ? "#388c3c" : "",  #47b04c
+                          color: checkifvoted(u.pollkey) ? "#47b04c" : "",
                         }}
                       />{" "}
                       {u.nrofvoters}

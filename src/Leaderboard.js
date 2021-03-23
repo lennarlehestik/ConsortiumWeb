@@ -639,7 +639,7 @@ function App(props) {
   if (data.rows[0]) {
     data.rows.sort((a, b) =>
       Number(a.rewardsreceived.split(" ")[0]) <
-      Number(b.rewardsreceived.split(" ")[0])
+        Number(b.rewardsreceived.split(" ")[0])
         ? 1
         : -1
     ); //CUT GOVRN OFF, MAKE IT A NR, AND THEN SORT
@@ -775,7 +775,7 @@ function App(props) {
           2,
           parseInt(
             Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0])) /
-              20000000
+            20000000
           )
         )
       );
@@ -785,14 +785,14 @@ function App(props) {
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
       (Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
-        halvingdivider()
+      halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const voterewards = (fullstake, communitystake) => {
     return parseInt(
       (Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
-        halvingdivider()
+      halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
   const countitdownvotes = () => {
@@ -1004,7 +1004,7 @@ function App(props) {
                 <TableCell style={{ fontWeight: "bold" }} width="25px">
                   #
                 </TableCell>
-                <TableCell style={{ fontWeight: "bold" }}>GOVERNOR</TableCell>
+                <TableCell style={{ fontWeight: "bold" }}>ACCOUNT</TableCell>
                 <TableCell style={{ fontWeight: "bold" }} align="right">
                   REWARDS
                 </TableCell>

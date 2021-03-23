@@ -15,7 +15,7 @@ global.fetch = require("node-fetch");
 const { createDfuseClient } = require("@dfuse/client");
 
 const client = createDfuseClient({
-  apiKey: "web_991fc195887bdff870ed60491424077a",
+  apiKey: "web_980c76a681533405e40137b9d04a7a27",
   network: "eos.dfuse.eosnation.io",
 });
 
@@ -128,7 +128,7 @@ function App() {
             matchingActions.forEach(({ dbOps }) => {
               if (
                 Date.parse(dbOps[0].oldJSON.object.timecreated) >
-                  Date.parse("2020-10-13T11:18:32") &&
+                Date.parse("2020-10-13T11:18:32") &&
                 dbOps[0].oldJSON.object.community == scope
               ) {
                 list[`${dbOps[0].oldJSON.object.uniqueurl}`] = [
@@ -161,7 +161,7 @@ function App() {
             matchingActions.forEach(({ dbOps }) => {
               if (
                 Date.parse(dbOps[0].oldJSON.object.timecreated) >
-                  Date.parse("2020-10-13T11:18:32") &&
+                Date.parse("2020-10-13T11:18:32") &&
                 dbOps[0].oldJSON.object.community == scope
               ) {
                 list[`${dbOps[0].oldJSON.object.uniqueurl}`] = [
@@ -194,8 +194,8 @@ function App() {
   }, [lowBlockNum]);
 
   const goBack = () => {
-    setLowBlockNum(lowBlockNum-15000000)
-    setHighBlockNum(highBlockNum-15000000)
+    setLowBlockNum(lowBlockNum - 15000000)
+    setHighBlockNum(highBlockNum - 15000000)
 
   }
   // CODE:END:quickstarts_javascript_node_eos_section4
@@ -247,14 +247,14 @@ function App() {
               style={{
                 color: "black",
                 "text-decoration": "none",
-                "font-size":"14px"
+                "font-size": "14px"
               }}
               className={classes.title}
             >Showing {Math.abs(highBlockNum).toLocaleString()} to {Math.abs(lowBlockNum).toLocaleString()} blocks back.</Typography>
 
             <Button
               style={{ color: "inherit", "border-radius": "50px" }}
-              onClick={()=>goBack()}
+              onClick={() => goBack()}
             >
               Next blocks
             </Button>
@@ -264,67 +264,67 @@ function App() {
       </div>
 
       {loading == "notloading" ?
-      <header className="history-header">
-        <div style={{ "text-align": "left", "line-height": "30px" }}>
-          {Object.keys(datar).map(function (key) {
-            let sum = datar[key][4].reduce((a, b) => a + b, 0);
-            return (
-              <div
-                class="card"
-                style={{
-                  "border-radius": "15px",
-                  padding: "20px",
-                  "margin-top": "10px",
-                  "margin-bottom": "10px",
-                  "max-width": "500px",
-                  "background-color": "#FFFFFF",
-                }}
-              >
-                <a
-                  style={{ "text-decoration": "none", color: "black" }}
-                  value={key}
+        <header className="history-header">
+          <div style={{ "text-align": "left", "line-height": "30px" }}>
+            {Object.keys(datar).map(function (key) {
+              let sum = datar[key][4].reduce((a, b) => a + b, 0);
+              return (
+                <div
+                  class="card"
+                  style={{
+                    "border-radius": "15px",
+                    padding: "20px",
+                    "margin-top": "10px",
+                    "margin-bottom": "10px",
+                    "max-width": "500px",
+                    "background-color": "#FFFFFF",
+                  }}
                 >
-                  {
-                    <div>
-                      <a style={{ "font-weight": "600", "font-size": "16px" }}>
-                        {datar[key][1]}
-                      </a>
-                      <br />
-                      <a>{datar[key][2]}</a>
-                      {Object.keys(datar[key][3]).map(function (subkey) {
-                        return (
-                          <div class="item">
-                            <a>
-                              {datar[key][3][subkey]} (
+                  <a
+                    style={{ "text-decoration": "none", color: "black" }}
+                    value={key}
+                  >
+                    {
+                      <div>
+                        <a style={{ "font-weight": "600", "font-size": "16px" }}>
+                          {datar[key][1]}
+                        </a>
+                        <br />
+                        <a>{datar[key][2]}</a>
+                        {Object.keys(datar[key][3]).map(function (subkey) {
+                          return (
+                            <div class="item">
+                              <a>
+                                {datar[key][3][subkey]} (
                               {((datar[key][4][subkey] / sum) * 100).toFixed(2)}
                               %) <br />
-                              <div id="progressbar">
-                                <div
-                                  style={{
-                                    width: `${
-                                      (datar[key][4][subkey] / sum) * 100
-                                    }%`,
-                                  }}
-                                />
-                              </div>
-                            </a>
-                          </div>
-                        );
-                      })}
-                      <div style={{ width: "100%", "text-align": "right" }}>
-                        {nFormatter(datar[key][5])} tokens
+                                <div id="progressbar">
+                                  <div
+                                    style={{
+                                      width: `${
+                                        (datar[key][4][subkey] / sum) * 100
+                                        }%`,
+                                    }}
+                                  />
+                                </div>
+                              </a>
+                            </div>
+                          );
+                        })}
+                        <div style={{ width: "100%", "text-align": "right" }}>
+                          {nFormatter(datar[key][5])} tokens
                       </div>
-                    </div>
-                  }
-                </a>
-              </div>
-            );
-          })}
-        </div>
-      </header>
-      : loading == "loading" ? <div class="loading"><CircularProgress /></div>
-      : <div class="loading" style={{"text-align":"center"}}><b>Sorry! <br/>We reached our dFuse quota. Please try again in 30 minutes.</b></div>
-    }
+                      </div>
+                    }
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        </header>
+        : loading == "loading" ? <div class="loading"><CircularProgress /></div>
+          : <div class="loading" style={{ "text-align": "center" }}><b>Sorry! <br />We reached our dFuse quota. Please try again in 30 minutes.</b></div>
+      }
     </div>
   );
 }

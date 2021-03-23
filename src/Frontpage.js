@@ -1078,12 +1078,13 @@ function App(props) {
                 fontSize: "14px",
               }}
             >
-              <div class="line" style={{ "padding-top": "7px" }}>
+              <div class="line" style={{ "padding-top": "7px" }} style={{ "color": "black" }}>
                 <a
                   class="identfier"
                   style={{
                     "vertical-align": "top",
                   }}
+                  style={{ "color": "black" }}
                 >
                   Halving events:
                 </a>
@@ -1092,6 +1093,7 @@ function App(props) {
                   style={{
                     fontWeight: "bold",
                     "vertical-align": "top",
+                    "color": "black",
                   }}
                   data-html="true"
                   data-for="pede"
@@ -1123,12 +1125,12 @@ function App(props) {
               </div>
               <hr />
               <div class="line" style={{ "padding-bottom": "7px" }}>
-                <a class="identfier">To mine until next halving:</a>
+                <a class="identfier" style={{ "color": "black" }}>To mine until next halving:</a>
                 <a
                   class="value"
                   style={{
                     "font-weight": "",
-                  }}
+                  }} style={{ "color": "black" }}
                 >
                   <b>{stakeformatter(tonexthalving(gettotalcircu()))} GOVRN</b>
                 </a>

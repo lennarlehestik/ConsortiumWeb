@@ -206,7 +206,44 @@ function App(props) {
     });
     Toast.fire({
       icon: "success",
-      title: "Successfully increased voting and polling rewards",
+      title: "Successfully staked!",
+    });
+  };
+
+  const sucessunstake = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Successfully unstaked!",
+    });
+  };
+
+
+  const sucessvote = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Successfully voted!",
     });
   };
 
@@ -224,7 +261,7 @@ function App(props) {
     });
     Toast.fire({
       icon: "info",
-      title: "Preparing oracle request to validate your token balance.",
+      title: "Opening wallet...",
     });
   };
 
@@ -312,23 +349,12 @@ function App(props) {
 
     //if (curr + "Z" > moment(creationdate + "Z").add(72, "hours")) {
 
-    if (
-      moment().diff(moment(creationdate + "Z").add(168, "hours"), "minutes") > 0
-    ) {
-      return (
-        "expired " +
-        moment(creationdate + "Z")
-          .add(168, "hours")
-          .fromNow()
-      );
-    } else {
-      return (
-        "expires " +
-        moment(creationdate + "Z")
-          .add(168, "hours")
-          .fromNow()
-      );
-    }
+
+    return (
+      "created " +
+      moment(creationdate + "Z")
+        .fromNow()
+    )
 
     //return "expires " + moment(creationdate).toNow();
 
@@ -523,6 +549,7 @@ function App(props) {
       );
     }
   };
+
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
       //(Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
@@ -539,6 +566,7 @@ function App(props) {
       halvingdivider()
     ).toFixed(4); //LISA KUUP JUUR communitystake/fullstake sellele
   };
+
 
   const gettotalstaked = () => {
     if (totalstaked.rows[0]) {
@@ -781,7 +809,7 @@ function App(props) {
                         &nbsp;&nbsp;&nbsp;
                         <HowToRegOutlinedIcon
                           style={{
-                            color: checkifvoted(u.pollkey) ? "#388c3c" : "",
+                            color: checkifvoted(u.pollkey) ? "#47b04c" : "",
                           }}
                         />{" "}
                         {u.nrofvoters}
@@ -1051,10 +1079,7 @@ function App(props) {
                 option: optionnumber,
                 community: scope,
                 voter: displayaccountname(),
-                schedname: uniquename,
-                schednamests: uniquenamests,
-                schednamevtb: uniquenamevtb,
-                schedindvt: uniquenameindvt,
+
               },
             },
           ],
@@ -1065,7 +1090,8 @@ function App(props) {
           expireSeconds: 300,
         });
         //alert("GREAT SUCCESS!")
-        window.location.reload(false);
+        //window.location.reload(false);
+        sucessvote();
 
         ReactGA.event({
           category: "Chain acion",
@@ -1418,7 +1444,9 @@ function App(props) {
           expireSeconds: 300,
         });
         //alert("GREAT SUCCESS!")
-        window.location.reload(false);
+        //window.location.reload(false);
+        sucessunstake();
+
       } catch (error) {
 
         actionpuccis(error);
@@ -1629,7 +1657,7 @@ function App(props) {
     }
 
 
-    /*
+
     if (!votedata.rows[0] && scope == "zlmdhu2blclw") {
       //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
       fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
@@ -1649,7 +1677,7 @@ function App(props) {
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
 
-*/
+
   };
 
   /*
@@ -1776,9 +1804,32 @@ function App(props) {
         const difference = (firstvotetime - current) / 1000 / 3600 + 24;
         if (difference > 0) {
           if (votedata.rows[0]) {
-            balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
+            balance = Math.floor(
+              Number(votedata.rows[0].stake.split(" ")[0])
+            );
           }
 
+          let cpu = 0;
+          let net = 0;
+          if (votedata1.rows[0]) {
+            cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+            net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+          }
+
+          let rex = 0;
+          if (votedata2.rows[0]) {
+            rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+          }
+
+          let daily = 0;
+          if (dailyvoted.rows[0]) {
+            daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+          }
+
+          const bal = balance + cpu + net + rex - daily;
+          //const bal = balance - daily;
+
+          return bal;
         }
         if (difference < 0) {
           if (votedata.rows[0]) {
@@ -1786,7 +1837,25 @@ function App(props) {
               Number(votedata.rows[0].stake.split(" ")[0])
             );
           }
-          else {
+
+          let cpu = 0;
+          let net = 0;
+          if (votedata1.rows[0]) {
+            cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+            net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+          }
+
+          let rex = 0;
+          if (votedata2.rows[0]) {
+            rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+          }
+
+          if (votedata.rows[0]) {
+            const bal = balance + cpu + net + rex;
+            //const bal = balance;
+
+            return bal;
+          } else {
             return 0;
           }
         }
@@ -1794,15 +1863,35 @@ function App(props) {
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].stake.split(" ")[0]));
         }
-        else {
+
+        let cpu = 0;
+        let net = 0;
+        if (votedata1.rows[0]) {
+          cpu = Math.floor(Number(votedata1.rows[0].cpu_weight.split(" ")[0]));
+          net = Math.floor(Number(votedata1.rows[0].net_weight.split(" ")[0]));
+        }
+
+        let rex = 0;
+        if (votedata2.rows[0]) {
+          rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
+        }
+
+        let daily = 0;
+        if (dailyvoted.rows[0]) {
+          daily = Math.floor(Number(dailyvoted.rows[0].dailyvoted));
+        }
+        if (votedata.rows[0]) {
+          const bal = balance + cpu + net + rex;
+          //const bal = balance;
+          return bal;
+        } else {
           return 0;
         }
       }
-
     }
   };
   /*
-
+ 
   const getbalance = () => {
     if (dailyvoted.rows[0]) {
       const firstvotetime = new Date(dailyvoted.rows[0].first_vote_time + "Z");
@@ -1810,7 +1899,7 @@ function App(props) {
       const difference = (firstvotetime - current) / 1000 / 3600 + 0.0833333;
       if (difference > 0) {
         let balance = 0;
-
+ 
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
@@ -1834,7 +1923,7 @@ function App(props) {
       }
       if (difference < 0) {
         let balance = 0;
-
+ 
         if (votedata.rows[0]) {
           balance = Math.floor(Number(votedata.rows[0].balance.split(" ")[0]));
         }
@@ -1849,7 +1938,7 @@ function App(props) {
           rex = Math.floor(Number(votedata2.rows[0].vote_stake.split(" ")[0]));
         }
         
-
+ 
         const bal = balance + cpu + net;
         return bal;
       }
@@ -1891,46 +1980,46 @@ function App(props) {
               style={{ "font-family": "roboto" }}
             >
               <div class="line">
-                <a class="identfier">
+                <a class="identfier" style={{ "color": "black" }}>
                   <b>{displayaccountname()}</b>
                 </a>
               </div>
               <hr />
               <div class="line" style={{ "font-weight": "600" }}>
-                <a class="identfier">Balance:</a>
-                <a class="value">{getmybalance()} GOVRN</a>
+                <a class="identfier" style={{ "color": "black" }}>Balance:</a>
+                <a class="value" style={{ "color": "black" }}>{getmybalance()} GOVRN</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Voting power:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Voting power:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {getbalance()} {tokensymbol()}
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Voting power reset:</a>
-                <a class="value">{countitdown()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Voting power reset:</a>
+                <a class="value" style={{ "color": "black" }}>{countitdown()}</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Vote rewards left:</a>
-                <a class="value">{rewardsleft()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>
+                <a class="value" style={{ "color": "black" }}>{rewardsleft()}</a>
               </div>
               <div class="line">
-                <a class="identfier">Vote rewards reset:</a>
-                <a class="value">{countitdownvotes()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Vote rewards reset:</a>
+                <a class="value" style={{ "color": "black" }}>{countitdownvotes()}</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Voting reward:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Voting reward:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {voterewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Poll reward:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Poll reward:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
                 </a>
@@ -1941,6 +2030,7 @@ function App(props) {
                   class="identfier"
                   style={{
                     "margin-top": "10px",
+                    "color": "black",
                   }}
                 >
                   Poll reward threshold:
@@ -1949,6 +2039,7 @@ function App(props) {
                   style={{
                     "margin-left": "4px",
                     float: "right",
+                    "color": "black",
                   }}
                 >
                   {stakeformatter(getrewardthreshold())} {tokensymbol()}
@@ -2057,46 +2148,46 @@ function App(props) {
               style={{ "font-family": "roboto" }}
             >
               <div class="line">
-                <a class="identfier">
+                <a class="identfier" style={{ "color": "black" }}>
                   <b>{displayaccountname()}</b>
                 </a>
               </div>
               <hr />
               <div class="line" style={{ "font-weight": "600" }}>
-                <a class="identfier">Balance:</a>
-                <a class="value">{getmybalance()} GOVRN</a>
+                <a class="identfier" style={{ "color": "black" }}>Balance:</a>
+                <a class="value" style={{ "color": "black" }}>{getmybalance()} GOVRN</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Voting power:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Voting power:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {getbalance()} {tokensymbol()}
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Voting power reset:</a>
-                <a class="value">{countitdown()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Voting power reset:</a>
+                <a class="value" style={{ "color": "black" }}>{countitdown()}</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Vote rewards left:</a>
-                <a class="value">{rewardsleft()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>
+                <a class="value" style={{ "color": "black" }}>{rewardsleft()}</a>
               </div>
               <div class="line">
-                <a class="identfier">Vote rewards reset:</a>
-                <a class="value">{countitdownvotes()}</a>
+                <a class="identfier" style={{ "color": "black" }}>Vote rewards reset:</a>
+                <a class="value" style={{ "color": "black" }}>{countitdownvotes()}</a>
               </div>
               <hr />
               <div class="line">
-                <a class="identfier">Voting reward:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Voting reward:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {voterewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
                 </a>
               </div>
               <div class="line">
-                <a class="identfier">Poll reward:</a>
-                <a class="value">
+                <a class="identfier" style={{ "color": "black" }}>Poll reward:</a>
+                <a class="value" style={{ "color": "black" }}>
                   {pollrewards(gettotalstaked(), parseInt(stakedforcom()))}{" "}
                   GOVRN
                 </a>
@@ -2107,6 +2198,7 @@ function App(props) {
                   class="identfier"
                   style={{
                     "margin-top": "10px",
+                    "color": "black"
                   }}
                 >
                   Poll reward threshold:
@@ -2114,6 +2206,7 @@ function App(props) {
                 <a
                   style={{
                     "margin-left": "23px",
+                    "color": "black"
                   }}
                 >
                   {stakeformatter(getrewardthreshold())} {tokensymbol()}
@@ -2434,7 +2527,7 @@ function App(props) {
                   "/Leaderboard"
                 }
               >
-                Governor board
+                Most Active
               </Button>
 
               {logbutton()}
