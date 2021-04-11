@@ -33,7 +33,7 @@
     "react-tooltip": "^4.2.11",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^9.15.2",
-    "ual-anchor": "^0.5.0",
+    "ual-anchor": "^1.0.5",
     "ual-eosio-reference-authenticator": "^0.3.0",
     "ual-ledger": "^0.3.0",
     "ual-lynx": "^0.4.0",
