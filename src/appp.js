@@ -262,7 +262,7 @@ function App(props) {
   const sucessstake = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 6000,
       timerProgressBar: true,
@@ -280,7 +280,7 @@ function App(props) {
   const actionpuccis = (err) => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 5000,
       timerProgressBar: true,
@@ -316,7 +316,7 @@ function App(props) {
   const loadingscatter = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 10000,
       timerProgressBar: true,
@@ -334,7 +334,7 @@ function App(props) {
   const loadingvote = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 65000,
       timerProgressBar: true,
@@ -352,7 +352,7 @@ function App(props) {
   const loadingpoll = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 35000,
       timerProgressBar: true,
@@ -370,7 +370,7 @@ function App(props) {
   const loadingsdelpol = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 10000,
       timerProgressBar: true,
@@ -809,7 +809,7 @@ function App(props) {
           2,
           parseInt(
             Math.floor(Number(totalcircu.rows[0].supply.split(" ")[0])) /
-              25000000
+            25000000
           )
         )
       );
@@ -819,14 +819,14 @@ function App(props) {
   const pollrewards = (fullstake, communitystake) => {
     return parseInt(
       (Math.pow(communitystake / fullstake, 1 / 3) * 8225000 + 1175000) /
-        halvingdivider()
+      halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 
   const voterewards = (fullstake, communitystake) => {
     return parseInt(
       (Math.pow(communitystake / fullstake, 1 / 3) * 315000 + 45000) /
-        halvingdivider()
+      halvingdivider()
     ); //LISA KUUP JUUR communitystake/fullstake sellele
   };
 

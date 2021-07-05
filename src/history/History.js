@@ -322,7 +322,7 @@ function App() {
             })}
           </div>
         </header>
-        : loading == "loading" ? <div class="loading"><CircularProgress /></div>
+        : loading == "loading" ? <div class="loading1"><CircularProgress /></div>
           : <div class="loading" style={{ "text-align": "center" }}><b>Sorry! <br />We reached our dFuse quota. Please try again in 30 minutes.</b></div>
       }
     </div>

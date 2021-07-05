@@ -273,9 +273,9 @@ function App(props) {
   const sucessstake = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
-      timer: 7000,
+      timer: 3000,
       timerProgressBar: true,
       onOpen: (toast) => {
         toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -288,14 +288,32 @@ function App(props) {
     });
   };
 
+  const sucesspoll = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "center",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Poll sucessfully created!",
+    });
+  };
+
 
 
   const sucesssvote = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
-      timer: 7000,
+      timer: 3000,
       timerProgressBar: true,
       onOpen: (toast) => {
         toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -313,7 +331,7 @@ function App(props) {
   const actionpuccis = (err) => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 5000,
       timerProgressBar: true,
@@ -394,7 +412,7 @@ function App(props) {
   const loadingscatter = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 10000,
       timerProgressBar: true,
@@ -412,7 +430,7 @@ function App(props) {
   const loadingvote = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 65000,
       timerProgressBar: true,
@@ -430,7 +448,7 @@ function App(props) {
   const loadingpoll = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 35000,
       timerProgressBar: true,
@@ -448,7 +466,7 @@ function App(props) {
   const loadingsdelpol = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 10000,
       timerProgressBar: true,
@@ -577,7 +595,7 @@ function App(props) {
   }, communitydata["rows"]);
 
   const stakeformatter = (stakenumber) => {
-    if (stakenumber < 1000) {
+    if (stakenumber <= 1000) {
       return stakenumber;
     }
     if (stakenumber > 1000 && stakenumber < 1000000) {
@@ -1614,6 +1632,23 @@ function App(props) {
     }
 
 
+    if (!votedata.rows[0] && scope == "ofaqqnelrdwa") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "consortiumlv",
+          table: "accounts",
+          scope: "genesis.eden",
+
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
 
 
   };
@@ -1765,7 +1800,10 @@ authorization: [
           expireSeconds: 300,
         });
         //alert("GREAT SUCCESS!")
-        window.location.reload(false);
+        //window.location.reload(false);
+
+        sucesspoll();
+
         ReactGA.event({
           category: "Chain acion",
           action: "User created a poll.",
@@ -2390,10 +2428,7 @@ Swal.fire({
                   {getbalance()} {tokensymbol()}
                 </a>
               </div>
-              <div class="line">
-                <a class="identfier" style={{ "color": "black" }}>Voting power reset:</a>
-                <a class="value" style={{ "color": "black" }}>{countitdown()}</a>
-              </div>
+
               <hr />
               <div class="line">
                 <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>
@@ -2556,10 +2591,7 @@ Swal.fire({
                   {getbalance()} {tokensymbol()}
                 </a>
               </div>
-              <div class="line">
-                <a class="identfier" style={{ "color": "black" }}>Voting power reset:</a>
-                <a class="value" style={{ "color": "black" }}>{countitdown()}</a>
-              </div>
+
               <hr />
               <div class="line">
                 <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>

@@ -177,7 +177,7 @@ function App(props) {
   const loadingsdelpol = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 10000,
       timerProgressBar: true,
@@ -195,7 +195,7 @@ function App(props) {
   const sucessstake = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 6000,
       timerProgressBar: true,
@@ -213,7 +213,7 @@ function App(props) {
   const sucessunstake = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 6000,
       timerProgressBar: true,
@@ -232,7 +232,7 @@ function App(props) {
   const sucessvote = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 6000,
       timerProgressBar: true,
@@ -250,7 +250,7 @@ function App(props) {
   const loadingvote = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 65000,
       timerProgressBar: true,
@@ -268,7 +268,7 @@ function App(props) {
   const loadingscatter = () => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 10000,
       timerProgressBar: true,
@@ -1677,6 +1677,24 @@ function App(props) {
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
 
+    if (!votedata.rows[0] && scope == "ofaqqnelrdwa") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "consortiumlv",
+          table: "accounts",
+          scope: "genesis.eden",
+
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+
 
   };
 
@@ -1689,7 +1707,7 @@ function App(props) {
   */
 
   const stakeformatter = (stakenumber) => {
-    if (stakenumber < 1000) {
+    if (stakenumber <= 1000) {
       return stakenumber;
     }
     if (stakenumber > 1000 && stakenumber < 1000000) {
@@ -1996,10 +2014,7 @@ function App(props) {
                   {getbalance()} {tokensymbol()}
                 </a>
               </div>
-              <div class="line">
-                <a class="identfier" style={{ "color": "black" }}>Voting power reset:</a>
-                <a class="value" style={{ "color": "black" }}>{countitdown()}</a>
-              </div>
+
               <hr />
               <div class="line">
                 <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>
@@ -2164,10 +2179,7 @@ function App(props) {
                   {getbalance()} {tokensymbol()}
                 </a>
               </div>
-              <div class="line">
-                <a class="identfier" style={{ "color": "black" }}>Voting power reset:</a>
-                <a class="value" style={{ "color": "black" }}>{countitdown()}</a>
-              </div>
+
               <hr />
               <div class="line">
                 <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>
@@ -2302,7 +2314,7 @@ function App(props) {
   const actionpuccis = (err) => {
     const Toast = Swal.mixin({
       toast: true,
-      position: "bottom-end",
+      position: "center",
       showConfirmButton: false,
       timer: 5000,
       timerProgressBar: true,

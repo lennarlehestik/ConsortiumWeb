@@ -528,7 +528,7 @@ function App(props) {
           data-html="true"
           data-for="comad"
           data-tip={
-            "* After you add the community it will immediately appear on the frontpage of Consortium. <br/><br /> * Oracles will still have to be configured on the backend to enable voting and poll creation. <br/><br /> * Community of any social organization can be added, but please note that in the current Phase 2 <br /> we are only able to enable voting for communities that are storing their tokens on the EOS mainnet. <br/><br /> * The more GOVRN is staked for the community the higher the priority for configuration. <br /> For instance, if Ethereum communities will have the most GOVRN staked, that will serve <br /> as a signal for Consortium DAC that this chain should be supported next. <br/><br /> *Any social organization can acquire GOVRN and stake it for their community to signal <br/> willingness to have mutual project with Consortium DAC."
+            "* After you add the community it will immediately appear on the frontpage of Consortium.  <br/><br /> * The more GOVRN is staked for the community the higher the priority for configuration. <br /> For instance, if Ethereum communities will have the most GOVRN staked, that will serve <br /> as a signal for Consortium DAC that this chain should be supported next. <br/><br /> *Any social organization can acquire GOVRN and stake it for their community to signal <br/> willingness to have mutual project with Consortium DAC."
           }
         >
           <ReactTooltip
@@ -595,7 +595,7 @@ function App(props) {
           data-html="true"
           data-for="afrew"
           data-tip={
-            "Affiliate reward is transferred automatically to the account that added the community <br/><br /> Reward amount (GOVRN) = All the Vote and Poll rewards community generates * Affiliate reward (%)"
+            "Affiliate reward is transferred automatically to the account that added the community. <br/><br /> Reward amount (GOVRN) = All the Vote and Poll rewards community generates * Affiliate reward (%)."
           }
         />
       </div>
