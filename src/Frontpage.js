@@ -689,6 +689,13 @@ function App(props) {
 
               <Button
                 style={{ color: "inherit", "border-radius": "50px" }}
+                href={`${window.location.origin}/claim`}
+              >
+                CLAIM TOKENS
+              </Button>
+
+              <Button
+                style={{ color: "inherit", "border-radius": "50px" }}
                 //onClick={() => addcommunity()}  <Modal.Header closeButton>{pollcost(pollcostarv())}</Modal.Header>
                 onClick={handleShow}
               >

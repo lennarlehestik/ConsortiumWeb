@@ -25,6 +25,7 @@ import "./fonts/Roboto-Regular.ttf";
 import "./fonts/Roboto-Bold.ttf";
 import "./fonts/Roboto-Black.ttf";
 import "./fonts/Roboto-Medium.ttf";
+import Claim from "./Claim";
 
 const appName = "Consortium";
 
@@ -101,6 +102,7 @@ const routing = (
         <Route path="/poll/:id/:scope" component={Poll} />
         <Route exact path="/community/:scope" component={App} />
         <Route exact path="/history/:scope" component={History} />
+        <Route exact path="/claim" component={Claim} />
         <Route
           exact
           path="/community/:scope/Leaderboard"

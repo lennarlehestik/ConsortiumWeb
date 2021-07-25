@@ -19,7 +19,7 @@
     "anchor-link-browser-transport": "^2.1.1",
     "bootstrap": "^4.5.0",
     "clipboard-polyfill": "^3.0.1",
-    "firebase": "^8.0.2",
+    "firebase": "^8.7.0",
     "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.1.1",
