@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import "./Claim.css"
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import Swal from "sweetalert2";
-
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import { Button as BootstrapButton } from "react-bootstrap";
+import CardMedia from "@material-ui/core/CardMedia";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -49,6 +55,10 @@ const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
+  media: {
+    height: 0,
+    paddingTop: "30%", // 16:9
+  },
   fabButton: {
     position: "absolute",
     zIndex: 1,
@@ -63,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function App(props) {
+function Claim(props) {
   const {
     ual: { showModal, hideModal, logout },
   } = props;
@@ -121,9 +131,9 @@ function App(props) {
         limit: 100,
       }),
     }).then((response) =>
-      response.json().then((pooldata) => setPooldata(pooldata))
+      response.json().then((pooldata) => setPooldata(pooldata["rows"]))
     );
-  }, pooldata["rows"][0]);
+  }, pooldata[0]);
 
   const logbutton = () => {
     if (accountname) {
@@ -163,6 +173,88 @@ function App(props) {
     result = Math.floor(Math.random() * 99999999);
     return result;
 
+  }
+
+  const headercard = () => {
+    return(
+      <Card
+          className={classes.root}
+          style={{
+            marginBottom: "7px",
+            "padding-bottom": "10px",
+            borderRadius: "20px",
+            marginTop: "5px",
+          }}
+        >
+          <CardMedia
+            className={classes.media}
+            image={"https://i.ibb.co/WxjRR3Q/eden.png"}
+            title="Community image"
+          />
+                    <CardContent
+            style={{ "padding-bottom": "5px"}}
+          >
+            <Typography style={{ fontSize: "20px", "font-weight": "500" }}>
+              Claim tokens
+            </Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              component="p"
+              style={{ "margin-top": "6px" }}
+            >
+              You can claim tokens.
+            </Typography>
+          <div class="claimheaderbuttonrow">
+          <BootstrapButton
+          onClick={() => claimall()}
+                color="inherit"
+                variant="outline-dark"
+                style={{
+                  "font-weight": "bold",
+                  borderRadius: "15px",
+                  padding:"5px 20px 5px 20px",
+                  fontSize: "14px",
+                }}
+              >
+                Claim all
+              </BootstrapButton>
+          </div>
+          </CardContent>
+        </Card>
+    )
+  }
+
+  const cards = () => {
+    if(pooldata[0]){
+      return Object.keys(pooldata).map( key => 
+        <div class="claimcard">
+                <div class="claimcardtitle">{pooldata[key].poolname}</div>
+                <div class="claimcarddescription">{pooldata[key].pooldescr}</div>
+                <div class="claimamounts">Total tokens in pool: {pooldata[key].totalamount}</div>
+                <div class="claimamounts">Available to claim: {pooldata[key].clmamount}</div>
+                <div class="buttonrow">
+                <BootstrapButton
+                color="inherit"
+                variant="outline-dark"
+                style={{
+                  "font-weight": "bold",
+                  borderRadius: "15px",
+                  padding:"5px 20px 5px 20px",
+                  fontSize: "14px",
+                }}
+              >
+                Claim
+              </BootstrapButton>
+                <div class="buttonsright">
+                  <AddBoxIcon/>
+                  <DeleteIcon onClick={() => deletepool(pooldata[key].poolid)}/>
+                  <EditIcon/>
+                </div>
+              </div>
+              </div>
+      )
+    }
   }
 
 
@@ -466,7 +558,7 @@ function App(props) {
 
 
 
-  const claimall = async (poolid) => {
+  const claimall = async () => {
     const {
       ual: { login, displayError, showModal },
     } = props;
@@ -474,6 +566,11 @@ function App(props) {
     const {
       ual: { activeUser },
     } = props;
+
+    const claimids = []
+    pooldata.forEach((i) => {
+      claimids.push(i.poolid)
+    })
 
 
     if (activeUser) {
@@ -492,7 +589,7 @@ function App(props) {
               ],
               data: {
                 claimer: displayaccountname(),
-                poolid: "siia vaja saada array of IDs of all the existing polls.",
+                poolid: claimids,
 
               },
             },
@@ -566,12 +663,14 @@ function App(props) {
           <AppBarOffset />
         </div>
       </div>
-
-
+      <div class="app">
+          {headercard()}
+          {cards()}
+        </div>
     </div>
 
   );
 }
 
-export default withUAL(App);
+export default withUAL(Claim);
 
