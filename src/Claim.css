@@ -50,3 +50,11 @@
 .claimheaderbuttonrow{
     float:right;
 }
+
+.buttonsright * {
+    transition: 0.1s;
+}
+
+.buttonsright * :hover{
+    color:#343a40;
+}
