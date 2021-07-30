@@ -247,9 +247,9 @@ function Claim(props) {
                 Claim
               </BootstrapButton>
                 <div class="buttonsright">
-                  <AddBoxIcon/>
-                  <DeleteIcon onClick={() => deletepool(pooldata[key].poolid)}/>
-                  <EditIcon/>
+                  <span><AddBoxIcon/></span>
+                  <span onClick={() => deletepool(pooldata[key].poolid)}><DeleteIcon/></span>
+                  <span><EditIcon/></span>
                 </div>
               </div>
               </div>
