@@ -176,83 +176,83 @@ function Claim(props) {
   }
 
   const headercard = () => {
-    return(
+    return (
       <Card
-          className={classes.root}
-          style={{
-            marginBottom: "7px",
-            "padding-bottom": "10px",
-            borderRadius: "20px",
-            marginTop: "5px",
-          }}
+        className={classes.root}
+        style={{
+          marginBottom: "7px",
+          "padding-bottom": "10px",
+          borderRadius: "20px",
+          marginTop: "5px",
+        }}
+      >
+        <CardMedia
+          className={classes.media}
+          image={"https://i.ibb.co/WxjRR3Q/eden.png"}
+          title="Community image"
+        />
+        <CardContent
+          style={{ "padding-bottom": "5px" }}
         >
-          <CardMedia
-            className={classes.media}
-            image={"https://i.ibb.co/WxjRR3Q/eden.png"}
-            title="Community image"
-          />
-                    <CardContent
-            style={{ "padding-bottom": "5px"}}
-          >
-            <Typography style={{ fontSize: "20px", "font-weight": "500" }}>
-              Claim tokens
+          <Typography style={{ fontSize: "20px", "font-weight": "500" }}>
+            Claim tokens
             </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              style={{ "margin-top": "6px" }}
-            >
-              You can claim tokens.
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            style={{ "margin-top": "6px" }}
+          >
+            You can claim tokens.
             </Typography>
           <div class="claimheaderbuttonrow">
-          <BootstrapButton
-          onClick={() => claimall()}
-                color="inherit"
-                variant="outline-dark"
-                style={{
-                  "font-weight": "bold",
-                  borderRadius: "15px",
-                  padding:"5px 20px 5px 20px",
-                  fontSize: "14px",
-                }}
-              >
-                Claim all
+            <BootstrapButton
+              onClick={() => claimall()}
+              color="inherit"
+              variant="outline-dark"
+              style={{
+                "font-weight": "bold",
+                borderRadius: "15px",
+                padding: "5px 20px 5px 20px",
+                fontSize: "14px",
+              }}
+            >
+              Claim all
               </BootstrapButton>
           </div>
-          </CardContent>
-        </Card>
+        </CardContent>
+      </Card>
     )
   }
 
   const cards = () => {
-    if(pooldata[0]){
-      return Object.keys(pooldata).map( key => 
+    if (pooldata[0]) {
+      return Object.keys(pooldata).map(key =>
         <div class="claimcard">
-                <div class="claimcardtitle">{pooldata[key].poolname}</div>
-                <div class="claimcarddescription">{pooldata[key].pooldescr}</div>
-                <div class="claimamounts">Total tokens in pool: {pooldata[key].totalamount}</div>
-                <div class="claimamounts">Available to claim: {pooldata[key].clmamount}</div>
-                <div class="buttonrow">
-                <BootstrapButton
-                color="inherit"
-                variant="outline-dark"
-                style={{
-                  "font-weight": "bold",
-                  borderRadius: "15px",
-                  padding:"5px 20px 5px 20px",
-                  fontSize: "14px",
-                }}
-              >
-                Claim
+          <div class="claimcardtitle">{pooldata[key].poolname}</div>
+          <div class="claimcarddescription">{pooldata[key].pooldescr}</div>
+          <div class="claimamounts">Total tokens in pool: {pooldata[key].totalamount}</div>
+          <div class="claimamounts">Available to claim: {pooldata[key].clmamount}</div>
+          <div class="buttonrow">
+            <BootstrapButton
+              color="inherit"
+              variant="outline-dark"
+              style={{
+                "font-weight": "bold",
+                borderRadius: "15px",
+                padding: "5px 20px 5px 20px",
+                fontSize: "14px",
+              }}
+            >
+              Claim
               </BootstrapButton>
-                <div class="buttonsright">
-                  <span><AddBoxIcon/></span>
-                  <span onClick={() => deletepool(pooldata[key].poolid)}><DeleteIcon/></span>
-                  <span><EditIcon/></span>
-                </div>
-              </div>
-              </div>
+            <div class="buttonsright">
+              <AddBoxIcon onClick={() => transfer(pooldata[key].poolid)} />
+              <DeleteIcon onClick={() => deletepool(pooldata[key].poolid)} />
+              <EditIcon onClick={() => deletepool(pooldata[key].poolid)} />
+            </div>
+          </div>
+        </div>
       )
     }
   }
@@ -389,6 +389,60 @@ function Claim(props) {
     }
   };
 
+  const transfer = async () => {
+    const {
+      ual: { login, displayError, showModal },
+    } = props;
+    // Via static contextType = UALContext, access to the activeUser object on this.context is now available
+    const {
+      ual: { activeUser },
+    } = props;
+
+    const poolid = makeint();
+
+    if (activeUser) {
+      loadingpoll();
+      try {
+        const transaction = {
+          actions: [
+            {
+              account: "SIIA VAJA FROM pooltable contractname",
+              name: "transfer",
+              authorization: [
+                {
+                  actor: displayaccountname(), // use account that was logged in
+                  permission: "active",
+                },
+              ],
+              data: {
+                to: "consortiumlv",
+                from: displayaccountname(),
+                amount: "SIIA VAJA seda mida userinputib.",
+                memo: "SIIA VAJA FROM pooltable poolid",
+              },
+            },
+          ],
+        };
+        // The activeUser.signTransaction will propose the passed in transaction to the logged in Authenticator
+        await activeUser.signTransaction(transaction, {
+          broadcast: true,
+          expireSeconds: 300,
+        });
+
+
+        sucesspoll();
+
+      } catch (error) {
+
+        actionpuccis(error);
+        console.log(error.message);
+
+      }
+    } else {
+      showModal();
+    }
+  };
+
   const modifypool = async () => {
     const {
       ual: { login, displayError, showModal },
@@ -416,7 +470,7 @@ function Claim(props) {
               ],
               data: {
                 creator: displayaccountname(),
-                poolid: poolid,
+                poolid: "SIIA VAJA from pooltable poolid",
                 poolname: poolname,
                 pooldescr: pooldescription,
                 contractname: contractname,
@@ -664,9 +718,9 @@ function Claim(props) {
         </div>
       </div>
       <div class="app">
-          {headercard()}
-          {cards()}
-        </div>
+        {headercard()}
+        {cards()}
+      </div>
     </div>
 
   );
