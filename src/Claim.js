@@ -15,13 +15,13 @@ import { Button as BootstrapButton } from "react-bootstrap";
 import CardMedia from "@material-ui/core/CardMedia";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-
+import Slider from "@material-ui/core/Slider";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { withUAL } from "ual-reactjs-renderer";
-
+import { Modal } from "react-bootstrap";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,7 +84,12 @@ function Claim(props) {
   const [poolname, setPoolName] = useState("");
   const [clmamount, setClmAmount] = useState("");
   const [contractname, setContractName] = useState("");
+  const [show, setShow] = useState(false);
 
+  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setShow(false);
+  };
 
 
 
@@ -206,6 +211,20 @@ function Claim(props) {
             You can claim tokens.
             </Typography>
           <div class="claimheaderbuttonrow">
+          <BootstrapButton
+              onClick={() => handleShow()}
+              color="inherit"
+              variant="outline-dark"
+              style={{
+                "font-weight": "bold",
+                borderRadius: "15px",
+                padding: "5px 20px 5px 20px",
+                fontSize: "14px",
+                marginRight:"5px"
+              }}
+            >
+              Claim all
+              </BootstrapButton>
             <BootstrapButton
               onClick={() => claimall()}
               color="inherit"
@@ -214,10 +233,10 @@ function Claim(props) {
                 "font-weight": "bold",
                 borderRadius: "15px",
                 padding: "5px 20px 5px 20px",
-                fontSize: "14px",
+                fontSize: "14px"
               }}
             >
-              Claim all
+              Create Pool
               </BootstrapButton>
           </div>
         </CardContent>
@@ -721,6 +740,24 @@ function Claim(props) {
         {headercard()}
         {cards()}
       </div>
+      <Modal show={show} onHide={handleClose} centered>
+            <Modal.Header closeButton>Create Pool</Modal.Header>
+            <Modal.Body>
+              <Slider
+                defaultValue={1}
+                aria-label="custom thumb label"
+                step={1}
+                min={0}
+                max={100}
+                onChangeCommitted={(e, val) => alert(val)} 
+                style={{
+                  marginBottom: "10px",
+                  "margin-top": "10px",
+                  color: "black",
+                }}
+              />
+            </Modal.Body>
+          </Modal>
     </div>
 
   );
