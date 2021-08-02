@@ -91,6 +91,10 @@ function Claim(props) {
 
   const [addsymbol, setAddSymbol] = useState("");
   const [adddecimals, setAddDecimals] = useState("");
+  const [addcontractname, setAddContractname] = useState("");
+  const [adduserinput, setAddUserInput] = useState(1);
+  const [addpoolid, setAddPoolId] = useState("");
+  const [addslidermax, setAddSliderMax] = useState(100);
 
   const [poolname, setPoolName] = useState("");
   const [pooldescription, setPoolDescription] = useState("");
@@ -103,13 +107,32 @@ function Claim(props) {
   const [modifyclaimamount, setModifyClaimAmount] = useState("");
   const [modifypoolid, setModifyPoolId] = useState("");
 
-  const handleShowAdd = (symbol, community) => {
+  const handleShowAdd = (symbol, contract, poolid) => {
+    fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        json: true,
+        code: contract,
+        table: "accounts",
+        scope: displayaccountname(),
+        limit: 1,
+      }),
+    }).then((response) =>
+      response.json().then((balance) => setAddSliderMax(Number(balance["rows"][0].balance.split(" ")[0])))
+    );
     setShowAdd(true);
     setAddSymbol(symbol.split(" ")[1])
     setAddDecimals(symbol.split(" ")[0].split(".")[1].length)
+    setAddContractname(contract)
+    setAddPoolId(poolid)
   }
   const handleCloseAdd = () => {
     setShowAdd(false);
+    setAddUserInput(1)
   };
 
   const handleShowEdit = (id) => {
@@ -303,7 +326,7 @@ function Claim(props) {
               Claim
               </BootstrapButton>
             <div class="buttonsright">
-              <AddBoxIcon onClick={() => handleShowAdd(pooldata[key].totalamount)} />
+              <AddBoxIcon onClick={() => handleShowAdd(pooldata[key].totalamount, pooldata[key].contractname, pooldata[key].poolid)} />
               <DeleteIcon onClick={() => deletepool(pooldata[key].poolid)} />
               <EditIcon onClick={() => handleShowEdit(pooldata[key].poolid)} />
             </div>
@@ -481,7 +504,7 @@ function Claim(props) {
         const transaction = {
           actions: [
             {
-              account: "SIIA VAJA FROM pooltable contractname",
+              account: addcontractname,
               name: "transfer",
               authorization: [
                 {
@@ -492,8 +515,8 @@ function Claim(props) {
               data: {
                 to: "consortiumlv",
                 from: displayaccountname(),
-                amount: "SIIA VAJA seda mida userinputib.",
-                memo: "SIIA VAJA FROM pooltable poolid",
+                quantity: adduserinput + "." + "0".repeat(adddecimals) + " " + addsymbol, //adduserinput + "." + adddecimals*"0" + " " + addsymbol,
+                memo: addpoolid,
               },
             },
           ],
@@ -797,26 +820,111 @@ function Claim(props) {
         {cards()}
       </div>
       <Modal show={showadd} onHide={handleCloseAdd} centered>
-        <Modal.Header closeButton>Add to pool {addsymbol} with {adddecimals} decimals.</Modal.Header>
+        <Modal.Header closeButton>
+        <Typography
+          style={{
+            fontSize: "22px",
+            "font-weight": "bold",
+            "margin-left": "7px",
+            "margin-bottom": "5px",
+          }}
+          data-html="true"
+          data-for="signalprogress"
+          data-tip={
+            "Add tokens to the pool."
+          }
+        >
+          <ReactTooltip
+            id="signalprogress"
+            type="dark"
+            effect="solid"
+            backgroundColor="black"
+            place="bottom"
+          />
+          Add to {addsymbol} pool.
+          <FontAwesomeIcon
+            icon={faInfoCircle}
+            style={{
+              height: "16px",
+              width: "16px",
+              color: "black",
+              "margin-bottom": "6px",
+
+              opacity: "0.7",
+              "margin-left": "2px",
+            }}
+          />
+        </Typography>
+        </Modal.Header>
         <Modal.Body>
+          <a>You are adding: {adduserinput} {addsymbol}.</a>
           <Slider
             defaultValue={1}
             aria-label="custom thumb label"
             step={1}
-            min={0}
-            max={100}
-            onChangeCommitted={(e, val) => alert(val)}
+            min={1}
+            max={addslidermax}
+            onChangeCommitted={(e, val) => setAddUserInput(val)}
             style={{
               marginBottom: "10px",
               "margin-top": "10px",
               color: "black",
             }}
           />
+            <BootstrapButton
+              variant="dark"
+              style={{
+                "font-weight": "bold",
+                borderRadius: "15px",
+                height: "38px",
+                fontSize: "15px",
+                width: "97%",
+                "margin-top": "10px",
+              }}
+              onClick={() => transfer()}
+            >
+              Add to pool
+                </BootstrapButton>
         </Modal.Body>
       </Modal>
 
       <Modal show={showedit} onHide={handleCloseEdit} centered>
-        <Modal.Header closeButton>Modify pool</Modal.Header>
+        <Modal.Header closeButton>
+        <Typography
+          style={{
+            fontSize: "22px",
+            "font-weight": "bold",
+            "margin-left": "7px",
+            "margin-bottom": "5px",
+          }}
+          data-html="true"
+          data-for="signalprogress"
+          data-tip={
+            "Modify pool"
+          }
+        >
+          <ReactTooltip
+            id="signalprogress"
+            type="dark"
+            effect="solid"
+            backgroundColor="black"
+            place="bottom"
+          />
+          Modify pool
+          <FontAwesomeIcon
+            icon={faInfoCircle}
+            style={{
+              height: "16px",
+              width: "16px",
+              color: "black",
+              "margin-bottom": "6px",
+
+              opacity: "0.7",
+              "margin-left": "2px",
+            }}
+          />
+        </Typography>
+        </Modal.Header>
         <Modal.Body>
           <a
             style={{
@@ -970,6 +1078,7 @@ function Claim(props) {
       </Modal>
 
       <Modal show={showcreate} onHide={handleCloseCreate} centered>
+      <Modal.Header>
         <Typography
           style={{
             fontSize: "22px",
@@ -1004,6 +1113,7 @@ function Claim(props) {
             }}
           />
         </Typography>
+        </Modal.Header>
         <Modal.Body>
           <a
             style={{
