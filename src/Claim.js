@@ -963,8 +963,8 @@ function Claim(props) {
             }}
           >
             {" "}
-                Community data is stored fully
-                <a href="https://bloks.io/account/consortiumlv"> on-chain</a>
+            Pools stored on
+                <a href="https://bloks.io/account/consortiumlv"> consortiumlv</a>
           </Typography>
         </center>
       </Modal>
