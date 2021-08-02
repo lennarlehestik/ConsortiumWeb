@@ -19,6 +19,9 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Slider from "@material-ui/core/Slider";
 import { makeStyles } from "@material-ui/core/styles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -232,7 +235,7 @@ function Claim(props) {
           style={{ "padding-bottom": "5px" }}
         >
           <Typography style={{ fontSize: "20px", "font-weight": "500" }}>
-            Claim tokens
+            Token pools
             </Typography>
           <Typography
             variant="body2"
@@ -240,10 +243,10 @@ function Claim(props) {
             component="p"
             style={{ "margin-top": "6px" }}
           >
-            You can claim tokens.
+            Eden members are eligible to claim tokens from the pools below. Each member is able to claim once from each pool.
             </Typography>
           <div class="claimheaderbuttonrow">
-          <BootstrapButton
+            <BootstrapButton
               color="inherit"
               variant="outline-dark"
               style={{
@@ -251,8 +254,9 @@ function Claim(props) {
                 borderRadius: "15px",
                 padding: "5px 20px 5px 20px",
                 fontSize: "14px",
-                marginRight:"5px"
+                marginRight: "5px"
               }}
+              onClick={() => claimall()}
             >
               Claim all
               </BootstrapButton>
@@ -294,6 +298,7 @@ function Claim(props) {
                 padding: "5px 20px 5px 20px",
                 fontSize: "14px",
               }}
+              onClick={() => claim(pooldata[key].poolid)}
             >
               Claim
               </BootstrapButton>
@@ -334,7 +339,7 @@ function Claim(props) {
       toast: true,
       position: "center",
       showConfirmButton: false,
-      timer: 3000,
+      timer: 10000,
       timerProgressBar: true,
       onOpen: (toast) => {
         toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -343,7 +348,7 @@ function Claim(props) {
     });
     Toast.fire({
       icon: "success",
-      title: "Success!",
+      title: "Transaction processed!",
     });
   };
 
@@ -362,6 +367,25 @@ function Claim(props) {
     Toast.fire({
       icon: "success",
       title: "Tokens successfully claimed!",
+    });
+  };
+
+
+  const creationsuccess = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "center",
+      showConfirmButton: false,
+      timer: 5000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Pool successfully created!",
     });
   };
 
@@ -427,7 +451,7 @@ function Claim(props) {
         });
 
 
-        sucesspoll();
+        creationsuccess();
 
       } catch (error) {
 
@@ -781,7 +805,7 @@ function Claim(props) {
             step={1}
             min={0}
             max={100}
-            onChangeCommitted={(e, val) => alert(val)} 
+            onChangeCommitted={(e, val) => alert(val)}
             style={{
               marginBottom: "10px",
               "margin-top": "10px",
@@ -792,312 +816,345 @@ function Claim(props) {
       </Modal>
 
       <Modal show={showedit} onHide={handleCloseEdit} centered>
-            <Modal.Header closeButton>Modify pool</Modal.Header>
-            <Modal.Body>
-              <a
-                style={{
-                  "font-weight": "500",
-                }}
-                data-html="true"
-                data-for="jobu"
-                data-tip={"Please insert name of the pool"}
-              >
-                <TextField
-                  style={{ width: "97%", margin: "7px" }}
-                  label={"Name of the pool"}
-                  onBlur={(text) => setModifyPoolName(text.target.value)}
-                  defaultValue={""}
-                  id="outlined-basic"
-                  variant="outlined"
-                  autoComplete="off"
-                />
-                <ReactTooltip
-                  id="jobu"
-                  type="dark"
-                  effect="solid"
-                  backgroundColor="black"
-                  place="top"
-                />
-              </a>
-
-              <a
-                style={{
-                  "font-weight": "500",
-                }}
-                data-html="true"
-                data-for="jobu4"
-                data-tip={
-                  "Please insert pool description"
-                }
-              >
-                <TextField
-                  style={{ width: "97%", margin: "7px" }}
-                  label={"Pool description"}
-                  onBlur={(text) => setModifyPoolDescription(text.target.value)}
-                  defaultValue={""}
-                  id="outlined-basic"
-                  variant="outlined"
-                  autoComplete="off"
-                />
-                <ReactTooltip
-                  id="jobu4"
-                  type="dark"
-                  effect="solid"
-                  backgroundColor="black"
-                  place="top"
-                />
-              </a>
-
-              <a
-                style={{
-                  "font-weight": "500",
-                }}
-                data-html="true"
-                data-for="jobu3"
-                data-tip={
-                  "Please insert the contract name"
-                }
-              >
-                <TextField
-                  style={{ width: "97%", margin: "7px" }}
-                  label={"Contract name"}
-                  onBlur={(text) => setModifyContractName(text.target.value)}
-                  id="outlined-basic"
-                  defaultValue={""}
-                  variant="outlined"
-                  autoComplete="off"
-                />
-                <ReactTooltip
-                  id="jobu3"
-                  type="dark"
-                  effect="solid"
-                  backgroundColor="black"
-                  place="top"
-                />
-              </a>
-
-              <a
-                style={{
-                  "font-weight": "500",
-                }}
-                data-html="true"
-                data-for="jobu2"
-                data-tip={
-                  "Please insert the claim amount."
-                }
-              >
-                <TextField
-                  style={{ width: "97%", margin: "7px" }}
-                  label={"Claim amount"}
-                  onBlur={(text) => setModifyClaimAmount(text.target.value)}
-                  defaultValue={""}
-                  id="outlined-basic"
-                  variant="outlined"
-                  autoComplete="off"
-                />
-              </a>
-              <ReactTooltip
-                id="jobu2"
-                type="dark"
-                effect="solid"
-                backgroundColor="black"
-                place="top"
-              />
-              <br />
-
-              <center>
-                <BootstrapButton
-                  variant="dark"
-                  style={{
-                    "font-weight": "bold",
-                    borderRadius: "15px",
-                    height: "38px",
-                    fontSize: "15px",
-                    width: "97%",
-                    "margin-top": "10px",
-                  }}
-                  onClick={() => modifypool()}
-                >
-                  Modify pool
-                </BootstrapButton>
-              </center>
-            </Modal.Body>
-            <hr
-              style={{
-                width: "90%",
-                "margin-top": "9px",
-                "margin-bottom": "10px",
-              }}
+        <Modal.Header closeButton>Modify pool</Modal.Header>
+        <Modal.Body>
+          <a
+            style={{
+              "font-weight": "500",
+            }}
+            data-html="true"
+            data-for="jobu"
+            data-tip={"Please insert name of the pool"}
+          >
+            <TextField
+              style={{ width: "97%", margin: "7px" }}
+              label={"Name of the pool"}
+              onBlur={(text) => setModifyPoolName(text.target.value)}
+              defaultValue={""}
+              id="outlined-basic"
+              variant="outlined"
+              autoComplete="off"
             />
-            <center>
-              {" "}
-              <Typography
-                style={{
-                  fontSize: "12px",
-                  "margin-bottom": "16px",
-                  "font-weight": "bold",
-                }}
-              >
-                {" "}
+            <ReactTooltip
+              id="jobu"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="top"
+            />
+          </a>
+
+          <a
+            style={{
+              "font-weight": "500",
+            }}
+            data-html="true"
+            data-for="jobu4"
+            data-tip={
+              "Please insert pool description"
+            }
+          >
+            <TextField
+              style={{ width: "97%", margin: "7px" }}
+              label={"Pool description"}
+              onBlur={(text) => setModifyPoolDescription(text.target.value)}
+              defaultValue={""}
+              id="outlined-basic"
+              variant="outlined"
+              autoComplete="off"
+            />
+            <ReactTooltip
+              id="jobu4"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="top"
+            />
+          </a>
+
+          <a
+            style={{
+              "font-weight": "500",
+            }}
+            data-html="true"
+            data-for="jobu3"
+            data-tip={
+              "Please insert the contract name"
+            }
+          >
+            <TextField
+              style={{ width: "97%", margin: "7px" }}
+              label={"Contract name"}
+              onBlur={(text) => setModifyContractName(text.target.value)}
+              id="outlined-basic"
+              defaultValue={""}
+              variant="outlined"
+              autoComplete="off"
+            />
+            <ReactTooltip
+              id="jobu3"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="top"
+            />
+          </a>
+
+          <a
+            style={{
+              "font-weight": "500",
+            }}
+            data-html="true"
+            data-for="jobu2"
+            data-tip={
+              "Please insert the claim amount."
+            }
+          >
+            <TextField
+              style={{ width: "97%", margin: "7px" }}
+              label={"Claim amount"}
+              onBlur={(text) => setModifyClaimAmount(text.target.value)}
+              defaultValue={""}
+              id="outlined-basic"
+              variant="outlined"
+              autoComplete="off"
+            />
+          </a>
+          <ReactTooltip
+            id="jobu2"
+            type="dark"
+            effect="solid"
+            backgroundColor="black"
+            place="top"
+          />
+          <br />
+
+          <center>
+            <BootstrapButton
+              variant="dark"
+              style={{
+                "font-weight": "bold",
+                borderRadius: "15px",
+                height: "38px",
+                fontSize: "15px",
+                width: "97%",
+                "margin-top": "10px",
+              }}
+              onClick={() => modifypool()}
+            >
+              Modify pool
+                </BootstrapButton>
+          </center>
+        </Modal.Body>
+        <hr
+          style={{
+            width: "90%",
+            "margin-top": "9px",
+            "margin-bottom": "10px",
+          }}
+        />
+        <center>
+          {" "}
+          <Typography
+            style={{
+              fontSize: "12px",
+              "margin-bottom": "16px",
+              "font-weight": "bold",
+            }}
+          >
+            {" "}
                 Community data is stored fully
                 <a href="https://bloks.io/account/consortiumlv"> on-chain</a>
-              </Typography>
-            </center>
-          </Modal>
+          </Typography>
+        </center>
+      </Modal>
 
-          <Modal show={showcreate} onHide={handleCloseCreate} centered>
-            <Modal.Header closeButton>Create a pool</Modal.Header>
-            <Modal.Body>
-              <a
-                style={{
-                  "font-weight": "500",
-                }}
-                data-html="true"
-                data-for="jobu"
-                data-tip={"Please insert name of the pool"}
-              >
-                <TextField
-                  style={{ width: "97%", margin: "7px" }}
-                  label={"Name of the pool"}
-                  onBlur={(text) => setPoolName(text.target.value)}
-                  defaultValue={""}
-                  id="outlined-basic"
-                  variant="outlined"
-                  autoComplete="off"
-                />
-                <ReactTooltip
-                  id="jobu"
-                  type="dark"
-                  effect="solid"
-                  backgroundColor="black"
-                  place="top"
-                />
-              </a>
+      <Modal show={showcreate} onHide={handleCloseCreate} centered>
+        <Typography
+          style={{
+            fontSize: "22px",
+            "font-weight": "bold",
+            "margin-left": "7px",
+            "margin-bottom": "5px",
+          }}
+          data-html="true"
+          data-for="comad"
+          data-tip={
+            "*Any EOS account holder can create a pool.  <br/><br /> *Minor manual configuration of smart contracts are needed, <br /> in case the token in the pool is new. <br/><br /> *There are no fees to create a pool."
+          }
+        >
+          <ReactTooltip
+            id="comad"
+            type="dark"
+            effect="solid"
+            backgroundColor="black"
+            place="bottom"
+          />
+         Create a pool
+          <FontAwesomeIcon
+            icon={faInfoCircle}
+            style={{
+              height: "16px",
+              width: "16px",
+              color: "black",
+              "margin-bottom": "6px",
 
-              <a
-                style={{
-                  "font-weight": "500",
-                }}
-                data-html="true"
-                data-for="jobu4"
-                data-tip={
-                  "Please insert pool description"
-                }
-              >
-                <TextField
-                  style={{ width: "97%", margin: "7px" }}
-                  label={"Pool description"}
-                  onBlur={(text) => setPoolDescription(text.target.value)}
-                  defaultValue={""}
-                  id="outlined-basic"
-                  variant="outlined"
-                  autoComplete="off"
-                />
-                <ReactTooltip
-                  id="jobu4"
-                  type="dark"
-                  effect="solid"
-                  backgroundColor="black"
-                  place="top"
-                />
-              </a>
-
-              <a
-                style={{
-                  "font-weight": "500",
-                }}
-                data-html="true"
-                data-for="jobu3"
-                data-tip={
-                  "Please insert the contract name"
-                }
-              >
-                <TextField
-                  style={{ width: "97%", margin: "7px" }}
-                  label={"Contract name"}
-                  onBlur={(text) => setContractName(text.target.value)}
-                  id="outlined-basic"
-                  defaultValue={""}
-                  variant="outlined"
-                  autoComplete="off"
-                />
-                <ReactTooltip
-                  id="jobu3"
-                  type="dark"
-                  effect="solid"
-                  backgroundColor="black"
-                  place="top"
-                />
-              </a>
-
-              <a
-                style={{
-                  "font-weight": "500",
-                }}
-                data-html="true"
-                data-for="jobu2"
-                data-tip={
-                  "Please insert the claim amount."
-                }
-              >
-                <TextField
-                  style={{ width: "97%", margin: "7px" }}
-                  label={"Claim amount"}
-                  onBlur={(text) => setClaimAmount(text.target.value)}
-                  defaultValue={""}
-                  id="outlined-basic"
-                  variant="outlined"
-                  autoComplete="off"
-                />
-              </a>
-              <ReactTooltip
-                id="jobu2"
-                type="dark"
-                effect="solid"
-                backgroundColor="black"
-                place="top"
-              />
-              <br />
-
-              <center>
-                <BootstrapButton
-                  variant="dark"
-                  style={{
-                    "font-weight": "bold",
-                    borderRadius: "15px",
-                    height: "38px",
-                    fontSize: "15px",
-                    width: "97%",
-                    "margin-top": "10px",
-                  }}
-                  onClick={() => createpool()}
-                >
-                  Create pool
-                </BootstrapButton>
-              </center>
-            </Modal.Body>
-            <hr
-              style={{
-                width: "90%",
-                "margin-top": "9px",
-                "margin-bottom": "10px",
-              }}
+              opacity: "0.7",
+              "margin-left": "2px",
+            }}
+          />
+        </Typography>
+        <Modal.Body>
+          <a
+            style={{
+              "font-weight": "500",
+            }}
+            data-html="true"
+            data-for="jobu"
+            data-tip={"Please insert name of the pool"}
+          >
+            <TextField
+              style={{ width: "97%", margin: "7px" }}
+              label={"Name of the pool"}
+              onBlur={(text) => setPoolName(text.target.value)}
+              defaultValue={""}
+              id="outlined-basic"
+              variant="outlined"
+              autoComplete="off"
             />
-            <center>
-              {" "}
-              <Typography
-                style={{
-                  fontSize: "12px",
-                  "margin-bottom": "16px",
-                  "font-weight": "bold",
-                }}
-              >
-                {" "}
-                Community data is stored fully
-                <a href="https://bloks.io/account/consortiumlv"> on-chain</a>
-              </Typography>
-            </center>
-          </Modal>
+            <ReactTooltip
+              id="jobu"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="top"
+            />
+          </a>
+
+          <a
+            style={{
+              "font-weight": "500",
+            }}
+            data-html="true"
+            data-for="jobu4"
+            data-tip={
+              "Please insert pool description"
+            }
+          >
+            <TextField
+              style={{ width: "97%", margin: "7px" }}
+              label={"Pool description"}
+              onBlur={(text) => setPoolDescription(text.target.value)}
+              defaultValue={""}
+              id="outlined-basic"
+              variant="outlined"
+              autoComplete="off"
+            />
+            <ReactTooltip
+              id="jobu4"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="top"
+            />
+          </a>
+
+          <a
+            style={{
+              "font-weight": "500",
+            }}
+            data-html="true"
+            data-for="jobu3"
+            data-tip={
+              "Please insert the contract name associated with the tokens in the pool."
+            }
+          >
+            <TextField
+              style={{ width: "97%", margin: "7px" }}
+              label={"Contract name"}
+              onBlur={(text) => setContractName(text.target.value)}
+              id="outlined-basic"
+              defaultValue={""}
+              variant="outlined"
+              autoComplete="off"
+            />
+            <ReactTooltip
+              id="jobu3"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="top"
+            />
+          </a>
+
+          <a
+            style={{
+              "font-weight": "500",
+            }}
+            data-html="true"
+            data-for="jobu2"
+            data-tip={
+              "Please insert amount that the Eden members will be able to claim (exact decimals eg. 1.0000 EOS)."
+            }
+          >
+            <TextField
+              style={{ width: "97%", margin: "7px" }}
+              label={"Claim amount"}
+              onBlur={(text) => setClaimAmount(text.target.value)}
+              defaultValue={""}
+              id="outlined-basic"
+              variant="outlined"
+              autoComplete="off"
+            />
+          </a>
+          <ReactTooltip
+            id="jobu2"
+            type="dark"
+            effect="solid"
+            backgroundColor="black"
+            place="top"
+          />
+          <br />
+
+          <center>
+            <BootstrapButton
+              variant="dark"
+              style={{
+                "font-weight": "bold",
+                borderRadius: "15px",
+                height: "38px",
+                fontSize: "15px",
+                width: "97%",
+                "margin-top": "10px",
+              }}
+              onClick={() => createpool()}
+            >
+              Create pool
+                </BootstrapButton>
+          </center>
+        </Modal.Body>
+        <hr
+          style={{
+            width: "90%",
+            "margin-top": "9px",
+            "margin-bottom": "10px",
+          }}
+        />
+        <center>
+          {" "}
+          <Typography
+            style={{
+              fontSize: "12px",
+              "margin-bottom": "16px",
+              "font-weight": "bold",
+            }}
+          >
+            {" "}
+                Pools stored on
+                <a href="https://bloks.io/account/consortiumlv"> consortiumlv</a>
+          </Typography>
+        </center>
+      </Modal>
     </div>
 
   );
