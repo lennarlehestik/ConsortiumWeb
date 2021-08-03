@@ -94,7 +94,7 @@ function Claim(props) {
   const [addcontractname, setAddContractname] = useState("");
   const [adduserinput, setAddUserInput] = useState(1);
   const [addpoolid, setAddPoolId] = useState("");
-  const [addslidermax, setAddSliderMax] = useState(100);
+  const [addslidermax, setAddSliderMax] = useState(1);
 
   const [poolname, setPoolName] = useState("");
   const [pooldescription, setPoolDescription] = useState("");
@@ -123,7 +123,7 @@ function Claim(props) {
       }),
     }).then((response) =>
       response.json().then((balance) => setAddSliderMax(Number(balance["rows"][0].balance.split(" ")[0])))
-    ).catch((e)=>console.log(e))
+    ).catch((e) => console.log(e))
     setShowAdd(true);
     setAddSymbol(symbol.split(" ")[1])
     setAddDecimals(symbol.split(" ")[0].split(".")[1].length)
@@ -902,7 +902,7 @@ function Claim(props) {
             aria-label="custom thumb label"
             step={1}
             min={1}
-            max={addslidermax ? addslidermax : 100}
+            max={addslidermax ? addslidermax : 1}
             onChangeCommitted={(e, val) => setAddUserInput(val)}
             style={{
               marginBottom: "10px",
