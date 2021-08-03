@@ -123,7 +123,7 @@ function Claim(props) {
       }),
     }).then((response) =>
       response.json().then((balance) => setAddSliderMax(Number(balance["rows"][0].balance.split(" ")[0])))
-    );
+    ).catch((e)=>console.log(e))
     setShowAdd(true);
     setAddSymbol(symbol.split(" ")[1])
     setAddDecimals(symbol.split(" ")[0].split(".")[1].length)
@@ -902,7 +902,7 @@ function Claim(props) {
             aria-label="custom thumb label"
             step={1}
             min={1}
-            max={addslidermax}
+            max={addslidermax ? addslidermax : 100}
             onChangeCommitted={(e, val) => setAddUserInput(val)}
             style={{
               marginBottom: "10px",
