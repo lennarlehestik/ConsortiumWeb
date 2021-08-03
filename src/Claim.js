@@ -267,6 +267,7 @@ function Claim(props) {
             style={{ "margin-top": "6px" }}
           >
             Eden members are eligible to claim tokens from the pools below. Each member is able to claim once from each pool.
+            Authors and sponsors of the idea are Eden members Max Infeld and Duane Philippi.
             </Typography>
           <div class="claimheaderbuttonrow">
             <BootstrapButton
@@ -309,8 +310,8 @@ function Claim(props) {
         <div class="claimcard">
           <div class="claimcardtitle">{pooldata[key].poolname}</div>
           <div class="claimcarddescription">{pooldata[key].pooldescr}</div>
-          <div class="claimamounts">Total tokens in pool: {pooldata[key].totalamount}</div>
-          <div class="claimamounts">Available to claim: {pooldata[key].clmamount}</div>
+          <div class="claimamounts"> <b>Total tokens in pool: {pooldata[key].totalamount}</b></div>
+          <div class="claimamounts"><b>Available to claim: {pooldata[key].clmamount}</b></div>
           <div class="buttonrow">
             <BootstrapButton
               color="inherit"
@@ -375,6 +376,25 @@ function Claim(props) {
     });
   };
 
+
+  const successmod = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "center",
+      showConfirmButton: false,
+      timer: 10000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Successfully modified!",
+    });
+  };
+
   const sucesspoll = () => {
     const Toast = Swal.mixin({
       toast: true,
@@ -390,6 +410,25 @@ function Claim(props) {
     Toast.fire({
       icon: "success",
       title: "Tokens successfully claimed!",
+    });
+  };
+
+
+  const successadd = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "center",
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true,
+      onOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Tokens successfully added to the pool!",
     });
   };
 
@@ -528,7 +567,7 @@ function Claim(props) {
         });
 
 
-        sucesspoll();
+        successadd();
 
       } catch (error) {
 
@@ -584,7 +623,7 @@ function Claim(props) {
         });
 
 
-        sucesspoll();
+        successmod();
 
       } catch (error) {
 
@@ -821,43 +860,43 @@ function Claim(props) {
       </div>
       <Modal show={showadd} onHide={handleCloseAdd} centered>
         <Modal.Header closeButton>
-        <Typography
-          style={{
-            fontSize: "22px",
-            "font-weight": "bold",
-            "margin-left": "7px",
-            "margin-bottom": "5px",
-          }}
-          data-html="true"
-          data-for="signalprogress"
-          data-tip={
-            "Add tokens to the pool."
-          }
-        >
-          <ReactTooltip
-            id="signalprogress"
-            type="dark"
-            effect="solid"
-            backgroundColor="black"
-            place="bottom"
-          />
-          Add to {addsymbol} pool.
-          <FontAwesomeIcon
-            icon={faInfoCircle}
+          <Typography
             style={{
-              height: "16px",
-              width: "16px",
-              color: "black",
-              "margin-bottom": "6px",
-
-              opacity: "0.7",
-              "margin-left": "2px",
+              fontSize: "22px",
+              "font-weight": "bold",
+              "margin-left": "7px",
+              "margin-bottom": "5px",
             }}
-          />
-        </Typography>
+            data-html="true"
+            data-for="signalprogress"
+            data-tip={
+              "*Addition of tokens to the pool involves their transfer to consortiumlv account"
+            }
+          >
+            <ReactTooltip
+              id="signalprogress"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="bottom"
+            />
+          Add to pool
+          <FontAwesomeIcon
+              icon={faInfoCircle}
+              style={{
+                height: "16px",
+                width: "16px",
+                color: "black",
+                "margin-bottom": "6px",
+
+                opacity: "0.7",
+                "margin-left": "2px",
+              }}
+            />
+          </Typography>
         </Modal.Header>
         <Modal.Body>
-          <a>You are adding: {adduserinput} {addsymbol}.</a>
+          <a>You are adding: {adduserinput} {addsymbol}</a>
           <Slider
             defaultValue={1}
             aria-label="custom thumb label"
@@ -871,59 +910,59 @@ function Claim(props) {
               color: "black",
             }}
           />
-            <BootstrapButton
-              variant="dark"
-              style={{
-                "font-weight": "bold",
-                borderRadius: "15px",
-                height: "38px",
-                fontSize: "15px",
-                width: "97%",
-                "margin-top": "10px",
-              }}
-              onClick={() => transfer()}
-            >
-              Add to pool
+          <BootstrapButton
+            variant="dark"
+            style={{
+              "font-weight": "bold",
+              borderRadius: "15px",
+              height: "38px",
+              fontSize: "15px",
+              width: "97%",
+              "margin-top": "10px",
+            }}
+            onClick={() => transfer()}
+          >
+            Transfer
                 </BootstrapButton>
         </Modal.Body>
       </Modal>
 
       <Modal show={showedit} onHide={handleCloseEdit} centered>
         <Modal.Header closeButton>
-        <Typography
-          style={{
-            fontSize: "22px",
-            "font-weight": "bold",
-            "margin-left": "7px",
-            "margin-bottom": "5px",
-          }}
-          data-html="true"
-          data-for="signalprogress"
-          data-tip={
-            "Modify pool"
-          }
-        >
-          <ReactTooltip
-            id="signalprogress"
-            type="dark"
-            effect="solid"
-            backgroundColor="black"
-            place="bottom"
-          />
+          <Typography
+            style={{
+              fontSize: "22px",
+              "font-weight": "bold",
+              "margin-left": "7px",
+              "margin-bottom": "5px",
+            }}
+            data-html="true"
+            data-for="signalprogress"
+            data-tip={
+              "Oh, hi Mark!"
+            }
+          >
+            <ReactTooltip
+              id="signalprogress"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="bottom"
+            />
           Modify pool
           <FontAwesomeIcon
-            icon={faInfoCircle}
-            style={{
-              height: "16px",
-              width: "16px",
-              color: "black",
-              "margin-bottom": "6px",
+              icon={faInfoCircle}
+              style={{
+                height: "16px",
+                width: "16px",
+                color: "black",
+                "margin-bottom": "6px",
 
-              opacity: "0.7",
-              "margin-left": "2px",
-            }}
-          />
-        </Typography>
+                opacity: "0.7",
+                "margin-left": "2px",
+              }}
+            />
+          </Typography>
         </Modal.Header>
         <Modal.Body>
           <a
@@ -1050,7 +1089,7 @@ function Claim(props) {
               }}
               onClick={() => modifypool()}
             >
-              Modify pool
+              Modify
                 </BootstrapButton>
           </center>
         </Modal.Body>
@@ -1078,41 +1117,41 @@ function Claim(props) {
       </Modal>
 
       <Modal show={showcreate} onHide={handleCloseCreate} centered>
-      <Modal.Header>
-        <Typography
-          style={{
-            fontSize: "22px",
-            "font-weight": "bold",
-            "margin-left": "7px",
-            "margin-bottom": "5px",
-          }}
-          data-html="true"
-          data-for="comad"
-          data-tip={
-            "*Any EOS account holder can create a pool.  <br/><br /> *Minor manual configuration of smart contracts are needed, <br /> in case the token in the pool is new. <br/><br /> *There are no fees to create a pool."
-          }
-        >
-          <ReactTooltip
-            id="comad"
-            type="dark"
-            effect="solid"
-            backgroundColor="black"
-            place="bottom"
-          />
+        <Modal.Header>
+          <Typography
+            style={{
+              fontSize: "22px",
+              "font-weight": "bold",
+              "margin-left": "7px",
+              "margin-bottom": "5px",
+            }}
+            data-html="true"
+            data-for="comad"
+            data-tip={
+              "*Any EOS account holder can create a pool. <br/><br /> *There are no fees to create a pool."
+            }
+          >
+            <ReactTooltip
+              id="comad"
+              type="dark"
+              effect="solid"
+              backgroundColor="black"
+              place="bottom"
+            />
          Create a pool
           <FontAwesomeIcon
-            icon={faInfoCircle}
-            style={{
-              height: "16px",
-              width: "16px",
-              color: "black",
-              "margin-bottom": "6px",
+              icon={faInfoCircle}
+              style={{
+                height: "16px",
+                width: "16px",
+                color: "black",
+                "margin-bottom": "6px",
 
-              opacity: "0.7",
-              "margin-left": "2px",
-            }}
-          />
-        </Typography>
+                opacity: "0.7",
+                "margin-left": "2px",
+              }}
+            />
+          </Typography>
         </Modal.Header>
         <Modal.Body>
           <a
