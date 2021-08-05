@@ -968,8 +968,30 @@ function App(props) {
             <a style={{ "margin-top": "20px" }}>Search</a>
           </BootstrapButton>
         </div>
+        <div class="claimbuttonwrapper">
+          <BootstrapButton
+            variant="dark"
+            color="inherit"
+            textAlign="right"
+            style={{
+              borderRadius: "15px",
+              fontSize: "15px",
+              "font-weight": "bold",
+              "padding": "15px",
+              "width": "100%",
+              opacity: "0.9",
+            }}
+            id="claimbutton"
+
+            //style={{ color: "inherit", "border-radius": "50px" }}
+            href={`${window.location.origin}/claim`}
+          >
+            CLAIM TOKENS
+          </BootstrapButton>
+        </div>
 
         <div class="parent">
+
           {data.rows.map((u, i) => {
             return (
               <div class="frontpagecard">

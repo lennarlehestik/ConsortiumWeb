@@ -267,7 +267,7 @@ function Claim(props) {
             style={{ "margin-top": "6px" }}
           >
             Eden members are eligible to claim tokens from the pools below. Each member is able to claim once from each pool.
-            Authors and sponsors of the idea are Eden members Max Infeld and Duane Philippi.
+            Authors and sponsors of the idea are Eden members Max Infeld and Duane Phillippi.
             </Typography>
           <div class="claimheaderbuttonrow">
             <BootstrapButton

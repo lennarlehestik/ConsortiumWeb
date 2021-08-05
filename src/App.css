@@ -44,8 +44,18 @@
   margin-bottom: 50px;
 }
 
+.claimbuttonwrapper{
+  padding: 5px 15px 15px 15px;
+}
+
 @media only screen and (min-width: 768px) {
   .mobilemenu {
+    display: none;
+  }
+  #claimbutton {
+    display: none;
+  }
+  .claimbuttonwrapper{
     display: none;
   }
 }
