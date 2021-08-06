@@ -2716,10 +2716,10 @@ anchor-link-browser-transport@^2.1.1:
   dependencies:
     qrcode "^1.4.4"
 
-anchor-link-browser-transport@^3.1.3:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.1.3.tgz#eb65dbcba9380885f36b08b2a9d05bf9cdeb4e46"
-  integrity sha512-r5S7r/NkkBQaUydh0Q3MOZZ7oQo1KZZ72LHtJzW5PX1v2dIW76/hxsKVE9IjwmIIeHvB6jqgHgTk0Rm3YVdqYw==
+anchor-link-browser-transport@^3.2.3:
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.2.4.tgz#61ce650666c557db9d12d6ac54abd5ab934eb952"
+  integrity sha512-dtuZMWbBGYlcwo7gQWMCoMGgCCCEEYQ41RPlSUC5PWOLsgtS1rxp3ueEve1wCwNl4QCJcAN8SJGHShWcJ5ZfJQ==
   dependencies:
     tslib "^2.0.3"
 
@@ -2737,10 +2737,10 @@ anchor-link@^2.1.2:
     uuid "^8.1.0"
     ws "^7.2.5"
 
-anchor-link@^3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/anchor-link/-/anchor-link-3.2.3.tgz#ed57b54050a74ae3fb391bdb67f78c7196d8a343"
-  integrity sha512-1AnQLwO6tKWAP7l9/dwQ4iRT8RvNFBDPb7mxdqS2hURJa6zXEI9UdIMKCVKP64iiu2Jekf8/TSXnFKJFVXIPog==
+anchor-link@^3.3.2:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/anchor-link/-/anchor-link-3.3.3.tgz#7eb667c07e74f438c41b5376496911e4a3d70592"
+  integrity sha512-ssUIWhsFIrw8/hokPXSIS5eddajVHcGZlSwxm/HUG1IMvkwh7TSn/m5IY/VsAfF+roN7MJ5zs0XyFl8JtJno9Q==
   dependencies:
     "@greymass/eosio" "^0.4.0"
     asmcrypto.js "^2.3.2"
@@ -12131,14 +12131,14 @@ u2f-api@0.2.7:
   resolved "https://registry.yarnpkg.com/u2f-api/-/u2f-api-0.2.7.tgz#17bf196b242f6bf72353d9858e6a7566cc192720"
   integrity sha512-fqLNg8vpvLOD5J/z4B6wpPg4Lvowz1nJ9xdHcCzdUPKcFE/qNCceV2gNZxSJd5vhAZemHr/K/hbzVA0zxB5mkg==
 
-ual-anchor@^1.0.5:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/ual-anchor/-/ual-anchor-1.0.6.tgz#55c0214cc2cb21abf103ab30cf9e23705a106aab"
-  integrity sha512-rtyCgmY7zf3BSFdiZx6y18e04kjLud6/vZibEwVmbN5XHywM/QhuD20986TQwMcvhS7vZ/pLExUcQEc3ycN+3w==
+ual-anchor@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/ual-anchor/-/ual-anchor-1.0.9.tgz#c777e9f3d69cdd6affa46de914732847027e5477"
+  integrity sha512-aaQ//gJ8tQnsmaEe5iiFbJovKuiTFJ8FPNUrlvHLjaMqJnjFbprDT4AhLfpHHe+9fwSp/ol8wP4spPACpuofPg==
   dependencies:
     "@greymass/eosio" "^0.4.3"
-    anchor-link "^3.2.3"
-    anchor-link-browser-transport "^3.1.3"
+    anchor-link "^3.3.2"
+    anchor-link-browser-transport "^3.2.3"
     elliptic "6.5.4"
     eosio-signing-request "^2.2.1"
     eosjs "^21.0.3"
