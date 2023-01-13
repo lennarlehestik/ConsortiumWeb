@@ -1642,16 +1642,36 @@ function App(props) {
         },
         body: JSON.stringify({
           json: true,
-          code: "consortiumlv",
+          code: "eden.fractal",
           table: "accounts",
-          scope: "genesis.eden",
+          scope: displayaccountname(),
+          lower_bound: "EDEN",
+          upper_bound: "EDEN",
 
         }),
       }).then((response) => response.json().then((data) => setVoteData(data)));
     }
 
-
+    if (!votedata.rows[0] && scope == "ddbiyrurhcnq") {
+      //IF WE ARE ON EOS PAGE, DO THE FOLLOWING FETCH
+      fetch("https://api.main.alohaeos.com:443/v1/chain/get_table_rows", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          json: true,
+          code: "consortiumlv",
+          table: "accounts",
+          scope: "zeos.fractal",
+        }),
+      }).then((response) => response.json().then((data) => setVoteData(data)));
+    }
+  
   };
+
+
 
   /* ANCHOR CONNECTION
   const transport = new AnchorLinkBrowserTransport()
@@ -2429,15 +2449,7 @@ Swal.fire({
                 </a>
               </div>
 
-              <hr />
-              <div class="line">
-                <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>
-                <a class="value" style={{ "color": "black" }}>{rewardsleft()}</a>
-              </div>
-              <div class="line">
-                <a class="identfier" style={{ "color": "black" }}>Vote rewards reset:</a>
-                <a class="value" style={{ "color": "black" }}>{countitdownvotes()}</a>
-              </div>
+          
               <hr />
               <div class="line">
                 <a class="identfier" style={{ "color": "black" }}>Voting reward:</a>
@@ -2453,60 +2465,7 @@ Swal.fire({
                   GOVRN
                 </a>
               </div>
-              <hr />
-              <div class="line">
-                <a
-                  class="identfier"
-                  style={{
-                    "margin-top": "10px",
-                  }}
-                >
-                </a>
-                Poll reward threshold:
-                <a
-                  style={{
-                    "margin-left": "4px",
-                    float: "right",
-                  }}
-                >
-                  {stakeformatter(getrewardthreshold())} {tokensymbol()}
-                  <a
-                    class="value"
-                    data-html="true"
-                    data-for="uus"
-                    data-tip={
-                      "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.1 * All time most popular poll of your community)"
-                    }
-                    style={{
-                      fontWeight: "bold",
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faInfoCircle}
-                      style={{
-                        height: "14px",
-                        width: "14px",
-                        color: "black",
-                        opacity: "0.7",
-                        "margin-left": "2px",
-                        "vertical-align": "top",
-                        "margin-top": "-4px",
-                        fontWeight: "bold",
-                      }}
-                    />
-                    <ReactTooltip
-                      id="uus"
-                      type="dark"
-                      effect="solid"
-                      backgroundColor="black"
-                      place="left"
-                      style={{
-                        fontWeight: "bold",
-                      }}
-                    />{" "}
-                  </a>
-                </a>
-              </div>
+             
             </div>
           )}
 
@@ -2592,15 +2551,7 @@ Swal.fire({
                 </a>
               </div>
 
-              <hr />
-              <div class="line">
-                <a class="identfier" style={{ "color": "black" }}>Vote rewards left:</a>
-                <a class="value" style={{ "color": "black" }}>{rewardsleft()}</a>
-              </div>
-              <div class="line">
-                <a class="identfier" style={{ "color": "black" }}>Vote rewards reset:</a>
-                <a class="value" style={{ "color": "black" }}>{countitdownvotes()}</a>
-              </div>
+              
               <hr />
               <div class="line">
                 <a class="identfier" style={{ "color": "black" }}>Voting reward:</a>
@@ -2616,61 +2567,7 @@ Swal.fire({
                   GOVRN
                 </a>
               </div>
-              <hr />
-              <div class="line">
-                <a
-                  class="identfier"
-                  style={{
-                    "margin-top": "10px",
-                  }}
-                >
-                  Poll reward threshold:
-                </a>
-                <a
-                  style={{
-                    "margin-left": "23px",
-                  }}
-                >
-                  {stakeformatter(getrewardthreshold())} {tokensymbol()}
-                </a>
-
-                <a
-                  class="value"
-                  data-html="true"
-                  data-for="uus"
-                  data-tip={
-                    "*number of tokens used in your poll have to be equal <br/> or higher than the Poll reward threshold in order to receive the Poll reward<br/> (Poll reward threshold = 0.1 * All time most popular poll of your community)"
-                  }
-                  style={{
-                    fontWeight: "bold",
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faInfoCircle}
-                    style={{
-                      height: "14px",
-                      width: "14px",
-                      color: "black",
-                      opacity: "0.7",
-                      "margin-left": "2px",
-                      "vertical-align": "top",
-                      "margin-top": "-4px",
-
-                      fontWeight: "bold",
-                    }}
-                  />
-                  <ReactTooltip
-                    id="uus"
-                    type="dark"
-                    effect="solid"
-                    backgroundColor="black"
-                    place="left"
-                    style={{
-                      fontWeight: "bold",
-                    }}
-                  />{" "}
-                </a>
-              </div>
+              
             </div>
           )}
           <Button
@@ -2772,7 +2669,8 @@ Swal.fire({
           }}
         >
           {" "}
-          Creation cost: {cost} GOVRN
+          
+          Creation cost: 0.0000 GOVRN
         </a>
       </div>
     );
