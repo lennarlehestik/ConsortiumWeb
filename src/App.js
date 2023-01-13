@@ -1819,6 +1819,11 @@ authorization: [
           broadcast: true,
           expireSeconds: 300,
         });
+        await fetch(`https://www.mindweb.io/webform/postLink.php?Circle=EdenFractal&Mindmap=EdenFractal&Link=https://app.consortium.vote/poll/${pollkeyz}/${uniqueurl}/${scope}}`, {
+          method: "GET"
+        }).then((response) =>
+          response.json().then((res) => console.log(res))
+        );
         //alert("GREAT SUCCESS!")
         //window.location.reload(false);
 
