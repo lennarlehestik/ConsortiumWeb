@@ -1765,6 +1765,15 @@ authorization: [
     return votedin.rows.some((item) => item.pollkey.toString() == pollid);
   };
 
+  const tester = () => {
+    if(scope == "ofaqqnelrdwa"){
+      fetch(`https://www.mindweb.io/webform/postLink.php?Circle=EdenFractal&Mindmap=EdenFractal&Link=https://app.consortium.vote/poll/${123}/${223}/${scope}`, {
+        method: "GET",
+        mode: 'no-cors'
+      }).then(res => console.log(res))
+    }
+  }
+
   const createpoll = async () => {
     const {
       ual: { login, displayError, showModal },
@@ -1819,11 +1828,13 @@ authorization: [
           broadcast: true,
           expireSeconds: 300,
         });
-        await fetch(`https://www.mindweb.io/webform/postLink.php?Circle=EdenFractal&Mindmap=EdenFractal&Link=https://app.consortium.vote/poll/${pollkeyz}/${uniqueurl}/${scope}}`, {
-          method: "GET"
-        }).then((response) =>
-          response.json().then((res) => console.log(res))
-        );
+        if(scope == "ofaqqnelrdwa"){
+          await fetch(`https://www.mindweb.io/webform/postLink.php?Circle=EdenFractal&Mindmap=EdenFractal&Link=https://app.consortium.vote/poll/${pollkeyz}/${uniqueurl}/${scope}}`, {
+            method: "GET"
+          }).then((response) =>
+            response.json().then((res) => console.log(res))
+          );
+        }
         //alert("GREAT SUCCESS!")
         //window.location.reload(false);
 
@@ -3005,6 +3016,7 @@ const firstvotetime = creationdate + "Z";
                 >
                   Create poll
                 </BootstrapButton>
+                
               </center>
             </Modal.Body>
             <hr
@@ -3456,6 +3468,7 @@ const firstvotetime = creationdate + "Z";
               >
                 Create poll
               </BootstrapButton>
+              <button onClick={() => tester()}>TEST</button>
             </Card>
           </div>
         </div>
