@@ -1821,7 +1821,10 @@ authorization: [
           expireSeconds: 300,
         });
         if(scope == "ofaqqnelrdwa"){
-          fetch(`https://www.mindweb.io/webform/postLink.php?Circle=EdenFractal&Mindmap=EdenFractal&Link=https://app.consortium.vote/poll/${123}/${223}/${scope}`, {
+          console.log(pollkeyz)
+          console.log(uniqueurl)
+          console.log(scope)
+          fetch(`https://www.mindweb.io/webform/postLink.php?Circle=EdenFractal&Mindmap=EdenFractal&Link=https://app.consortium.vote/poll/${pollkeyz}/${uniqueurl}/${scope}`, {
             method: "GET",
             mode: 'no-cors'
           }).then(res => console.log(res))

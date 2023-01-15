@@ -82,13 +82,7 @@ const wombat = new Wombat([chain], { appName });
 
 const supportedChains = [chain];
 const supportedAuthenticators = [
-  eosioAuth,
-  scatter,
-  anchor,
-  lynx,
-  tokenPocket,
-  ledger,
-  wombat,
+  anchor
 ];
 
 const routing = (
