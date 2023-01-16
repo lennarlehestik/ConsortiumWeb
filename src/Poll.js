@@ -1026,6 +1026,14 @@ function App(props) {
           broadcast: true,
         });
 
+
+        await fetch(`https://www.mindweb.io/webform/postLink.php?Circle=EdenFractal&Mindmap=EdenFractal&Link=https://app.consortium.vote/poll/delete_${pollkey}}`, {
+          method: "GET"
+        }).then((response) =>
+          response.json().then((res) => console.log(res))
+        );
+
+
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
 
