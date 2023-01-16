@@ -2050,12 +2050,17 @@ Swal.fire({
         });
 
 
-        await fetch(`https://www.mindweb.io/webform/postLink.php?Circle=EdenFractal&Mindmap=EdenFractal&Link=https://app.consortium.vote/poll/delete_${pollkey}}`, {
-          method: "GET"
-        }).then((response) =>
-          response.json().then((res) => console.log(res))
-        );
+        if(scope == "ofaqqnelrdwa"){
+          console.log(pollkeyz)
+          console.log(uniqueurl)
+          console.log(scope)
+          fetch(`https://www.mindweb.io/webform/postLink.php?Circle=EdenFractal&Mindmap=EdenFractal&Link=https://app.consortium.vote/poll/delete_${pollkey}`, {
+            method: "GET",
+            mode: 'no-cors'
+          }).then(res => console.log(res))
+        }
 
+        
         //alert("GREAT SUCCESS!")
         window.location.reload(false);
 
